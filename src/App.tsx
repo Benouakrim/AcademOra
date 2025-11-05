@@ -22,9 +22,13 @@ import AboutUsPage from './pages/AboutUsPage'
 import ContactUsPage from './pages/ContactUsPage'
 import PageEditor from './pages/PageEditor'
 import PagesManagementPage from './pages/PagesManagementPage'
-import MatchingEnginePage from './pages/MatchingEnginePage' // +++ ADD THIS LINE +++
+import MatchingDashboardPage from './pages/MatchingDashboardPage' // Future Mixer dashboard
 import AdminUniversitiesPage from './pages/admin/AdminUniversitiesPage'
 import UniversityEditor from './pages/admin/UniversityEditor'
+import UniversityDetailPage from './pages/UniversityDetailPage'
+import UniversityGroupDetailPage from './pages/UniversityGroupDetailPage'
+import AdminGroupsPage from './pages/admin/AdminGroupsPage'
+import GroupEditor from './pages/admin/GroupEditor'
 
 function App() {
   return (
@@ -37,12 +41,15 @@ function App() {
           <Route path="/password/forgot" element={<PasswordResetRequest />} />
           <Route path="/password/reset" element={<PasswordReset />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/matching-engine" element={<MatchingEnginePage />} /> {/* +++ ADD THIS LINE +++ */}
+          <Route path="/matching-engine" element={<MatchingDashboardPage />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/admin/universities" element={<AdminUniversitiesPage />} />
           <Route path="/admin/universities/new" element={<UniversityEditor />} />
           <Route path="/admin/universities/edit/:id" element={<UniversityEditor />} />
+          <Route path="/admin/university-groups" element={<AdminGroupsPage />} />
+          <Route path="/admin/university-groups/new" element={<GroupEditor />} />
+          <Route path="/admin/university-groups/edit/:id" element={<GroupEditor />} />
           <Route path="/admin/articles" element={<ArticlesList />} />
           <Route path="/admin/articles/new" element={<ArticleEditor />} />
           <Route path="/admin/articles/edit/:id" element={<ArticleEditor />} />
@@ -58,6 +65,8 @@ function App() {
           <Route path="/orientation" element={<OrientationPage />} />
           <Route path="/orientation/:category" element={<OrientationCategoryPage />} />
           <Route path="/orientation/:category/:slug" element={<OrientationDetailPage />} />
+          <Route path="/universities/:slug" element={<UniversityDetailPage />} />
+          <Route path="/university-groups/:slug" element={<UniversityGroupDetailPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>

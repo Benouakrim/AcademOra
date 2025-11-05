@@ -11,11 +11,8 @@ const router = express.Router();
  */
 router.post('/', authenticateToken, async (req, res) => {
   try {
-    const criteria = req.body;
-
-    if (!criteria || typeof criteria !== 'object') {
-      return res.status(400).json({ error: 'Invalid criteria object' });
-    }
+    // Accept any object shape for the new complex criteria; default to {}
+    const criteria = req.body || {};
 
     const results = await matchUniversities(criteria, 20);
     res.json(results);

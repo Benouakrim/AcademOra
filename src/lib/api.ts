@@ -231,6 +231,53 @@ export const matchingAPI = {
   },
 };
 
+// Public Universities API (no auth required)
+export const universitiesAPI = {
+  async getUniversities() {
+    return fetchAPI('/universities');
+  },
+  async getUniversityBySlug(slug: string) {
+    return fetchAPI(`/universities/${slug}`);
+  },
+};
+
+// Public University Groups API (no auth required)
+export const universityGroupsAPI = {
+  async getGroups() {
+    return fetchAPI('/university-groups');
+  },
+  async getGroupBySlug(slug: string) {
+    return fetchAPI(`/university-groups/${slug}`);
+  },
+};
+
+// Admin University Groups CRUD API
+export const adminUniversityGroupsAPI = {
+  async getGroups() {
+    return fetchAPI('/admin/university-groups');
+  },
+  async getGroupById(id: string) {
+    return fetchAPI(`/admin/university-groups/${id}`);
+  },
+  async createGroup(data: any) {
+    return fetchAPI('/admin/university-groups', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  async updateGroup(id: string, data: any) {
+    return fetchAPI(`/admin/university-groups/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+  async deleteGroup(id: string) {
+    return fetchAPI(`/admin/university-groups/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
 // Admin University CRUD API
 export const adminUniversityAPI = {
   async getUniversities() {

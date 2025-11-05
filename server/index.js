@@ -9,6 +9,9 @@ import adminRoutes from './routes/admin.js';
 import uploadRoutes from './routes/upload.js';
 import matchingRoutes from './routes/matching.js';
 import adminUniversityRoutes from './routes/adminUniversities.js';
+import universitiesRoutes from './routes/universities.js';
+import universityGroupsRoutes from './routes/universityGroups.js';
+import adminUniversityGroupsRoutes from './routes/adminUniversityGroups.js';
 
 dotenv.config();
 
@@ -29,8 +32,14 @@ app.use('/api/orientation', orientationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/matching', matchingRoutes);
+// Public universities (no auth required)
+app.use('/api/universities', universitiesRoutes);
+// Public university groups (no auth required)
+app.use('/api/university-groups', universityGroupsRoutes);
 // Admin universities CRUD
 app.use('/api/admin/universities', adminUniversityRoutes);
+// Admin university groups CRUD
+app.use('/api/admin/university-groups', adminUniversityGroupsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -37,6 +37,19 @@ export async function getMatchingUniversities(criteria) {
       query = query.eq('country', criteria.country);
     }
 
+    // New filters: degree levels, languages, cost of living
+    if (criteria?.academics?.filters?.degreeLevel) {
+      query = query.overlaps('degree_levels', [criteria.academics.filters.degreeLevel]);
+    }
+
+    if (criteria?.academics?.filters?.languages && criteria.academics.filters.languages.length > 0) {
+      query = query.overlaps('languages', criteria.academics.filters.languages);
+    }
+
+    if (criteria?.financials?.filters?.maxCostOfLiving) {
+      query = query.lte('cost_of_living_index', criteria.financials.filters.maxCostOfLiving);
+    }
+
     query = query.order('avg_tuition_per_year', { ascending: true });
 
     const { data, error } = await query;
@@ -79,6 +92,24 @@ export async function getUniversityById(id) {
   }
 }
 
+export async function getUniversityBySlug(slug) {
+  try {
+    const { data, error } = await supabase
+      .from('universities')
+      .select('*')
+      .eq('slug', slug)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') return null;
+      throw error;
+    }
+    return data || null;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function createUniversity(payload) {
   try {
     const insert = {
@@ -94,7 +125,18 @@ export async function createUniversity(payload) {
       ranking_world: toNumberOrNull(payload.ranking_world),
       interests: csvToArray(payload.interests),
       required_tests: csvToArray(payload.required_tests),
+      // New fields
+      degree_levels: csvToArray(payload.degree_levels),
+      languages: csvToArray(payload.languages),
+      ranking_tier: payload.ranking_tier || null,
+      scholarship_availability: toNumberOrNull(payload.scholarship_availability),
+      cost_of_living_index: toNumberOrNull(payload.cost_of_living_index),
+      campus_setting: payload.campus_setting || null,
+      climate: payload.climate || null,
+      post_grad_visa_strength: toNumberOrNull(payload.post_grad_visa_strength),
+      internship_strength: toNumberOrNull(payload.internship_strength),
       metadata: payload.metadata || null,
+      group_id: payload.group_id || null,
     };
 
     const { data, error } = await supabase
@@ -125,7 +167,17 @@ export async function updateUniversity(id, payload) {
     if (payload.ranking_world !== undefined) update.ranking_world = toNumberOrNull(payload.ranking_world);
     if (payload.interests !== undefined) update.interests = csvToArray(payload.interests);
     if (payload.required_tests !== undefined) update.required_tests = csvToArray(payload.required_tests);
+    if (payload.degree_levels !== undefined) update.degree_levels = csvToArray(payload.degree_levels);
+    if (payload.languages !== undefined) update.languages = csvToArray(payload.languages);
+    if (payload.ranking_tier !== undefined) update.ranking_tier = payload.ranking_tier || null;
+    if (payload.scholarship_availability !== undefined) update.scholarship_availability = toNumberOrNull(payload.scholarship_availability);
+    if (payload.cost_of_living_index !== undefined) update.cost_of_living_index = toNumberOrNull(payload.cost_of_living_index);
+    if (payload.campus_setting !== undefined) update.campus_setting = payload.campus_setting || null;
+    if (payload.climate !== undefined) update.climate = payload.climate || null;
+    if (payload.post_grad_visa_strength !== undefined) update.post_grad_visa_strength = toNumberOrNull(payload.post_grad_visa_strength);
+    if (payload.internship_strength !== undefined) update.internship_strength = toNumberOrNull(payload.internship_strength);
     if (payload.metadata !== undefined) update.metadata = payload.metadata;
+    if (payload.group_id !== undefined) update.group_id = payload.group_id || null;
 
     const { data, error } = await supabase
       .from('universities')

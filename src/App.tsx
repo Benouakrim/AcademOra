@@ -22,6 +22,9 @@ import AboutUsPage from './pages/AboutUsPage'
 import ContactUsPage from './pages/ContactUsPage'
 import PageEditor from './pages/PageEditor'
 import PagesManagementPage from './pages/PagesManagementPage'
+import MatchingEnginePage from './pages/MatchingEnginePage' // +++ ADD THIS LINE +++
+import AdminUniversitiesPage from './pages/admin/AdminUniversitiesPage'
+import UniversityEditor from './pages/admin/UniversityEditor'
 
 function App() {
   return (
@@ -34,8 +37,12 @@ function App() {
           <Route path="/password/forgot" element={<PasswordResetRequest />} />
           <Route path="/password/reset" element={<PasswordReset />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/matching-engine" element={<MatchingEnginePage />} /> {/* +++ ADD THIS LINE +++ */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/admin/universities" element={<AdminUniversitiesPage />} />
+          <Route path="/admin/universities/new" element={<UniversityEditor />} />
+          <Route path="/admin/universities/edit/:id" element={<UniversityEditor />} />
           <Route path="/admin/articles" element={<ArticlesList />} />
           <Route path="/admin/articles/new" element={<ArticleEditor />} />
           <Route path="/admin/articles/edit/:id" element={<ArticleEditor />} />

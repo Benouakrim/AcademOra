@@ -18,13 +18,17 @@
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "welcome": "Welcome",
-    "language": "Language"
+    "language": "Language",
+    "matcher": "Matcher"
   },
   "home": {
     "heroTitle": "Your Academic Journey Starts Here",
     "heroSubtitle": "Discover fields, explore schools, study abroad opportunities, and get expert guidance on your academic path with AcademOra.",
     "exploreOrientation": "Explore Orientation",
     "readBlog": "Read Our Blog",
+    "matcherTitle": "Find Your Perfect University",
+    "matcherDescription": "Use our new matching engine to get a personalized list of universities based on your grades, budget, and interests.",
+    "findYourMatch": "Find Your Match",
     "featuresTitle": "Everything You Need for Academic Success",
     "featuresSubtitle": "Comprehensive resources and guidance to help you make informed decisions",
     "fieldsTitle": "Fields & Programs",

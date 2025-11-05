@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { User, BookOpen, GraduationCap, LogOut } from 'lucide-react'
+import { User, BookOpen, GraduationCap, LogOut, Compass } from 'lucide-react' // +++ ADD Compass +++
 import { authAPI, getCurrentUser } from '../lib/api'
 
 interface UserType {
@@ -82,7 +82,15 @@ export default function DashboardPage() {
             {/* Quick Actions */}
             <div className="card">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+              {/* +++ MODIFY THIS GRID +++ */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Link
+                  to="/matching-engine"
+                  className="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-primary-600 hover:bg-primary-50 transition-colors"
+                >
+                  <Compass className="h-6 w-6 text-primary-600 mr-3" />
+                  <span className="font-semibold">University Matcher</span>
+                </Link>
                 <Link
                   to="/orientation"
                   className="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-primary-600 hover:bg-primary-50 transition-colors"

@@ -220,3 +220,40 @@ export const orientationAPI = {
     return fetchAPI(`/orientation/${category}/${slug}`);
   },
 };
+
+// Matching API
+export const matchingAPI = {
+  async getMatches(criteria: any) {
+    return fetchAPI('/matching', {
+      method: 'POST',
+      body: JSON.stringify(criteria),
+    });
+  },
+};
+
+// Admin University CRUD API
+export const adminUniversityAPI = {
+  async getUniversities() {
+    return fetchAPI('/admin/universities');
+  },
+  async getUniversityById(id: string) {
+    return fetchAPI(`/admin/universities/${id}`);
+  },
+  async createUniversity(data: any) {
+    return fetchAPI('/admin/universities', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  async updateUniversity(id: string, data: any) {
+    return fetchAPI(`/admin/universities/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+  async deleteUniversity(id: string) {
+    return fetchAPI(`/admin/universities/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};

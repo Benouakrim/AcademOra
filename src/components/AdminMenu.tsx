@@ -8,7 +8,8 @@ import {
   Users,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  Building // +++ ADD THIS IMPORT +++
 } from 'lucide-react';
 
 interface AdminMenuProps {
@@ -32,6 +33,14 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
       path: '/admin/articles',
       description: 'Manage articles and blog posts'
     },
+    // +++ ADD THIS OBJECT +++
+    {
+      name: 'Universities',
+      icon: Building,
+      path: '/admin/universities',
+      description: 'Manage university data'
+    },
+    // +++ END OF ADDITION +++
     {
       name: 'Media',
       icon: Image,

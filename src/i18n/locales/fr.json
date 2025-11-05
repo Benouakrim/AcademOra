@@ -18,13 +18,17 @@
     "password": "Mot de passe",
     "confirmPassword": "Confirmer le mot de passe",
     "welcome": "Bienvenue",
-    "language": "Langue"
+    "language": "Langue",
+    "matcher": "Matcher"
   },
   "home": {
     "heroTitle": "Votre parcours académique commence ici",
     "heroSubtitle": "Découvrez les domaines, explorez les écoles, les opportunités d'études à l'étranger et obtenez des conseils d'experts sur votre parcours académique avec AcademOra.",
     "exploreOrientation": "Explorer l'orientation",
     "readBlog": "Lire notre blog",
+    "matcherTitle": "Trouvez Votre Université Parfaite",
+    "matcherDescription": "Utilisez notre nouvel outil de matching pour obtenir une liste personnalisée d'universités en fonction de vos notes, budget et intérêts.",
+    "findYourMatch": "Trouver ma voie",
     "featuresTitle": "Tout ce dont vous avez besoin pour réussir vos études",
     "featuresSubtitle": "Ressources complètes et conseils pour vous aider à prendre des décisions éclairées",
     "fieldsTitle": "Domaines et programmes",

@@ -7,6 +7,8 @@ import blogRoutes from './routes/blog.js';
 import orientationRoutes from './routes/orientation.js';
 import adminRoutes from './routes/admin.js';
 import uploadRoutes from './routes/upload.js';
+import matchingRoutes from './routes/matching.js';
+import adminUniversityRoutes from './routes/adminUniversities.js';
 
 dotenv.config();
 
@@ -26,6 +28,9 @@ app.use('/api/blog', blogRoutes);
 app.use('/api/orientation', orientationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/matching', matchingRoutes);
+// Admin universities CRUD
+app.use('/api/admin/universities', adminUniversityRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { BookOpen, GraduationCap, Globe, FileText, ArrowRight, CheckCircle, Search } from 'lucide-react'
+import { BookOpen, GraduationCap, Globe, FileText, ArrowRight, CheckCircle, Search, Compass } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 import { blogAPI } from '../lib/api'
@@ -363,6 +363,86 @@ export default function HomePage() {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Matcher CTA Section */}
+      <section className="relative py-16 bg-gradient-to-br from-white to-primary-50/30 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Matcher Image */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="relative"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                alt="University matching"
+                className="rounded-2xl shadow-2xl w-full h-auto object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://via.placeholder.com/800x600/dc2626/ffffff?text=University+Matcher'
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary-900/30 to-transparent rounded-2xl" />
+              <motion.div
+                className="absolute -bottom-6 -right-6 w-full h-full bg-primary-400/30 rounded-2xl blur-2xl -z-10"
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.3, 0.5, 0.3],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </motion.div>
+
+            {/* Matcher Content */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="relative"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="absolute -top-12 -left-12 text-primary-600/20"
+              >
+                <Compass className="w-24 h-24" />
+              </motion.div>
+              
+              <h2 className="text-3xl md:text-4xl font-extrabold mb-6 relative">
+                <span className="bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+                  {t('home.matcherTitle')}
+                </span>
+              </h2>
+              
+              <p className="text-lg text-gray-600 mb-8">
+                {t('home.matcherDescription')}
+              </p>
+
+              <Link
+                to="/matching-engine"
+                className="relative group inline-flex items-center space-x-2 btn-primary bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 text-lg px-8 py-3 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300"
+              >
+                <span>{t('home.findYourMatch')}</span>
+                <motion.div
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  <Compass className="h-5 w-5" />
+                </motion.div>
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>

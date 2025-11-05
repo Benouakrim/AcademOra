@@ -132,6 +132,18 @@ export default function Navbar({ onAdminMenuToggle, showAdminMenu }: NavbarProps
             {user ? (
               <>
                 <Link
+                  to="/matching-engine"
+                  className="relative text-gray-700 font-medium hover:text-primary-600 transition-colors px-2 py-1 group"
+                >
+                  <span className="relative z-10">{t('common.matcher')}</span>
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600"
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </Link>
+                <Link
                   to="/dashboard"
                   className="flex items-center space-x-1 text-gray-700 hover:text-primary-600 transition-colors"
                 >
@@ -246,6 +258,13 @@ export default function Navbar({ onAdminMenuToggle, showAdminMenu }: NavbarProps
             </Link>
             {user ? (
               <>
+                <Link
+                  to="/matching-engine"
+                  className="block px-3 py-2 text-gray-700 font-medium hover:bg-gray-100 rounded-md"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {t('common.matcher')}
+                </Link>
                 <Link
                   to="/dashboard"
                   className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md"

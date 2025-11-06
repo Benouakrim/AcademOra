@@ -6,7 +6,8 @@ import {
   CheckCircle, XCircle, AlertCircle, ExternalLink, Clock, School, Trophy,
   Zap, Shield, Home, Plane, Sun, DollarSign as DollarIcon, BarChart3
 } from 'lucide-react'
-import { universitiesAPI } from '../lib/api'
+import { universitiesAPI, reviewsAPI, getCurrentUser } from '../lib/api'
+import SaveButton from '../components/SaveButton'
 
 interface University {
   id: string
@@ -103,6 +104,10 @@ export default function UniversityDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [imageError, setImageError] = useState(false)
+  const [reviews, setReviews] = useState<any[]>([])
+  const [myRating, setMyRating] = useState<number>(0)
+  const [myComment, setMyComment] = useState<string>('')
+  const [savingReview, setSavingReview] = useState(false)
 
   useEffect(() => {
     async function fetchUniversity() {
@@ -129,6 +134,34 @@ export default function UniversityDetailPage() {
 
     fetchUniversity()
   }, [slug])
+
+  useEffect(() => {
+    async function loadReviews() {
+      try {
+        if (university?.id) {
+          const list = await reviewsAPI.list(university.id)
+          setReviews(Array.isArray(list) ? list : [])
+        }
+      } catch {}
+    }
+    loadReviews()
+  }, [university?.id])
+
+  const submitReview = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!university?.id || !myRating) return
+    setSavingReview(true)
+    try {
+      await reviewsAPI.upsert(university.id, myRating, myComment || undefined)
+      const list = await reviewsAPI.list(university.id)
+      setReviews(Array.isArray(list) ? list : [])
+      setMyComment('')
+    } catch (err) {
+      // no-op
+    } finally {
+      setSavingReview(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -269,6 +302,12 @@ export default function UniversityDetailPage() {
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-3 mt-6">
+                <SaveButton
+                  itemType="university"
+                  itemId={university.id}
+                  itemData={{ name: university.name, slug: university.slug, location: `${location}, ${country}` }}
+                  className="bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30"
+                />
                 {university.website_url && (
                   <a
                     href={university.website_url}
@@ -316,6 +355,51 @@ export default function UniversityDetailPage() {
                 {university.faculty_to_student_ratio && (
                   <InfoItem label="Faculty to Student Ratio" value={university.faculty_to_student_ratio} />
                 )}
+              </div>
+            </SectionCard>
+
+            {/* Student Reviews */}
+            <SectionCard
+              icon={<Users className="h-6 w-6" />}
+              title="Student Reviews"
+              className="bg-white rounded-lg shadow-sm p-6"
+            >
+              <div className="space-y-6">
+                <form onSubmit={submitReview} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <div className="flex flex-col md:flex-row md:items-center gap-3">
+                    <div>
+                      <div className="text-xs text-gray-600 mb-1">Your Rating</div>
+                      <select value={myRating} onChange={(e)=> setMyRating(Number(e.target.value))} className="border rounded px-2 py-1 text-sm">
+                        <option value={0}>Select…</option>
+                        {[1,2,3,4,5].map(n => <option key={n} value={n}>{n} / 5</option>)}
+                      </select>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-xs text-gray-600 mb-1">Comment (optional)</div>
+                      <input value={myComment} onChange={(e)=> setMyComment(e.target.value)} placeholder="Share your experience"
+                        className="w-full border rounded px-3 py-2 text-sm" />
+                    </div>
+                    <div>
+                      <button disabled={!myRating || savingReview} className="btn-primary text-sm">
+                        {savingReview ? 'Saving…' : 'Submit'}
+                      </button>
+                    </div>
+                  </div>
+                </form>
+
+                <div className="divide-y">
+                  {reviews.length === 0 ? (
+                    <div className="text-sm text-gray-500">No reviews yet.</div>
+                  ) : reviews.map((r) => (
+                    <div key={r.id} className="py-3">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-semibold text-gray-900">{r.rating} / 5</div>
+                        <div className="text-xs text-gray-500">{new Date(r.created_at).toLocaleDateString()}</div>
+                      </div>
+                      {r.comment && <div className="text-sm text-gray-700 mt-1">{r.comment}</div>}
+                    </div>
+                  ))}
+                </div>
               </div>
             </SectionCard>
 

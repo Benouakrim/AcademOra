@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Lock } from 'lucide-react'
 import { orientationAPI, getCurrentUser } from '../lib/api'
+import SaveButton from '../components/SaveButton'
 
 interface Resource {
   id: string
@@ -122,12 +123,19 @@ export default function OrientationDetailPage() {
             <span className="inline-block bg-primary-100 text-primary-700 text-sm font-semibold px-4 py-1 rounded-full">
               {category}
             </span>
-            {resource.premium && (
-              <span className="inline-flex items-center bg-yellow-100 text-yellow-800 text-sm font-semibold px-4 py-1 rounded-full">
-                <Lock className="h-3 w-3 mr-1" />
-                Premium
-              </span>
-            )}
+            <div className="flex items-center gap-3">
+              {resource.premium && (
+                <span className="inline-flex items-center bg-yellow-100 text-yellow-800 text-sm font-semibold px-4 py-1 rounded-full">
+                  <Lock className="h-3 w-3 mr-1" />
+                  Premium
+                </span>
+              )}
+              <SaveButton
+                itemType="resource"
+                itemId={resource.id}
+                itemData={{ title: resource.title, slug: resource.slug, category: resource.category }}
+              />
+            </div>
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">

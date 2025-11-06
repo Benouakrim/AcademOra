@@ -3,6 +3,7 @@ import { createUser, findUserByEmail, verifyPassword, updatePasswordByEmail } fr
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { sendPasswordResetEmail } from '../services/email.js';
+import fetch from 'node-fetch';
 
 const router = express.Router();
 
@@ -216,4 +217,124 @@ router.post('/reset', async (req, res) => {
 });
 
 export default router;
+
+// --- OAuth (Google & LinkedIn) ---
+
+// Google OAuth using authorization code flow
+router.get('/oauth/google/start', (req, res) => {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const redirectUri = (process.env.API_BASE_URL || `http://localhost:${process.env.PORT || 3001}`) + '/api/auth/oauth/google/callback';
+  const scope = encodeURIComponent('openid email profile');
+  const state = 'state';
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
+  res.redirect(authUrl);
+});
+
+router.get('/oauth/google/callback', async (req, res) => {
+  try {
+    const code = req.query.code;
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+    const redirectUri = (process.env.API_BASE_URL || `http://localhost:${process.env.PORT || 3001}`) + '/api/auth/oauth/google/callback';
+
+    // Exchange code for tokens
+    const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        code: String(code || ''),
+        client_id: clientId,
+        client_secret: clientSecret,
+        redirect_uri: redirectUri,
+        grant_type: 'authorization_code',
+      }),
+    });
+    const tokenJson = await tokenRes.json();
+    const idToken = tokenJson.id_token;
+
+    if (!idToken) return res.status(400).json({ error: 'Failed to obtain id_token' });
+
+    // Verify id_token and get email
+    const verifyRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`);
+    const verify = await verifyRes.json();
+    const email = verify?.email;
+    if (!email) return res.status(400).json({ error: 'Email missing from Google token' });
+
+    // Find or create user
+    let user = await findUserByEmail(email);
+    if (!user) {
+      // Create with random password
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+      user = await createUser(email, randomPassword, 'user');
+    }
+
+    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET);
+
+    // Redirect to frontend with token
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const redirectTo = `${frontendUrl.replace(/\/$/, '')}/login?oauth=google&token=${encodeURIComponent(token)}`;
+    res.redirect(redirectTo);
+  } catch (error) {
+    console.error('Google OAuth callback error:', error);
+    res.status(500).json({ error: 'OAuth failed' });
+  }
+});
+
+// LinkedIn OAuth (authorization code flow)
+router.get('/oauth/linkedin/start', (req, res) => {
+  const clientId = process.env.LINKEDIN_CLIENT_ID;
+  const redirectUri = (process.env.API_BASE_URL || `http://localhost:${process.env.PORT || 3001}`) + '/api/auth/oauth/linkedin/callback';
+  const scope = encodeURIComponent('r_liteprofile r_emailaddress');
+  const state = 'state';
+  const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
+  res.redirect(authUrl);
+});
+
+router.get('/oauth/linkedin/callback', async (req, res) => {
+  try {
+    const code = req.query.code;
+    const clientId = process.env.LINKEDIN_CLIENT_ID;
+    const clientSecret = process.env.LINKEDIN_CLIENT_SECRET;
+    const redirectUri = (process.env.API_BASE_URL || `http://localhost:${process.env.PORT || 3001}`) + '/api/auth/oauth/linkedin/callback';
+
+    // Exchange code for access token
+    const tokenRes = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        grant_type: 'authorization_code',
+        code: String(code || ''),
+        redirect_uri: redirectUri,
+        client_id: clientId,
+        client_secret: clientSecret,
+      }),
+    });
+    const tokenJson = await tokenRes.json();
+    const accessToken = tokenJson.access_token;
+    if (!accessToken) return res.status(400).json({ error: 'Failed to obtain access_token' });
+
+    // Fetch user email
+    const emailRes = await fetch('https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const emailJson = await emailRes.json();
+    const email = emailJson?.elements?.[0]?.['handle~']?.emailAddress;
+    if (!email) return res.status(400).json({ error: 'Email missing from LinkedIn' });
+
+    // Find or create user
+    let user = await findUserByEmail(email);
+    if (!user) {
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+      user = await createUser(email, randomPassword, 'user');
+    }
+
+    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET);
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const redirectTo = `${frontendUrl.replace(/\/$/, '')}/login?oauth=linkedin&token=${encodeURIComponent(token)}`;
+    res.redirect(redirectTo);
+  } catch (error) {
+    console.error('LinkedIn OAuth callback error:', error);
+    res.status(500).json({ error: 'OAuth failed' });
+  }
+});
 

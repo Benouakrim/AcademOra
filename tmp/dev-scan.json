@@ -1,0 +1,334 @@
+{
+  "generatedAt": "2025-11-06T10:46:23.011Z",
+  "projectRoot": "C:\\Users\\ayper\\Desktop\\Projects Ayoub\\Coding",
+  "files": {
+    "pages": [],
+    "components": [],
+    "src": [],
+    "serverRoutes": []
+  },
+  "data": {
+    "users": [
+      {
+        "id": "364aa81d-229b-4e2d-b224-33ba9251a7cc",
+        "username": "alice",
+        "email": "alice@example.com",
+        "full_name": "Alice Johnson"
+      },
+      {
+        "id": "5de3362c-41a6-4ba2-b4fe-56c23ec6c892",
+        "username": "benc",
+        "email": "ben@example.com",
+        "full_name": "Ben Carter"
+      },
+      {
+        "id": "3e423b2d-4136-4ab1-87d7-f34c2f4017bf",
+        "username": "chloe",
+        "email": "chloe@example.com",
+        "full_name": "Chloé Martin"
+      },
+      {
+        "id": "914623b8-728d-4c19-b004-89049d69f9eb",
+        "username": "diego",
+        "email": "diego@example.com",
+        "full_name": "Diego Alvarez"
+      },
+      {
+        "id": "845ce099-27fe-4e75-8f86-a9dd0bd87f26",
+        "username": "emma",
+        "email": "emma@example.com",
+        "full_name": "Emma Rossi"
+      },
+      {
+        "id": "04e241ed-7bec-415e-8ff4-ddcf3a66e971",
+        "username": "ay-perso2001-04e241ed",
+        "email": "ay.perso2001@gmail.com",
+        "full_name": null
+      },
+      {
+        "id": "09dfb27d-dcbb-4b8c-93b7-0619566fa9e9",
+        "username": "benouakrim-private-09dfb27d",
+        "email": "benouakrim.private@gmail.com",
+        "full_name": null
+      },
+      {
+        "id": "b9e79e4f-6b45-4753-af07-ac8a8a7752e8",
+        "username": "admin-b9e79e4f",
+        "email": "admin@academora.com",
+        "full_name": null
+      }
+    ],
+    "articles": [
+      {
+        "id": "fdf4e022-00e5-4436-a2ca-d40439f687bc",
+        "slug": "university-admissions-step-by-step",
+        "title": "Application Process: Step-by-Step Guide for University Admissions",
+        "published": true,
+        "_content": "<h2>Introduction</h2>\n      <p>The university application process can seem overwhelming, but breaking it down into manageable steps makes it much easier. This guide will walk you through each stage of the application process.</p>\n      \n      <h2>Step 1: Research and Create a List (12-18 months before)</h2>\n      <p>Start early by researching universities that match your interests, academic profile, and career goals. Create a list of:</p>\n      <ul>\n        <li><strong>Reach schools:</strong> Competitive but achievable</li>\n        <li><strong>Target schools:</strong> Good fit based on your profile</li>\n        <li><strong>Safety schools:</strong> Strong likelihood of acceptance</li>\n      </ul>\n      \n      <h2>Step 2: Understand Requirements (10-12 months before)</h2>\n      <p>Each university has specific requirements. Common elements include:</p>\n      <ul>\n        <li>Academic transcripts</li>\n        <li>Standardized test scores (SAT, ACT, TOEFL, IELTS)</li>\n        <li>Letters of recommendation</li>\n        <li>Personal statement or essay</li>\n        <li>Portfolio (for arts programs)</li>\n      </ul>\n      \n      <h2>Step 3: Prepare Standardized Tests (9-12 months before)</h2>\n      <p>Register for and prepare for required standardized tests:</p>\n      <ul>\n        <li>Take practice tests to identify areas for improvement</li>\n        <li>Consider test prep courses or tutoring</li>\n        <li>Allow time for multiple attempts if needed</li>\n      </ul>\n      \n      <h2>Step 4: Request Transcripts and Recommendations (6-9 months before)</h2>\n      <p>Contact your school to request official transcripts. Ask teachers, counselors, or employers for recommendation letters well in advance.</p>\n      \n      <h2>Step 5: Write Your Personal Statement (4-6 months before)</h2>\n      <p>Your personal statement is crucial. Tips for writing:</p>\n      <ul>\n        <li>Tell a compelling story that showcases your personality</li>\n        <li>Be authentic and specific</li>\n        <li>Show passion for your chosen field</li>\n        <li>Get feedback from mentors or writing centers</li>\n      </ul>\n      \n      <h2>Step 6: Complete Applications (2-4 months before deadlines)</h2>\n      <p>Fill out all application forms carefully:</p>\n      <ul>\n        <li>Double-check all information for accuracy</li>\n        <li>Meet all requirements for each university</li>\n        <li>Submit supplementary materials</li>\n        <li>Pay application fees</li>\n      </ul>\n      \n      <h2>Step 7: Submit Before Deadlines</h2>\n      <p>Submit all applications before deadlines. Early decision/action deadlines are typically in November, while regular decision is usually in January.</p>\n      \n      <h2>Step 8: Follow Up</h2>\n      <p>After submitting, check your application status regularly and respond promptly to any requests for additional information.</p>\n      \n      <h2>Conclusion</h2>\n      <p>Starting early, staying organized, and paying attention to details are key to a successful application process. Good luck with your applications!</p>"
+      },
+      {
+        "id": "b53e8523-0cb5-46fc-a33b-e37e8cb0b680",
+        "slug": "understanding-academic-fields-guide",
+        "title": "Understanding Different Academic Fields: A Complete Guide",
+        "published": true,
+        "_content": "<h2>Introduction</h2>\n      <p>The world of academia is vast and diverse, with countless fields of study to explore. This guide will help you understand the major academic disciplines and how to choose the right one for you.</p>\n      \n      <h2>STEM Fields (Science, Technology, Engineering, Mathematics)</h2>\n      <p>STEM fields focus on scientific inquiry, technological innovation, and quantitative analysis. Popular fields include:</p>\n      <ul>\n        <li><strong>Computer Science:</strong> Software development, AI, cybersecurity</li>\n        <li><strong>Engineering:</strong> Mechanical, electrical, civil, biomedical</li>\n        <li><strong>Natural Sciences:</strong> Biology, chemistry, physics, environmental science</li>\n        <li><strong>Mathematics:</strong> Applied math, statistics, data science</li>\n      </ul>\n      \n      <h2>Social Sciences</h2>\n      <p>Social sciences study human behavior and society. Key fields include:</p>\n      <ul>\n        <li><strong>Psychology:</strong> Human behavior and mental processes</li>\n        <li><strong>Sociology:</strong> Social structures and relationships</li>\n        <li><strong>Economics:</strong> Market systems and financial behavior</li>\n        <li><strong>Political Science:</strong> Government and political systems</li>\n      </ul>\n      \n      <h2>Humanities</h2>\n      <p>Humanities explore human culture, history, and expression. Major areas include:</p>\n      <ul>\n        <li><strong>Literature:</strong> Literary analysis and creative writing</li>\n        <li><strong>History:</strong> Historical research and interpretation</li>\n        <li><strong>Philosophy:</strong> Critical thinking and ethical reasoning</li>\n        <li><strong>Languages:</strong> Linguistic study and cultural immersion</li>\n      </ul>\n      \n      <h2>Arts and Creative Fields</h2>\n      <p>Creative fields emphasize artistic expression and innovation:</p>\n      <ul>\n        <li><strong>Visual Arts:</strong> Painting, sculpture, digital arts</li>\n        <li><strong>Performing Arts:</strong> Theater, music, dance</li>\n        <li><strong>Design:</strong> Graphic design, fashion, architecture</li>\n      </ul>\n      \n      <h2>Business and Professional Fields</h2>\n      <p>Business programs prepare students for careers in commerce and management:</p>\n      <ul>\n        <li><strong>Business Administration:</strong> Management, strategy, entrepreneurship</li>\n        <li><strong>Finance:</strong> Banking, investment, financial planning</li>\n        <li><strong>Marketing:</strong> Branding, advertising, market research</li>\n      </ul>\n      \n      <h2>How to Choose Your Field</h2>\n      <p>Consider these factors when selecting an academic field:</p>\n      <ul>\n        <li>Your interests and passions</li>\n        <li>Career opportunities and job market</li>\n        <li>Academic strengths and skills</li>\n        <li>Long-term career goals</li>\n        <li>Work-life balance preferences</li>\n      </ul>\n      \n      <h2>Conclusion</h2>\n      <p>Each academic field offers unique perspectives and career paths. Take time to explore your interests, talk to professionals in different fields, and consider how each discipline aligns with your goals and values.</p>"
+      },
+      {
+        "id": "aaf50552-afed-4591-9c91-4af1c054622d",
+        "slug": "how-to-choose-right-university",
+        "title": "How to Choose the Right University: A Complete Guide",
+        "published": true,
+        "_content": "<h2>Introduction</h2><p>Choosing the right university is one of the most important decisions you'll make in your academic journey. This comprehensive guide will help you navigate the selection process.</p><h2>1. Define Your Goals</h2><p>Before you start looking at universities, take time to understand what you want to achieve. Consider your career aspirations, preferred field of study, location preferences, and budget constraints.</p><h2>2. Research Programs</h2><p>Look for universities that excel in your chosen field. Check program rankings, faculty credentials, research opportunities, and alumni success stories.</p><h2>Conclusion</h2><p>Take your time, do thorough research, and trust your instincts.</p>"
+      },
+      {
+        "id": "7eba02db-71e0-4f6e-8705-4536c8c8fcc4",
+        "slug": "how-to-bazoo",
+        "title": "How to bazoonga",
+        "published": true,
+        "_content": "<p>Chlamanquonnach</p><ul><li><p>ece cce</p></li></ul><pre><code>cece</code></pre><p></p>"
+      },
+      {
+        "id": "56827aea-267b-4453-a852-c7094936a698",
+        "slug": "10-tips-international-students",
+        "title": "10 Essential Tips for International Students Studying Abroad",
+        "published": true,
+        "_content": "<h3>Introduction</h3><h3>Studying abroad is an exciting adventure that offers incredible opportunities for personal and academic growth. However, it also comes with unique challenges. Here are 10 essential tips to help you succeed.</h3><h3>1. Prepare Your Documents Early</h3><h2><code>Start preparing your visa, passport, and academic documents well in advance. Processing times can vary significantly.</code></h2><h2>2. Learn the Local Language</h2><h3>Even if your courses are in English, learning the local language will enhance your experience and help you integrate better.</h3><h3>3. Research the Culture</h3><h3>Understanding cultural norms and expectations will help you avoid misunderstandings and make meaningful connections.</h3><h3>4. Budget Wisely</h3><p><s>Create a realistic budget that accounts for tuition, accommodation, food, transportation, and unexpected expenses.</s></p><h1>5. Find Accommodation Early</h1><p><em>Secure your housing before arriving. University dorms, homestays, and shared apartments are common options.</em></p><h2>6. Build a Support Network</h2><p><strong>Connect with other international students, join clubs, and participate in orientation activities to build friendships.</strong></p><h1>7. Stay Connected with Home</h1><p><mark>Regular communication with family and friends back home can help combat homesickness.</mark></p><h2>8. Explore Academically</h2><p><em>Take advantage of unique courses, research opportunities, and academic resources not available at home.</em></p><h3>9. Travel When Possible</h3><p style=\"text-align: center;\">Use your time abroad to explore the country and nearby regions. Travel broadens your perspective.</p><h1 style=\"text-align: center;\">10. Stay Healthy</h1><p>Take care of your physical and mental health. Find healthcare providers, maintain a healthy routine, and seek help when needed.</p><p>Conclusion</p><p>Studying abroad is a transformative experience. With proper preparation and an open mind, you can make the most of this incredible opportunity.</p>"
+      },
+      {
+        "id": "9d314713-8bee-4f06-8a7a-65db09e147b0",
+        "slug": "study-abroad-complete-guide",
+        "title": "Study Abroad: Everything You Need to Know",
+        "published": true,
+        "_content": "<h2>Why Study Abroad?</h2><p>Studying abroad offers incredible opportunities for personal growth, cultural immersion, and academic excellence. It's an experience that can transform your worldview and career prospects.</p><h2>Popular Destinations</h2><p>Some of the most popular study abroad destinations include the United States, United Kingdom, Canada, Germany, and Australia.</p><h2>Application Process</h2><p>The application process typically involves researching programs, preparing documents, taking standardized tests, applying for visas, and securing financial aid.</p>"
+      },
+      {
+        "id": "f7880352-e2d8-4019-aea5-5a334fb1105b",
+        "slug": "top-10-engineering-fields-career-prospects",
+        "title": "Top 10 Engineering Fields with Best Career Prospects",
+        "published": true,
+        "_content": "<h2>Introduction</h2><p>Engineering is one of the most versatile and rewarding career paths. Here are the top 10 engineering fields with excellent career prospects.</p><h2>1. Software Engineering</h2><p>With digital transformation accelerating, software engineers are in high demand.</p><h2>2. Artificial Intelligence & Machine Learning</h2><p>AI engineers design and develop intelligent systems.</p><h2>Conclusion</h2><p>Each engineering field offers unique opportunities. Choose based on your interests and career goals.</p>"
+      },
+      {
+        "id": "e4528411-c099-4d7f-b004-df18b010b178",
+        "slug": "university-application-deadlines-timeline",
+        "title": "University Application Deadlines: Complete Timeline Guide",
+        "published": true,
+        "_content": "<h2>Understanding Application Deadlines</h2><p>Missing an application deadline can mean waiting another year. Here's a comprehensive timeline to keep you on track.</p><h2>Key Deadlines</h2><p>Early Decision: November 1, Regular Decision: January 1-15, UCAS (UK): January 15</p><h2>Tips for Success</h2><p>Create a master calendar with all deadlines, set reminders 2 weeks before each deadline, and submit applications early.</p>"
+      },
+      {
+        "id": "90b48d7c-ad0c-406b-876a-f190a65a477f",
+        "slug": "scholarships-international-students-funding",
+        "title": "Scholarships for International Students: Where to Find Funding",
+        "published": true,
+        "_content": "<h2>Introduction</h2><p>Finding scholarships can significantly reduce the financial burden of studying abroad. Here's where to look for funding opportunities.</p><h2>Types of Scholarships</h2><p>Merit-based, need-based, country-specific, and subject-specific scholarships are available.</p><h2>Where to Find</h2><p>Check university websites, government programs like Fulbright and Chevening, and private organizations.</p><h2>Application Tips</h2><p>Start searching early, apply to multiple scholarships, tailor each application, and write compelling essays.</p>"
+      }
+    ],
+    "universities": [
+      {
+        "id": "4e1621a9-0f3a-4380-aed9-68ca27d7afe6",
+        "slug": "university-of-toronto",
+        "name": "University of Toronto"
+      },
+      {
+        "id": "dbe4c9e8-30f8-4050-b669-54be1538a523",
+        "slug": "sorbonne-university",
+        "name": "Sorbonne University"
+      },
+      {
+        "id": "7132245c-ed17-4f8e-b8a7-763b2ad0410d",
+        "slug": "university-of-california-berkeley",
+        "name": "University of California, Berkeley (UCB)"
+      },
+      {
+        "id": "02d21ea5-57c1-4c4e-b80e-dd1974778b36",
+        "slug": "university-of-oxford",
+        "name": "University of Oxford"
+      },
+      {
+        "id": "0013f7dd-9961-4fd9-89cc-f58d06a95303",
+        "slug": "national-university-of-singapore",
+        "name": "National University of Singapore"
+      },
+      {
+        "id": "aba41d29-acda-4e97-ad24-6402f35a108d",
+        "slug": "eth-zurich",
+        "name": "ETH Zurich"
+      },
+      {
+        "id": "75181e72-d5d2-489b-8c06-248448fcf566",
+        "slug": "university-of-sydney",
+        "name": "University of Sydney"
+      },
+      {
+        "id": "cd448632-5cd7-4f47-b372-fce4d8788d7f",
+        "slug": "massachusetts-institute-of-technology",
+        "name": "Massachusetts Institute of Technology"
+      },
+      {
+        "id": "b69a4b33-d33d-4735-a211-9bbade9a96d8",
+        "slug": "la-rochelle-university-business-school",
+        "name": "La Rochelle University - Business School"
+      },
+      {
+        "id": "c30a72fa-dcec-4736-a027-f1f58c3f8afa",
+        "slug": "la-rochelle-university-engineering-campus",
+        "name": "La Rochelle University - Engineering Campus"
+      },
+      {
+        "id": "53951350-2ff7-403e-89be-697150e9faee",
+        "slug": "la-rochelle-university-law-social-sciences",
+        "name": "La Rochelle University - Law & Social Sciences"
+      },
+      {
+        "id": "4ea4a612-f7dd-4658-82ae-ccd7d859e10e",
+        "slug": "university-of-california-los-angeles",
+        "name": "University of California, Los Angeles"
+      },
+      {
+        "id": "56ade067-a838-4c60-837c-439391f885e4",
+        "slug": "university-of-edinburgh",
+        "name": "University of Edinburgh"
+      }
+    ],
+    "staticPages": [
+      {
+        "slug": "about",
+        "title": "About",
+        "status": "published"
+      }
+    ],
+    "universityGroups": [
+      {
+        "id": "7e89ed12-4bd2-4f91-a129-94f354243522",
+        "slug": "sorbonne-university-alliance",
+        "name": "Sorbonne University Alliance"
+      },
+      {
+        "id": "a4181cd8-cce1-47cb-9a8e-a0fda76c7ccc",
+        "slug": "university-of-london",
+        "name": "University of London"
+      },
+      {
+        "id": "c9ebbea0-69d9-4e07-b74c-40e3ad008a96",
+        "slug": "la-rochelle-university",
+        "name": "La Rochelle University"
+      },
+      {
+        "id": "56b71f43-5684-45a8-9101-b92fd3f4979a",
+        "slug": "university-of-california-system",
+        "name": "University of California System"
+      }
+    ],
+    "orientationCategories": [],
+    "orientationResources": [],
+    "tags": [],
+    "categories": []
+  },
+  "derived": {
+    "userPaths": [
+      "/u/alice",
+      "/u/benc",
+      "/u/chloe",
+      "/u/diego",
+      "/u/emma",
+      "/u/ay-perso2001-04e241ed",
+      "/u/benouakrim-private-09dfb27d",
+      "/u/admin-b9e79e4f"
+    ],
+    "articlePaths": [
+      "/blog/university-admissions-step-by-step",
+      "/blog/understanding-academic-fields-guide",
+      "/blog/how-to-choose-right-university",
+      "/blog/how-to-bazoo",
+      "/blog/10-tips-international-students",
+      "/blog/study-abroad-complete-guide",
+      "/blog/top-10-engineering-fields-career-prospects",
+      "/blog/university-application-deadlines-timeline",
+      "/blog/scholarships-international-students-funding"
+    ],
+    "universityPaths": [
+      "/universities/university-of-toronto",
+      "/universities/sorbonne-university",
+      "/universities/university-of-california-berkeley",
+      "/universities/university-of-oxford",
+      "/universities/national-university-of-singapore",
+      "/universities/eth-zurich",
+      "/universities/university-of-sydney",
+      "/universities/massachusetts-institute-of-technology",
+      "/universities/la-rochelle-university-business-school",
+      "/universities/la-rochelle-university-engineering-campus",
+      "/universities/la-rochelle-university-law-social-sciences",
+      "/universities/university-of-california-los-angeles",
+      "/universities/university-of-edinburgh"
+    ],
+    "staticPagePaths": [
+      "/about"
+    ],
+    "groupPaths": [
+      "/university-groups/sorbonne-university-alliance",
+      "/university-groups/university-of-london",
+      "/university-groups/la-rochelle-university",
+      "/university-groups/university-of-california-system"
+    ],
+    "orientationCategoryPaths": [],
+    "orientationResourcePaths": [],
+    "articleMeta": [
+      {
+        "slug": "university-admissions-step-by-step",
+        "title": "Application Process: Step-by-Step Guide for University Admissions",
+        "published": true,
+        "hasContent": true
+      },
+      {
+        "slug": "understanding-academic-fields-guide",
+        "title": "Understanding Different Academic Fields: A Complete Guide",
+        "published": true,
+        "hasContent": true
+      },
+      {
+        "slug": "how-to-choose-right-university",
+        "title": "How to Choose the Right University: A Complete Guide",
+        "published": true,
+        "hasContent": true
+      },
+      {
+        "slug": "how-to-bazoo",
+        "title": "How to bazoonga",
+        "published": true,
+        "hasContent": true
+      },
+      {
+        "slug": "10-tips-international-students",
+        "title": "10 Essential Tips for International Students Studying Abroad",
+        "published": true,
+        "hasContent": true
+      },
+      {
+        "slug": "study-abroad-complete-guide",
+        "title": "Study Abroad: Everything You Need to Know",
+        "published": true,
+        "hasContent": true
+      },
+      {
+        "slug": "top-10-engineering-fields-career-prospects",
+        "title": "Top 10 Engineering Fields with Best Career Prospects",
+        "published": true,
+        "hasContent": true
+      },
+      {
+        "slug": "university-application-deadlines-timeline",
+        "title": "University Application Deadlines: Complete Timeline Guide",
+        "published": true,
+        "hasContent": true
+      },
+      {
+        "slug": "scholarships-international-students-funding",
+        "title": "Scholarships for International Students: Where to Find Funding",
+        "published": true,
+        "hasContent": true
+      }
+    ],
+    "frontendRoutePatterns": [],
+    "backendRoutePatterns": []
+  }
+}

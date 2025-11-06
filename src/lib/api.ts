@@ -231,6 +231,46 @@ export const matchingAPI = {
   },
 };
 
+// User Preferences API
+export const userPreferencesAPI = {
+  async getPreferences() {
+    return fetchAPI('/user-preferences');
+  },
+  async savePreferences(prefs: {
+    weight_tuition?: number;
+    weight_location?: number;
+    weight_ranking?: number;
+    weight_program?: number;
+    weight_language?: number;
+  }) {
+    return fetchAPI('/user-preferences', {
+      method: 'POST',
+      body: JSON.stringify(prefs),
+    });
+  },
+};
+
+// Saved Matches API
+export const savedMatchesAPI = {
+  async list() {
+    return fetchAPI('/saved-matches');
+  },
+  async isSaved(universityId: string) {
+    return fetchAPI(`/saved-matches/check/${universityId}`);
+  },
+  async save(universityId: string, note?: string) {
+    return fetchAPI('/saved-matches', {
+      method: 'POST',
+      body: JSON.stringify({ university_id: universityId, note }),
+    });
+  },
+  async unsave(universityId: string) {
+    return fetchAPI(`/saved-matches/${universityId}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
 // Public Universities API (no auth required)
 export const universitiesAPI = {
   async getUniversities() {
@@ -240,6 +280,22 @@ export const universitiesAPI = {
     return fetchAPI(`/universities/${slug}`);
   },
 };
+
+// Reviews API
+export const reviewsAPI = {
+  async list(universityId: string) {
+    return fetchAPI(`/reviews/university/${universityId}`)
+  },
+  async upsert(universityId: string, rating: number, comment?: string) {
+    return fetchAPI(`/reviews/university/${universityId}` , {
+      method: 'POST',
+      body: JSON.stringify({ rating, comment })
+    })
+  },
+  async remove(universityId: string) {
+    return fetchAPI(`/reviews/university/${universityId}`, { method: 'DELETE' })
+  }
+}
 
 // Public University Groups API (no auth required)
 export const universityGroupsAPI = {
@@ -302,5 +358,179 @@ export const adminUniversityAPI = {
     return fetchAPI(`/admin/universities/${id}`, {
       method: 'DELETE',
     });
+  },
+};
+
+// User Profile API
+export const profileAPI = {
+  async getProfile() {
+    return fetchAPI('/profile');
+  },
+  async updateProfile(data: any) {
+    return fetchAPI('/profile', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+  async updatePassword(currentPassword: string, newPassword: string) {
+    return fetchAPI('/profile/password', {
+      method: 'PUT',
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+  },
+};
+
+// Saved Items API
+export const savedItemsAPI = {
+  async getSavedItems(type?: string) {
+    const url = type ? `/saved-items?type=${type}` : '/saved-items';
+    return fetchAPI(url);
+  },
+  async getSavedItemsCount() {
+    return fetchAPI('/saved-items/count');
+  },
+  async checkIfSaved(type: string, id: string) {
+    return fetchAPI(`/saved-items/check/${type}/${id}`);
+  },
+  async saveItem(type: string, id: string, data?: any) {
+    return fetchAPI('/saved-items', {
+      method: 'POST',
+      body: JSON.stringify({ item_type: type, item_id: id, item_data: data }),
+    });
+  },
+  async unsaveItem(type: string, id: string) {
+    return fetchAPI(`/saved-items/${type}/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// University Claims API
+export const universityClaimsAPI = {
+  async createClaimRequest(data: any) {
+    return fetchAPI('/university-claims/request', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  async getMyClaimRequests() {
+    return fetchAPI('/university-claims/my-requests');
+  },
+  async getMyClaims() {
+    return fetchAPI('/university-claims/my-claims');
+  },
+  async getClaimRequest(id: string) {
+    return fetchAPI(`/university-claims/request/${id}`);
+  },
+};
+
+// Admin University Claims API
+export const adminUniversityClaimsAPI = {
+  async getClaimRequests(status?: string) {
+    const url = status ? `/admin/university-claims?status=${status}` : '/admin/university-claims';
+    return fetchAPI(url);
+  },
+  async getClaimRequest(id: string) {
+    return fetchAPI(`/admin/university-claims/${id}`);
+  },
+  async updateClaimRequestStatus(id: string, status: string, adminNotes?: string) {
+    return fetchAPI(`/admin/university-claims/${id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status, admin_notes: adminNotes }),
+    });
+  },
+  async updateClaimStatus(id: string, status: string) {
+    return fetchAPI(`/admin/university-claims/claim/${id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
+  },
+};
+
+// Admin Analytics API
+export const adminAnalyticsAPI = {
+  async overview() {
+    return fetchAPI('/admin/analytics/overview');
+  },
+  async registrationsLast7() {
+    return fetchAPI('/admin/analytics/registrations/last7');
+  },
+};
+
+// Public Users API
+export const usersPublicAPI = {
+  async getPublicProfile(usernameOrId: string) {
+    return fetchAPI(`/users/${usernameOrId}`);
+  },
+};
+
+// Profile Sections API (authenticated)
+export const profileSectionsAPI = {
+  async list(kind: 'experiences'|'education'|'projects'|'certifications') {
+    return fetchAPI(`/profile-sections/${kind}`);
+  },
+  async create(kind: 'experiences'|'education'|'projects'|'certifications', payload: any) {
+    return fetchAPI(`/profile-sections/${kind}`, { method: 'POST', body: JSON.stringify(payload) });
+  },
+  async update(kind: 'experiences'|'education'|'projects'|'certifications', id: string, payload: any) {
+    return fetchAPI(`/profile-sections/${kind}/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+  },
+  async remove(kind: 'experiences'|'education'|'projects'|'certifications', id: string) {
+    return fetchAPI(`/profile-sections/${kind}/${id}`, { method: 'DELETE' });
+  },
+};
+
+// Static Pages API (public)
+export const staticPagesAPI = {
+  async getPage(slug: string) {
+    return fetchAPI(`/pages/${slug}`);
+  },
+  async getNavbarPages() {
+    return fetchAPI('/pages/navbar/list');
+  },
+};
+
+// Admin Static Pages API
+export const adminStaticPagesAPI = {
+  async getAllPages() {
+    return fetchAPI('/admin/pages');
+  },
+  async getPage(slug: string) {
+    return fetchAPI(`/admin/pages/${slug}`);
+  },
+  async updatePage(slug: string, data: { 
+    title: string; 
+    content: string; 
+    meta_title?: string; 
+    meta_description?: string;
+    status?: 'published' | 'draft';
+    visibility_areas?: string[];
+    sort_order?: number;
+  }) {
+    return fetchAPI(`/admin/pages/${slug}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+  async deletePage(slug: string) {
+    return fetchAPI(`/admin/pages/${slug}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// Notifications API
+export const notificationsAPI = {
+  async list() {
+    return fetchAPI('/notifications');
+  },
+  async unreadCount() {
+    return fetchAPI('/notifications/unread/count');
+  },
+  async markRead(id: string) {
+    return fetchAPI(`/notifications/${id}/read`, { method: 'POST' });
+  },
+  async markAllRead() {
+    return fetchAPI('/notifications/read-all', { method: 'POST' });
   },
 };

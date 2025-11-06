@@ -1,4 +1,6 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { savedMatchesAPI } from '../../lib/api'
 
 type Props = {
   university: any
@@ -13,9 +15,51 @@ export default function UniversityCard({ university }: Props) {
   const visaMonths = university.post_study_work_visa_months || null
   const [imageError, setImageError] = React.useState(false)
   const logoUrl = university.logo_url || university.image_url
-  
+  const navigate = useNavigate()
+  const detailHref = university?.slug ? `/universities/${university.slug}` : (university?.id ? `/universities/${university.id}` : '#')
+  const [saved, setSaved] = React.useState<boolean>(false)
+  const [saving, setSaving] = React.useState<boolean>(false)
+
+  React.useEffect(() => {
+    let mounted = true
+    async function load() {
+      try {
+        const res = await savedMatchesAPI.isSaved(university.id)
+        if (!mounted) return
+        setSaved(!!res?.saved)
+      } catch {}
+    }
+    if (university?.id) load()
+    return () => { mounted = false }
+  }, [university?.id])
+
+  const toggleSave = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!university?.id || saving) return
+    setSaving(true)
+    try {
+      if (saved) {
+        await savedMatchesAPI.unsave(university.id)
+        setSaved(false)
+      } else {
+        await savedMatchesAPI.save(university.id)
+        setSaved(true)
+      }
+    } catch (e) {
+      // ignore for now
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
-    <div className="bg-white rounded-lg shadow p-4 border hover:shadow-md transition-shadow">
+    <div
+      className="bg-white rounded-lg shadow p-4 border hover:shadow-md transition-shadow cursor-pointer hover:ring-2 hover:ring-primary-100"
+      onClick={() => navigate(detailHref)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter') navigate(detailHref) }}
+    >
       <div className="flex items-start gap-4">
         {logoUrl && !imageError ? (
           <img 
@@ -37,7 +81,18 @@ export default function UniversityCard({ university }: Props) {
                 <p className="text-xs text-gray-500 mt-0.5">{university.short_name}</p>
               )}
             </div>
-            <div className="text-xs font-bold text-primary-600 whitespace-nowrap">{university.score ?? 0}%</div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleSave}
+                disabled={saving}
+                className={`text-xs px-2 py-1 rounded border ${saved ? 'bg-primary-600 text-white border-primary-600' : 'bg-white text-primary-600 border-primary-600 hover:bg-primary-50'} transition-colors`}
+                aria-label={saved ? 'Unsave' : 'Save'}
+                title={saved ? 'Unsave' : 'Save'}
+              >
+                {saved ? 'Saved' : 'Save'}
+              </button>
+              <div className="text-xs font-bold text-primary-600 whitespace-nowrap">{university.score ?? 0}%</div>
+            </div>
           </div>
           <p className="text-xs text-gray-600 mt-1 line-clamp-2">{university.description}</p>
           

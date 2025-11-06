@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Plus, Edit, Trash2, Eye, EyeOff, Search, FileText, Globe, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { adminStaticPagesAPI } from '../lib/api';
 
 interface Page {
   id: string;
@@ -36,53 +37,25 @@ export default function PagesManagementPage() {
   const fetchPages = async () => {
     try {
       setLoading(true);
-      // In real implementation, fetch from your API
-      // const data = await adminAPI.getPages();
+      const data = await adminStaticPagesAPI.getAllPages();
       
-      // Mock data for demonstration
-      const mockPages: Page[] = [
-        {
-          id: '1',
-          title: 'About Us',
-          slug: 'about',
-          status: 'published',
-          template: 'about',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: '2',
-          title: 'Contact Us',
-          slug: 'contact',
-          status: 'published',
-          template: 'contact',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: '3',
-          title: 'Privacy Policy',
-          slug: 'privacy',
-          status: 'published',
-          template: 'default',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: '4',
-          title: 'Terms of Service',
-          slug: 'terms',
-          status: 'draft',
-          template: 'default',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      ];
+      // Transform API data to match Page interface
+      const pages: Page[] = (data || []).map((page: any) => ({
+        id: page.id,
+        title: page.title,
+        slug: page.slug,
+        status: page.status || 'draft',
+        template: 'custom', // All pages use custom template now
+        created_at: page.created_at || new Date().toISOString(),
+        updated_at: page.updated_at || new Date().toISOString(),
+      }));
       
-      setPages(mockPages);
-      setFilteredPages(mockPages);
+      setPages(pages);
+      setFilteredPages(pages);
     } catch (err: any) {
       console.error('Failed to fetch pages:', err.message);
+      setPages([]);
+      setFilteredPages([]);
     } finally {
       setLoading(false);
     }
@@ -113,19 +86,16 @@ export default function PagesManagementPage() {
     setFilteredPages(filtered);
   }, [pages, searchTerm, filterStatus]);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (page: Page) => {
     if (!confirm('Are you sure you want to delete this page? This action cannot be undone.')) {
       return;
     }
 
     try {
-      // In real implementation, delete from your API
-      // await adminAPI.deletePage(id);
-      
-      console.log('Deleting page:', id);
+      await adminStaticPagesAPI.deletePage(page.slug);
       
       // Update local state
-      setPages(pages.filter(page => page.id !== id));
+      setPages(pages.filter(p => p.id !== page.id));
     } catch (err: any) {
       alert('Failed to delete page: ' + err.message);
     }
@@ -133,33 +103,51 @@ export default function PagesManagementPage() {
 
   const handleDuplicate = async (page: Page) => {
     try {
-      // In real implementation, duplicate via your API
-      // const newPage = await adminAPI.duplicatePage(page.id);
+      const originalPage = await adminStaticPagesAPI.getPage(page.slug);
       
-      const newPage: Page = {
-        ...page,
-        id: Date.now().toString(),
-        title: `${page.title} (Copy)`,
-        slug: `${page.slug}-copy`,
-        status: 'draft'
-      };
-      
-      setPages([newPage, ...pages]);
+      if (originalPage) {
+        const newSlug = `${page.slug}-copy-${Date.now()}`;
+        await adminStaticPagesAPI.updatePage(newSlug, {
+          title: `${originalPage.title} (Copy)`,
+          content: originalPage.content,
+          meta_title: originalPage.meta_title,
+          meta_description: originalPage.meta_description,
+          status: 'draft',
+          visibility_areas: originalPage.visibility_areas || [],
+          sort_order: originalPage.sort_order || 0,
+        });
+        
+        // Refresh pages list
+        fetchPages();
+      }
     } catch (err: any) {
       alert('Failed to duplicate page: ' + err.message);
     }
   };
 
-  const toggleStatus = async (id: string) => {
+  const toggleStatus = async (page: Page) => {
     try {
-      // In real implementation, update via your API
-      // await adminAPI.updatePageStatus(id, newStatus);
+      const pageData = await adminStaticPagesAPI.getPage(page.slug);
       
-      setPages(pages.map(page => 
-        page.id === id 
-          ? { ...page, status: page.status === 'published' ? 'draft' : 'published' }
-          : page
-      ));
+      if (pageData) {
+        const newStatus = page.status === 'published' ? 'draft' : 'published';
+        await adminStaticPagesAPI.updatePage(page.slug, {
+          title: pageData.title,
+          content: pageData.content,
+          meta_title: pageData.meta_title,
+          meta_description: pageData.meta_description,
+          status: newStatus,
+          visibility_areas: pageData.visibility_areas || [],
+          sort_order: pageData.sort_order || 0,
+        });
+        
+        // Update local state
+        setPages(pages.map(p => 
+          p.id === page.id 
+            ? { ...p, status: newStatus }
+            : p
+        ));
+      }
     } catch (err: any) {
       alert('Failed to update page status: ' + err.message);
     }
@@ -357,7 +345,7 @@ export default function PagesManagementPage() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <button
-                              onClick={() => toggleStatus(page.id)}
+                              onClick={() => toggleStatus(page)}
                               className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full cursor-pointer transition-colors ${
                                 page.status === 'published'
                                   ? 'bg-green-100 text-green-800 hover:bg-green-200'
@@ -382,7 +370,7 @@ export default function PagesManagementPage() {
                                 <Eye className="h-5 w-5" />
                               </a>
                               <Link
-                                to={`/admin/pages/${page.id}/edit`}
+                                to={`/admin/pages/${page.slug}/edit`}
                                 className="text-blue-600 hover:text-blue-900"
                                 title="Edit page"
                               >
@@ -396,7 +384,7 @@ export default function PagesManagementPage() {
                                 <Plus className="h-5 w-5" />
                               </button>
                               <button
-                                onClick={() => handleDelete(page.id)}
+                                onClick={() => handleDelete(page)}
                                 className="text-red-600 hover:text-red-900"
                                 title="Delete page"
                               >

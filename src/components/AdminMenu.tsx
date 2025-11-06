@@ -9,7 +9,10 @@ import {
   Menu,
   X,
   ChevronRight,
-  Building // +++ ADD THIS IMPORT +++
+  Building2,
+  Shield,
+  School,
+  Mail
 } from 'lucide-react';
 
 interface AdminMenuProps {
@@ -22,10 +25,16 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
 
   const menuItems = [
     {
-      name: 'Dashboard',
+      name: 'Admin Dashboard',
       icon: LayoutDashboard,
       path: '/admin',
       description: 'Overview and statistics'
+    },
+    {
+      name: 'User Dashboard',
+      icon: LayoutDashboard,
+      path: '/dashboard',
+      description: 'User profile and saved items'
     },
     {
       name: 'Posts',
@@ -33,14 +42,24 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
       path: '/admin/articles',
       description: 'Manage articles and blog posts'
     },
-    // +++ ADD THIS OBJECT +++
     {
       name: 'Universities',
-      icon: Building,
+      icon: School,
       path: '/admin/universities',
       description: 'Manage university data'
     },
-    // +++ END OF ADDITION +++
+    {
+      name: 'University Groups',
+      icon: Building2,
+      path: '/admin/university-groups',
+      description: 'Manage university groups'
+    },
+    {
+      name: 'Claim Requests',
+      icon: Shield,
+      path: '/admin/university-claims',
+      description: 'Review university claims'
+    },
     {
       name: 'Media',
       icon: Image,
@@ -52,6 +71,18 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
       icon: File,
       path: '/admin/pages',
       description: 'Create and edit static pages'
+    },
+    {
+      name: 'About Page',
+      icon: FileText,
+      path: '/admin/about',
+      description: 'Edit About Us page'
+    },
+    {
+      name: 'Contact Page',
+      icon: Mail,
+      path: '/admin/contact',
+      description: 'Manage Contact page settings'
     },
     {
       name: 'Appearance',
@@ -69,7 +100,8 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
 
   const isActive = (path: string) => {
     if (path === '/admin' && location.pathname === '/admin') return true;
-    if (path !== '/admin' && location.pathname.startsWith(path)) return true;
+    if (path === '/dashboard' && location.pathname === '/dashboard') return true;
+    if (path !== '/admin' && path !== '/dashboard' && location.pathname.startsWith(path)) return true;
     return false;
   };
 
@@ -88,7 +120,8 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
         className={`
           fixed top-0 left-0 h-full bg-white shadow-2xl z-50 transition-all duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-          w-72
+          w-80
+          flex flex-col
         `}
       >
         {/* Header */}
@@ -112,8 +145,8 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
           </div>
         </div>
 
-        {/* Menu Items */}
-        <div className="flex-1 overflow-y-auto p-4">
+        {/* Menu Items - Scrollable */}
+        <div className="flex-1 overflow-y-auto p-4" style={{ minHeight: 0 }}>
           <div className="space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
@@ -155,6 +188,18 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
           <div className="mt-8 p-4 bg-gray-50 rounded-xl">
             <h3 className="font-semibold text-gray-800 mb-3 text-sm">Quick Actions</h3>
             <div className="space-y-2">
+              {import.meta.env.DEV && (
+                <Link
+                  to="/__dev"
+                  onClick={onToggle}
+                  className="flex items-center gap-3 p-3 bg-white rounded-lg hover:shadow-sm transition-all duration-200 text-sm text-gray-700 hover:text-blue-600"
+                >
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <LayoutDashboard className="h-4 w-4 text-purple-600" />
+                  </div>
+                  <span className="font-medium">Dev Dashboard</span>
+                </Link>
+              )}
               <Link
                 to="/admin/articles/new"
                 onClick={onToggle}
@@ -179,8 +224,8 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-gray-200">
+        {/* Footer - Fixed at bottom */}
+        <div className="p-4 border-t border-gray-200 bg-white flex-shrink-0">
           <div className="flex items-center gap-3 text-xs text-gray-500">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             <span>System Online</span>

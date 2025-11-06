@@ -4,7 +4,7 @@ import RangeSlider from '../components/matching/inputs/RangeSlider'
 import ToggleGroup from '../components/matching/inputs/ToggleGroup'
 import MultiSelectPills from '../components/matching/inputs/MultiSelectPills'
 import UniversityCard from '../components/matching/UniversityCard'
-import { matchingAPI } from '../lib/api'
+import { matchingAPI, userPreferencesAPI } from '../lib/api'
 
 function useDebouncedValue(value: any, delay = 400) {
   const [debounced, setDebounced] = useState(value)
@@ -30,6 +30,14 @@ export default function MatchingDashboardPage() {
   const debouncedState = useDebouncedValue(state, 500)
   const [results, setResults] = useState<any[]>([])
   const [flash, setFlash] = useState<string | null>(null)
+  const [weights, setWeights] = useState({
+    weight_tuition: 0.5,
+    weight_location: 0.5,
+    weight_ranking: 0.5,
+    weight_program: 0.5,
+    weight_language: 0.5,
+  })
+  const debouncedWeights = useDebouncedValue(weights, 600)
 
   useEffect(() => {
     let mounted = true
@@ -54,6 +62,36 @@ export default function MatchingDashboardPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedState])
 
+  // Load existing weights on mount
+  useEffect(() => {
+    let mounted = true
+    async function loadPrefs() {
+      try {
+        const data = await userPreferencesAPI.getPreferences()
+        if (!mounted) return
+        if (data) setWeights({
+          weight_tuition: Number(data.weight_tuition ?? 0.5),
+          weight_location: Number(data.weight_location ?? 0.5),
+          weight_ranking: Number(data.weight_ranking ?? 0.5),
+          weight_program: Number(data.weight_program ?? 0.5),
+          weight_language: Number(data.weight_language ?? 0.5),
+        })
+      } catch {}
+    }
+    loadPrefs()
+    return () => { mounted = false }
+  }, [])
+
+  // Persist weights when changed
+  useEffect(() => {
+    async function savePrefs() {
+      try {
+        await userPreferencesAPI.savePreferences(debouncedWeights)
+      } catch {}
+    }
+    savePrefs()
+  }, [debouncedWeights])
+
   // modules list intentionally omitted (unused) to avoid unused local errors
 
   return (
@@ -65,6 +103,20 @@ export default function MatchingDashboardPage() {
 
       <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
         <div className="space-y-4">
+          <MixerModule
+            title="Weights"
+            isEnabled={true}
+            onToggle={()=>{}}
+            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 17h18M6 9h12M10 3h4"/></svg>}
+          >
+            <div className="space-y-3">
+              <RangeSlider label="Tuition Importance" value={weights.weight_tuition} min={0} max={1} step={0.05} onChange={(v)=> setWeights(w=>({ ...w, weight_tuition: v }))} />
+              <RangeSlider label="Location Importance" value={weights.weight_location} min={0} max={1} step={0.05} onChange={(v)=> setWeights(w=>({ ...w, weight_location: v }))} />
+              <RangeSlider label="Ranking/Visa Importance" value={weights.weight_ranking} min={0} max={1} step={0.05} onChange={(v)=> setWeights(w=>({ ...w, weight_ranking: v }))} />
+              <RangeSlider label="Program Fit Importance" value={weights.weight_program} min={0} max={1} step={0.05} onChange={(v)=> setWeights(w=>({ ...w, weight_program: v }))} />
+              <RangeSlider label="Language Importance" value={weights.weight_language} min={0} max={1} step={0.05} onChange={(v)=> setWeights(w=>({ ...w, weight_language: v }))} />
+            </div>
+          </MixerModule>
           <MixerModule
             title="Academics"
             isEnabled={state.academics.enabled}

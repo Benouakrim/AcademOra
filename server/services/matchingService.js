@@ -18,6 +18,20 @@ function scoreUniversity(uni = {}, criteria = {}) {
 
   // Start with base score of 100
   let score = 100;
+  // Weights from user preferences, default 0.5 each
+  const weights = criteria._weights || {};
+  const wTuition = clamp01(Number(weights.weight_tuition ?? 0.5));
+  const wLocation = clamp01(Number(weights.weight_location ?? 0.5));
+  const wRanking = clamp01(Number(weights.weight_ranking ?? 0.5));
+  const wProgram = clamp01(Number(weights.weight_program ?? 0.5));
+  const wLanguage = clamp01(Number(weights.weight_language ?? 0.5));
+
+  function clamp01(n){
+    if (Number.isNaN(n)) return 0.5;
+    if (n < 0) return 0;
+    if (n > 1) return 1;
+    return n;
+  }
 
   // Helper getters and safe normalization
   const get = (obj, path, fallback = undefined) => {
@@ -34,8 +48,9 @@ function scoreUniversity(uni = {}, criteria = {}) {
     const minGpa = get(criteria, 'academics.filters.minGpa', null);
     if (typeof minGpa === 'number' && typeof uni.min_gpa === 'number') {
       if (uni.min_gpa < minGpa) {
-        score -= 20;
-        explanations.push(`Academics: university min_gpa ${uni.min_gpa} < required ${minGpa} (-20)`);
+        const penalty = Math.round(20 * wProgram);
+        score -= penalty;
+        explanations.push(`Academics: university min_gpa ${uni.min_gpa} < required ${minGpa} (-${penalty})`);
       } else {
         explanations.push(`Academics: university min_gpa ${uni.min_gpa} >= required ${minGpa} (ok)`);
       }
@@ -57,8 +72,9 @@ function scoreUniversity(uni = {}, criteria = {}) {
       }
 
       if (mismatch) {
-        score -= 10;
-        explanations.push(`Academics: test policy mismatch (${testPolicy}) (-10)`);
+        const penalty = Math.round(10 * wProgram);
+        score -= penalty;
+        explanations.push(`Academics: test policy mismatch (${testPolicy}) (-${penalty})`);
       } else {
         explanations.push(`Academics: test policy OK (${testPolicy})`);
       }
@@ -73,8 +89,9 @@ function scoreUniversity(uni = {}, criteria = {}) {
     const maxBudget = get(criteria, 'financials.filters.maxBudget', null);
     if (typeof maxBudget === 'number' && typeof uni.avg_tuition_per_year === 'number') {
       if (uni.avg_tuition_per_year > maxBudget) {
-        score -= 30;
-        explanations.push(`Financials: tuition ${uni.avg_tuition_per_year} > maxBudget ${maxBudget} (-30)`);
+        const penalty = Math.round(30 * wTuition);
+        score -= penalty;
+        explanations.push(`Financials: tuition ${uni.avg_tuition_per_year} > maxBudget ${maxBudget} (-${penalty})`);
       } else {
         explanations.push(`Financials: tuition ${uni.avg_tuition_per_year} <= maxBudget ${maxBudget} (ok)`);
       }
@@ -91,8 +108,9 @@ function scoreUniversity(uni = {}, criteria = {}) {
       const uniCountry = uni.country ? String(uni.country).toLowerCase() : '';
       const normalized = countries.map((c) => String(c).toLowerCase());
       if (!normalized.includes(uniCountry)) {
-        score -= 15;
-        explanations.push(`Lifestyle: country ${uni.country || 'unknown'} not in preferred list (-15)`);
+        const penalty = Math.round(15 * wLocation);
+        score -= penalty;
+        explanations.push(`Lifestyle: country ${uni.country || 'unknown'} not in preferred list (-${penalty})`);
       } else {
         explanations.push(`Lifestyle: country ${uni.country} preferred (ok)`);
       }
@@ -109,8 +127,9 @@ function scoreUniversity(uni = {}, criteria = {}) {
     const minVisaMonths = get(criteria, 'future.filters.minVisaMonths', null);
     if (typeof minVisaMonths === 'number' && typeof uni.post_grad_visa_strength === 'number') {
       if (uni.post_grad_visa_strength < minVisaMonths) {
-        score -= 20;
-        explanations.push(`Future: visa months ${uni.post_grad_visa_strength} < required ${minVisaMonths} (-20)`);
+        const penalty = Math.round(20 * wRanking);
+        score -= penalty;
+        explanations.push(`Future: visa months ${uni.post_grad_visa_strength} < required ${minVisaMonths} (-${penalty})`);
       } else {
         explanations.push(`Future: visa months ${uni.post_grad_visa_strength} >= required ${minVisaMonths} (ok)`);
       }

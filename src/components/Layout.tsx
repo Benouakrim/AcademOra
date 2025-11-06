@@ -4,6 +4,8 @@ import Navbar from './Navbar'
 import Footer from './Footer'
 import AdminMenu from './AdminMenu'
 import { getCurrentUser } from '../lib/api'
+import DevNavigator from './dev/DevNavigator'
+import { registerVisitedPath } from '../devtools/routeRegistry'
 
 interface LayoutProps {
   children: ReactNode
@@ -15,6 +17,12 @@ export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
 
   useEffect(() => {
+    // Track visited paths for Dev Navigator (helps surface dynamic instances)
+    if (import.meta.env.DEV) {
+      registerVisitedPath(location.pathname)
+      // Trigger backend scanner (non-blocking)
+      fetch((import.meta as any).env?.VITE_API_URL?.replace(/\/$/, '') + '/dev/scan').catch(()=>{})
+    }
     // Check if user is admin
     const user = getCurrentUser();
     const adminRoutes = ['/admin', '/admin/', '/admin/articles', '/admin/users'];
@@ -28,21 +36,42 @@ export default function Layout({ children }: LayoutProps) {
     }
   }, [location.pathname]);
 
+  // Determine if footer should be hidden (editor pages)
+  const shouldHideFooter = () => {
+    const pathname = location.pathname;
+    
+    // Editor routes that should hide footer
+    const editorPatterns = [
+      /^\/admin\/articles\/(new|edit\/)/,  // /admin/articles/new or /admin/articles/edit/:id
+      /^\/admin\/pages\/(new|.*\/edit)$/,   // /admin/pages/new or /admin/pages/:slug/edit
+      /^\/admin\/universities\/(new|edit\/)/, // /admin/universities/new or /admin/universities/edit/:id
+      /^\/admin\/university-groups\/(new|edit\/)/, // /admin/university-groups/new or /admin/university-groups/edit/:id
+    ];
+    
+    return editorPatterns.some(pattern => pattern.test(pathname));
+  };
+
+  const hideFooter = shouldHideFooter();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar 
         onAdminMenuToggle={() => setShowAdminMenu(!showAdminMenu)}
         showAdminMenu={showAdminMenu}
+        isAdmin={isAdmin}
       />
       <main className="flex-grow">
         {children}
       </main>
-      <Footer />
+      {!hideFooter && <Footer />}
       {isAdmin && (
         <AdminMenu 
           isOpen={showAdminMenu} 
           onToggle={() => setShowAdminMenu(!showAdminMenu)} 
         />
+      )}
+      {import.meta.env.DEV && (
+        <DevNavigator />
       )}
     </div>
   )

@@ -6,6 +6,7 @@ import { getCurrentUser } from '../lib/api'
 import MarkdownPreview from '@uiw/react-markdown-preview'
 import rehypeRaw from 'rehype-raw'
 import remarkGfm from 'remark-gfm'
+import SaveButton from '../components/SaveButton'
 import '../styles/editor.css'
 
 interface Article {
@@ -169,15 +170,22 @@ export default function ArticlePage() {
             {article.title}
           </h1>
 
-          <div className="flex items-center text-gray-600 mb-8 pb-8 border-b border-gray-200">
-            <div className="flex items-center mr-6">
-              <Calendar className="h-5 w-5 mr-2" />
-              <span>{formatDate(article.created_at)}</span>
+          <div className="flex items-center justify-between mb-8 pb-8 border-b border-gray-200">
+            <div className="flex items-center text-gray-600">
+              <div className="flex items-center mr-6">
+                <Calendar className="h-5 w-5 mr-2" />
+                <span>{formatDate(article.created_at)}</span>
+              </div>
+              <div className="flex items-center">
+                <User className="h-5 w-5 mr-2" />
+                <span>Author</span>
+              </div>
             </div>
-            <div className="flex items-center">
-              <User className="h-5 w-5 mr-2" />
-              <span>Author</span>
-            </div>
+            <SaveButton
+              itemType="article"
+              itemId={article.id}
+              itemData={{ title: article.title, excerpt: article.excerpt, slug: article.slug }}
+            />
           </div>
 
           {article.featured_image && (

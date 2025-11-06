@@ -12,6 +12,20 @@ import adminUniversityRoutes from './routes/adminUniversities.js';
 import universitiesRoutes from './routes/universities.js';
 import universityGroupsRoutes from './routes/universityGroups.js';
 import adminUniversityGroupsRoutes from './routes/adminUniversityGroups.js';
+import profileRoutes from './routes/profile.js';
+import savedItemsRoutes from './routes/savedItems.js';
+import universityClaimsRoutes from './routes/universityClaims.js';
+import adminUniversityClaimsRoutes from './routes/adminUniversityClaims.js';
+import staticPagesRoutes from './routes/staticPages.js';
+import adminStaticPagesRoutes from './routes/adminStaticPages.js';
+import userPreferencesRoutes from './routes/userPreferences.js';
+import savedMatchesRoutes from './routes/savedMatches.js';
+import reviewsRoutes from './routes/reviews.js';
+import notificationsRoutes from './routes/notifications.js';
+import adminAnalyticsRoutes from './routes/adminAnalytics.js';
+import usersPublicRoutes from './routes/usersPublic.js';
+import profileSectionsRoutes from './routes/profileSections.js';
+import devRoutes from './routes/dev.js';
 
 dotenv.config();
 
@@ -32,6 +46,14 @@ app.use('/api/orientation', orientationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/matching', matchingRoutes);
+app.use('/api/user-preferences', userPreferencesRoutes);
+app.use('/api/saved-matches', savedMatchesRoutes);
+app.use('/api/reviews', reviewsRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/admin/analytics', adminAnalyticsRoutes);
+app.use('/api/users', usersPublicRoutes);
+app.use('/api/profile-sections', profileSectionsRoutes);
+app.use('/api/dev', devRoutes);
 // Public universities (no auth required)
 app.use('/api/universities', universitiesRoutes);
 // Public university groups (no auth required)
@@ -40,6 +62,18 @@ app.use('/api/university-groups', universityGroupsRoutes);
 app.use('/api/admin/universities', adminUniversityRoutes);
 // Admin university groups CRUD
 app.use('/api/admin/university-groups', adminUniversityGroupsRoutes);
+// User profile management
+app.use('/api/profile', profileRoutes);
+// Saved items
+app.use('/api/saved-items', savedItemsRoutes);
+// University claims (public routes for users)
+app.use('/api/university-claims', universityClaimsRoutes);
+// Admin university claims management
+app.use('/api/admin/university-claims', adminUniversityClaimsRoutes);
+// Public static pages
+app.use('/api/pages', staticPagesRoutes);
+// Admin static pages management
+app.use('/api/admin/pages', adminStaticPagesRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -14,8 +14,7 @@
     "db:seed": "node server/database/seed.js",
     "db:verify": "node server/database/verify-setup.js",
     "db:create-admin": "node server/database/create-admin.js",
-    "db:migrate": "node server/database/migrate.js"
-    ,
+    "db:migrate": "node server/database/migrate.js",
     "test:matching": "node server/scripts/testMatchingApi.cjs"
   },
   "dependencies": {
@@ -38,9 +37,12 @@
     "framer-motion": "^12.23.24",
     "i18next": "^23.7.6",
     "i18next-browser-languagedetector": "^7.2.0",
+    "i18next-fetch-backend": "^7.0.0",
+    "i18next-http-backend": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.294.0",
     "multer": "^2.0.2",
+    "node-fetch": "^2.7.0",
     "node-mailjet": "^6.0.4",
     "nodemailer": "^7.0.10",
     "pg": "^8.16.3",

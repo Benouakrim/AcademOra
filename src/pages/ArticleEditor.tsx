@@ -25,6 +25,8 @@ export default function ArticleEditor() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Array<{ id: string; name: string; slug: string; type: string }>>([]);
+  const [termsByTaxonomy, setTermsByTaxonomy] = useState<Record<string, Array<{ id: string; name: string }>>>({});
 
   const [showSEO, setShowSEO] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,6 +35,7 @@ export default function ArticleEditor() {
     content: '',
     excerpt: '',
     category: 'General',
+    term_ids: [] as string[],
     published: false,
     featured_image: '',
     meta_title: '',
@@ -103,11 +106,53 @@ export default function ArticleEditor() {
       return;
     }
 
+    // Load categories and taxonomy terms
+    loadCategories();
+    loadTaxonomyTerms();
+
     // If editing, fetch the article
     if (isEditMode && id) {
       fetchArticle();
     }
   }, [id, isEditMode, navigate]);
+
+  const loadCategories = async () => {
+    try {
+      // Load only blog categories for article editor
+      const data = await adminAPI.getAllCategories('blog');
+      setCategories(Array.isArray(data) ? data : []);
+      // Set default category if none selected and categories exist
+      if (!formData.category && data && data.length > 0) {
+        setFormData(prev => ({ ...prev, category: data[0].name }));
+      }
+    } catch (err: any) {
+      console.error('Error loading categories:', err);
+      // Fallback to default categories if API fails
+      setCategories([
+        { id: '1', name: 'General', slug: 'general', type: 'blog' },
+        { id: '2', name: 'Education', slug: 'education', type: 'blog' },
+        { id: '3', name: 'Tips', slug: 'tips', type: 'blog' },
+        { id: '4', name: 'Orientation', slug: 'orientation', type: 'blog' },
+        { id: '5', name: 'Study Abroad', slug: 'study-abroad', type: 'blog' },
+      ]);
+    }
+  };
+
+  const TAXONOMY_KEYS = ['scope', 'content_type', 'topic', 'field'];
+
+  const loadTaxonomyTerms = async () => {
+    try {
+      const entries: [string, Array<{ id: string; name: string }>] [] = [];
+      for (const key of TAXONOMY_KEYS) {
+        const data = await adminAPI.listTerms(key);
+        const simplified = (Array.isArray(data) ? data : []).map((t: any) => ({ id: t.id, name: t.name }));
+        entries.push([key, simplified]);
+      }
+      setTermsByTaxonomy(Object.fromEntries(entries));
+    } catch (err) {
+      console.error('Error loading taxonomy terms', err);
+    }
+  };
 
   // Update editor content when formData.content changes
   useEffect(() => {
@@ -133,12 +178,18 @@ export default function ArticleEditor() {
       }
       
       const article = await adminAPI.getArticleById(id!);
+      // Extract term_ids from article.terms if available
+      const termIds = Array.isArray(article.terms) 
+        ? article.terms.map((t: any) => t.id).filter(Boolean)
+        : [];
+      
       setFormData({
         title: article.title || '',
         slug: article.slug || '',
         content: article.content || '',
         excerpt: article.excerpt || '',
         category: article.category || 'General',
+        term_ids: termIds,
         published: article.published || false,
         featured_image: article.featured_image || '',
         meta_title: article.meta_title || article.title || '',
@@ -162,6 +213,13 @@ export default function ArticleEditor() {
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
     }));
+  };
+
+  const toggleTerm = (termId: string) => {
+    setFormData((prev) => {
+      const exists = prev.term_ids.includes(termId);
+      return { ...prev, term_ids: exists ? prev.term_ids.filter((id) => id !== termId) : [...prev.term_ids, termId] };
+    });
   };
 
   const generateSlug = (title: string) => {
@@ -280,12 +338,66 @@ export default function ArticleEditor() {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 bg-gray-50 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 transition-all duration-200 hover:bg-white hover:border-blue-300 focus:bg-white focus:border-blue-500"
               >
+                {categories.length > 0 ? (
+                  categories.map((cat) => (
+                    <option key={cat.id} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))
+                ) : (
+                  <>
                 <option value="General">General</option>
                 <option value="Education">Education</option>
                 <option value="Tips">Tips</option>
                 <option value="Orientation">Orientation</option>
                 <option value="Study Abroad">Study Abroad</option>
+                  </>
+                )}
               </select>
+              {categories.length === 0 && (
+                <p className="mt-1 text-xs text-gray-500">
+                  Loading categories... Using default options.
+                </p>
+              )}
+            </div>
+
+            {/* Taxonomies (multi-select) */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Classifications
+              </label>
+              <div className="space-y-4">
+                {TAXONOMY_KEYS.map((key) => {
+                  const label = key === 'content_type' ? 'Content Type' : key.charAt(0).toUpperCase() + key.slice(1);
+                  const terms = termsByTaxonomy[key] || [];
+                  return (
+                    <div key={key}>
+                      <div className="text-xs font-medium text-gray-600 mb-2">{label}</div>
+                      <div className="flex gap-2 flex-wrap">
+                        {terms.length === 0 ? (
+                          <div className="text-xs text-gray-400">No options</div>
+                        ) : (
+                          terms.map((t) => {
+                            const active = (formData.term_ids || []).includes(t.id);
+                            return (
+                              <button
+                                type="button"
+                                key={t.id}
+                                onClick={() => toggleTerm(t.id)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-shadow border ${
+                                  active ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-gray-200 text-gray-700'
+                                }`}
+                              >
+                                {t.name}
+                              </button>
+                            );
+                          })
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Excerpt */}

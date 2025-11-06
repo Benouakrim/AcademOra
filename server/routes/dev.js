@@ -5,6 +5,14 @@ import { runDevScan } from '../dev/scanner.js'
 
 const router = express.Router()
 
+// Guard: only allow in development
+router.use((req, res, next) => {
+  if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') {
+    return res.status(403).json({ error: 'dev endpoints disabled' })
+  }
+  next()
+})
+
 router.get('/scan', async (req, res) => {
   try {
     const data = await runDevScan()

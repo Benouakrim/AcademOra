@@ -119,8 +119,9 @@ export const authAPI = {
 
 // Blog API
 export const blogAPI = {
-  async getArticles() {
-    return fetchAPI('/blog');
+  async getArticles(category?: string) {
+    const url = category ? `/blog?category=${encodeURIComponent(category)}` : '/blog';
+    return fetchAPI(url);
   },
 
   async getArticle(slug: string) {
@@ -132,6 +133,33 @@ export const blogAPI = {
 export const adminAPI = {
   async getAllArticles() {
     return fetchAPI('/admin/articles');
+  },
+  
+  // Taxonomy Admin
+  async listTaxonomies() {
+    return fetchAPI('/admin/taxonomies');
+  },
+  async createTaxonomy(payload: { key: string; name: string; description?: string; sort_order?: number }) {
+    return fetchAPI('/admin/taxonomies', { method: 'POST', body: JSON.stringify(payload) });
+  },
+  async updateTaxonomy(id: string, payload: { name?: string; description?: string; sort_order?: number }) {
+    return fetchAPI(`/admin/taxonomies/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+  },
+  async deleteTaxonomy(id: string) {
+    return fetchAPI(`/admin/taxonomies/${id}`, { method: 'DELETE' });
+  },
+  async listTerms(taxonomyKey?: string) {
+    const url = taxonomyKey ? `/admin/taxonomy-terms?taxonomy=${encodeURIComponent(taxonomyKey)}` : '/admin/taxonomy-terms';
+    return fetchAPI(url);
+  },
+  async createTerm(payload: { taxonomy_id: string; name: string; slug: string; description?: string; color?: string; sort_order?: number }) {
+    return fetchAPI('/admin/taxonomy-terms', { method: 'POST', body: JSON.stringify(payload) });
+  },
+  async updateTerm(id: string, payload: { name?: string; slug?: string; description?: string; color?: string; sort_order?: number }) {
+    return fetchAPI(`/admin/taxonomy-terms/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+  },
+  async deleteTerm(id: string) {
+    return fetchAPI(`/admin/taxonomy-terms/${id}`, { method: 'DELETE' });
   },
 
   async getArticleById(id: string) {
@@ -160,6 +188,52 @@ export const adminAPI = {
 
   async getUsers() {
     return fetchAPI('/admin/users');
+  },
+
+  // Categories
+  async getAllCategories(type?: string) {
+    const url = type ? `/admin/categories?type=${encodeURIComponent(type)}` : '/admin/categories';
+    return fetchAPI(url);
+  },
+
+  async getCategoryById(id: string) {
+    return fetchAPI(`/admin/categories/${id}`);
+  },
+
+  async createCategory(categoryData: { 
+    name: string; 
+    slug: string; 
+    type?: string;
+    description?: string;
+    icon?: string;
+    color?: string;
+    sort_order?: number;
+  }) {
+    return fetchAPI('/admin/categories', {
+      method: 'POST',
+      body: JSON.stringify(categoryData),
+    });
+  },
+
+  async updateCategory(id: string, categoryData: { 
+    name?: string; 
+    slug?: string;
+    type?: string;
+    description?: string;
+    icon?: string;
+    color?: string;
+    sort_order?: number;
+  }) {
+    return fetchAPI(`/admin/categories/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(categoryData),
+    });
+  },
+
+  async deleteCategory(id: string) {
+    return fetchAPI(`/admin/categories/${id}`, {
+      method: 'DELETE',
+    });
   },
 };
 

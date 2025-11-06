@@ -3,10 +3,29 @@ import { getArticles, getArticleBySlug } from '../data/articles.js';
 
 const router = express.Router();
 
-// Get all published articles
+// Simple in-memory cache for list endpoint
+let listCache = { data: null, at: 0 };
+const LIST_TTL_MS = 60 * 1000;
+
+// Get all published articles (optionally filtered by category)
 router.get('/', async (req, res) => {
   try {
-    const articles = await getArticles();
+    const { category } = req.query;
+    const now = Date.now();
+    const cacheKey = category || 'all';
+    
+    // Use cache only if no category filter
+    if (!category && listCache.data && now - listCache.at < LIST_TTL_MS) {
+      return res.json(listCache.data);
+    }
+    
+    const articles = await getArticles(category || null);
+    
+    // Cache only if no category filter
+    if (!category) {
+      listCache = { data: articles, at: now };
+    }
+    
     res.json(articles);
   } catch (error) {
     res.status(500).json({ error: error.message });

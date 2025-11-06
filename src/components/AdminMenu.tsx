@@ -12,7 +12,8 @@ import {
   Building2,
   Shield,
   School,
-  Mail
+  Mail,
+  Tags
 } from 'lucide-react';
 
 interface AdminMenuProps {
@@ -65,6 +66,12 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
       icon: Image,
       path: '/admin/media',
       description: 'Upload and manage media files'
+    },
+    {
+      name: 'Taxonomies & Categories',
+      icon: Tags,
+      path: '/admin/taxonomies',
+      description: 'Manage taxonomies, terms, and categories'
     },
     {
       name: 'Pages',

@@ -242,9 +242,12 @@ export default function HomePage() {
                       </div>
                     )}
                     <div className="mb-2">
-                      <span className="inline-block bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 text-xs font-semibold px-3 py-1 rounded-full border border-primary-200 shadow-sm">
+                      <Link
+                        to={`/blog/category/${encodeURIComponent(a.category)}`}
+                        className="inline-block bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 text-xs font-semibold px-3 py-1 rounded-full border border-primary-200 shadow-sm hover:from-primary-200 hover:to-primary-100 transition-colors"
+                      >
                         {a.category}
-                      </span>
+                      </Link>
                     </div>
                     <h3 className="text-lg font-extrabold mb-2 text-gray-900 group-hover:text-primary-600 transition-colors">
                       <Link to={`/blog/${a.slug}`}>{a.title}</Link>

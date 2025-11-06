@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-11-06T10:46:23.011Z",
+  "generatedAt": "2025-11-06T14:19:30.343Z",
   "projectRoot": "C:\\Users\\ayper\\Desktop\\Projects Ayoub\\Coding",
   "files": {
     "pages": [],
@@ -102,13 +102,6 @@
         "_content": "<h2>Why Study Abroad?</h2><p>Studying abroad offers incredible opportunities for personal growth, cultural immersion, and academic excellence. It's an experience that can transform your worldview and career prospects.</p><h2>Popular Destinations</h2><p>Some of the most popular study abroad destinations include the United States, United Kingdom, Canada, Germany, and Australia.</p><h2>Application Process</h2><p>The application process typically involves researching programs, preparing documents, taking standardized tests, applying for visas, and securing financial aid.</p>"
       },
       {
-        "id": "f7880352-e2d8-4019-aea5-5a334fb1105b",
-        "slug": "top-10-engineering-fields-career-prospects",
-        "title": "Top 10 Engineering Fields with Best Career Prospects",
-        "published": true,
-        "_content": "<h2>Introduction</h2><p>Engineering is one of the most versatile and rewarding career paths. Here are the top 10 engineering fields with excellent career prospects.</p><h2>1. Software Engineering</h2><p>With digital transformation accelerating, software engineers are in high demand.</p><h2>2. Artificial Intelligence & Machine Learning</h2><p>AI engineers design and develop intelligent systems.</p><h2>Conclusion</h2><p>Each engineering field offers unique opportunities. Choose based on your interests and career goals.</p>"
-      },
-      {
         "id": "e4528411-c099-4d7f-b004-df18b010b178",
         "slug": "university-application-deadlines-timeline",
         "title": "University Application Deadlines: Complete Timeline Guide",
@@ -121,6 +114,13 @@
         "title": "Scholarships for International Students: Where to Find Funding",
         "published": true,
         "_content": "<h2>Introduction</h2><p>Finding scholarships can significantly reduce the financial burden of studying abroad. Here's where to look for funding opportunities.</p><h2>Types of Scholarships</h2><p>Merit-based, need-based, country-specific, and subject-specific scholarships are available.</p><h2>Where to Find</h2><p>Check university websites, government programs like Fulbright and Chevening, and private organizations.</p><h2>Application Tips</h2><p>Start searching early, apply to multiple scholarships, tailor each application, and write compelling essays.</p>"
+      },
+      {
+        "id": "f7880352-e2d8-4019-aea5-5a334fb1105b",
+        "slug": "top-10-engineering-fields-career-prospects",
+        "title": "Top 10 Engineering Fields with Best Career Prospects",
+        "published": true,
+        "_content": "<h2>Introduction</h2><p>Engineering is one of the most versatile and rewarding career paths. Here are the top 10 engineering fields with excellent career prospects.</p><h2>1. Software Engineering</h2><p>With digital transformation accelerating, software engineers are in high demand.</p><h2>2. Artificial Intelligence & Machine Learning</h2><p>AI engineers design and develop intelligent systems.</p><h2>Conclusion</h2><p>Each engineering field offers unique opportunities. Choose based on your interests and career goals.</p>"
       }
     ],
     "universities": [
@@ -222,7 +222,38 @@
     "orientationCategories": [],
     "orientationResources": [],
     "tags": [],
-    "categories": []
+    "categories": [
+      {
+        "id": "63d959bb-0a1c-45d8-96a8-3eda39900545",
+        "name": "Building",
+        "slug": "building"
+      },
+      {
+        "id": "223fd1ae-1b74-4c8e-a69b-4dd496d346d7",
+        "name": "Fields",
+        "slug": "fields"
+      },
+      {
+        "id": "b1a02c60-53ae-4895-9ddd-0ef7ee4b52f6",
+        "name": "Schools",
+        "slug": "schools"
+      },
+      {
+        "id": "a1e0b502-706c-4acf-8e8a-c8ba99418914",
+        "name": "Study Abroad",
+        "slug": "study-abroad"
+      },
+      {
+        "id": "7e4c5cd5-ea9b-4c12-b632-4c6f19041ffb",
+        "name": "Procedures",
+        "slug": "procedures"
+      },
+      {
+        "id": "987bef69-4fe4-486d-aa39-5bf82f84fab6",
+        "name": "Comparisons",
+        "slug": "comparisons"
+      }
+    ]
   },
   "derived": {
     "userPaths": [
@@ -242,9 +273,9 @@
       "/blog/how-to-bazoo",
       "/blog/10-tips-international-students",
       "/blog/study-abroad-complete-guide",
-      "/blog/top-10-engineering-fields-career-prospects",
       "/blog/university-application-deadlines-timeline",
-      "/blog/scholarships-international-students-funding"
+      "/blog/scholarships-international-students-funding",
+      "/blog/top-10-engineering-fields-career-prospects"
     ],
     "universityPaths": [
       "/universities/university-of-toronto",
@@ -310,12 +341,6 @@
         "hasContent": true
       },
       {
-        "slug": "top-10-engineering-fields-career-prospects",
-        "title": "Top 10 Engineering Fields with Best Career Prospects",
-        "published": true,
-        "hasContent": true
-      },
-      {
         "slug": "university-application-deadlines-timeline",
         "title": "University Application Deadlines: Complete Timeline Guide",
         "published": true,
@@ -324,6 +349,12 @@
       {
         "slug": "scholarships-international-students-funding",
         "title": "Scholarships for International Students: Where to Find Funding",
+        "published": true,
+        "hasContent": true
+      },
+      {
+        "slug": "top-10-engineering-fields-career-prospects",
+        "title": "Top 10 Engineering Fields with Best Career Prospects",
         "published": true,
         "hasContent": true
       }

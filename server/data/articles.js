@@ -1,13 +1,19 @@
 import supabase from '../database/supabase.js';
+import { listArticleTerms, setArticleTerms } from './taxonomies.js';
 
 // Get all published articles
-export async function getArticles() {
+export async function getArticles(categoryName = null) {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('articles')
       .select('*')
-      .eq('published', true)
-      .order('created_at', { ascending: false });
+      .eq('published', true);
+
+    if (categoryName) {
+      query = query.eq('category', categoryName);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
 
     if (error) {
       // Provide more helpful error messages
@@ -62,7 +68,9 @@ export async function getArticleBySlug(slug) {
       throw error;
     }
 
-    return data || null;
+    if (!data) return null;
+    const terms = await listArticleTerms(data.id).catch(() => []);
+    return { ...data, terms };
   } catch (error) {
     throw error;
   }
@@ -84,7 +92,9 @@ export async function getArticleById(id) {
       throw error;
     }
 
-    return data || null;
+    if (!data) return null;
+    const terms = await listArticleTerms(data.id).catch(() => []);
+    return { ...data, terms };
   } catch (error) {
     throw error;
   }
@@ -124,6 +134,10 @@ export async function createArticle(articleData) {
       throw error;
     }
 
+    // attach terms if provided
+    if (articleData.term_ids && articleData.term_ids.length && data?.id) {
+      await setArticleTerms(data.id, articleData.term_ids);
+    }
     return data;
   } catch (error) {
     throw error;
@@ -166,7 +180,12 @@ export async function updateArticle(id, articleData) {
       throw error;
     }
 
-    return data || null;
+    if (!data) return null;
+    if (articleData.term_ids) {
+      await setArticleTerms(id, articleData.term_ids || []);
+    }
+    const terms = await listArticleTerms(id).catch(() => []);
+    return { ...data, terms };
   } catch (error) {
     throw error;
   }

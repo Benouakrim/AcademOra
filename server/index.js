@@ -26,6 +26,7 @@ import adminAnalyticsRoutes from './routes/adminAnalytics.js';
 import usersPublicRoutes from './routes/usersPublic.js';
 import profileSectionsRoutes from './routes/profileSections.js';
 import devRoutes from './routes/dev.js';
+import sitemapRoutes from './routes/sitemap.js';
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ app.use('/api/admin/analytics', adminAnalyticsRoutes);
 app.use('/api/users', usersPublicRoutes);
 app.use('/api/profile-sections', profileSectionsRoutes);
 app.use('/api/dev', devRoutes);
+app.use('/', sitemapRoutes);
 // Public universities (no auth required)
 app.use('/api/universities', universitiesRoutes);
 // Public university groups (no auth required)

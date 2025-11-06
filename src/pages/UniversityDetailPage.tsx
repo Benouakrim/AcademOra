@@ -6,8 +6,11 @@ import {
   CheckCircle, XCircle, AlertCircle, ExternalLink, Clock, School, Trophy,
   Zap, Shield, Home, Plane, Sun, DollarSign as DollarIcon, BarChart3
 } from 'lucide-react'
-import { universitiesAPI, reviewsAPI, getCurrentUser } from '../lib/api'
+import { getCurrentUser } from '../lib/api'
+import { UniversitiesService } from '../lib/services/universitiesService'
+import { ReviewsService } from '../lib/services/reviewsService'
 import SaveButton from '../components/SaveButton'
+import SEO from '../components/SEO'
 
 interface University {
   id: string
@@ -119,7 +122,7 @@ export default function UniversityDetailPage() {
 
       try {
         setLoading(true)
-        const data = await universitiesAPI.getUniversityBySlug(slug)
+        const data = await UniversitiesService.getUniversityBySlug(slug)
         if (data) {
           setUniversity(data)
         } else {
@@ -139,7 +142,7 @@ export default function UniversityDetailPage() {
     async function loadReviews() {
       try {
         if (university?.id) {
-          const list = await reviewsAPI.list(university.id)
+          const list = await ReviewsService.list(university.id)
           setReviews(Array.isArray(list) ? list : [])
         }
       } catch {}
@@ -152,8 +155,8 @@ export default function UniversityDetailPage() {
     if (!university?.id || !myRating) return
     setSavingReview(true)
     try {
-      await reviewsAPI.upsert(university.id, myRating, myComment || undefined)
-      const list = await reviewsAPI.list(university.id)
+      await ReviewsService.upsert(university.id, myRating, myComment || undefined)
+      const list = await ReviewsService.list(university.id)
       setReviews(Array.isArray(list) ? list : [])
       setMyComment('')
     } catch (err) {
@@ -215,6 +218,7 @@ export default function UniversityDetailPage() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
+      <SEO title={`${university.name} | AcademOra`} description={university.description?.slice(0, 150)} />
       {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-primary-600 to-primary-800 text-white">
         <div className="absolute inset-0 bg-black/20"></div>

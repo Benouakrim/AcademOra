@@ -1,16 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import {
   ArrowLeft, MapPin, DollarSign, GraduationCap, Users, TrendingUp, Building,
   Globe, Calendar, Award, BookOpen, Globe2, Briefcase, Target, Heart,
   CheckCircle, XCircle, AlertCircle, ExternalLink, Clock, School, Trophy,
-  Zap, Shield, Home, Plane, Sun, DollarSign as DollarIcon, BarChart3
+  Zap, Shield, Home, Plane, Sun, Loader2, X, DollarSign as DollarIcon, BarChart3
 } from 'lucide-react'
-import { getCurrentUser } from '../lib/api'
+import { getCurrentUser, financialProfileAPI } from '../lib/api'
 import { UniversitiesService } from '../lib/services/universitiesService'
 import { ReviewsService } from '../lib/services/reviewsService'
 import SaveButton from '../components/SaveButton'
 import SEO from '../components/SEO'
+import FinancialAidPredictor from '../components/FinancialAidPredictor'
+import CareerTrajectoryHeatmap from '../components/CareerTrajectoryHeatmap'
+import MentorshipSystem from '../components/MentorshipSystem'
+import UniversityMicroContent from '../components/UniversityMicroContent'
+import MicroContentEditor from '../components/MicroContentEditor'
+import { MicroContent } from '../lib/services/microContentService'
 
 interface University {
   id: string
@@ -97,7 +103,28 @@ interface University {
   // Legacy
   ranking_world?: number
   country?: string
-  city?: string
+}
+
+interface UserProfile {
+  gpa?: number
+  sat_score?: number
+  act_score?: number
+  family_income?: number
+  international_student?: boolean
+  in_state?: boolean
+  first_generation?: boolean
+  special_talents?: string[]
+}
+
+interface FinancialProfileFormState {
+  gpa: string
+  sat_score: string
+  act_score: string
+  family_income: string
+  international_student: boolean
+  in_state: boolean
+  first_generation: boolean
+  special_talents: string
 }
 
 export default function UniversityDetailPage() {
@@ -111,6 +138,62 @@ export default function UniversityDetailPage() {
   const [myRating, setMyRating] = useState<number>(0)
   const [myComment, setMyComment] = useState<string>('')
   const [savingReview, setSavingReview] = useState(false)
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [currentUser, setCurrentUser] = useState<any>(() => getCurrentUser())
+  const [financialProfileLoading, setFinancialProfileLoading] = useState(false)
+  const [financialProfileError, setFinancialProfileError] = useState<string | null>(null)
+  const [showFinancialProfileModal, setShowFinancialProfileModal] = useState(false)
+  const [financialProfileSaving, setFinancialProfileSaving] = useState(false)
+  const [financialProfileModalError, setFinancialProfileModalError] = useState<string | null>(null)
+  const [financialProfileForm, setFinancialProfileForm] = useState<FinancialProfileFormState>({
+    gpa: '',
+    sat_score: '',
+    act_score: '',
+    family_income: '',
+    international_student: false,
+    in_state: false,
+    first_generation: false,
+    special_talents: ''
+  })
+  const [showMicroContentEditor, setShowMicroContentEditor] = useState(false)
+  const [editingMicroContent, setEditingMicroContent] = useState<any>(null)
+  const [isUniversityOwner, setIsUniversityOwner] = useState(false)
+
+  const refreshFinancialProfile = useCallback(async () => {
+    const storedUser = getCurrentUser()
+    setCurrentUser(storedUser)
+
+    if (!storedUser) {
+      setUserProfile(null)
+      return
+    }
+
+    try {
+      setFinancialProfileLoading(true)
+      setFinancialProfileError(null)
+      const profile = await financialProfileAPI.getProfile()
+
+      if (profile) {
+        setUserProfile({
+          gpa: profile.gpa ?? undefined,
+          sat_score: profile.sat_score ?? undefined,
+          act_score: profile.act_score ?? undefined,
+          family_income: profile.family_income ?? undefined,
+          international_student: profile.international_student ?? undefined,
+          in_state: profile.in_state ?? undefined,
+          first_generation: profile.first_generation ?? undefined,
+          special_talents: Array.isArray(profile.special_talents) ? profile.special_talents : []
+        })
+      } else {
+        setUserProfile(null)
+      }
+    } catch (error: any) {
+      setFinancialProfileError(error.message || 'Failed to load financial profile')
+      setUserProfile(null)
+    } finally {
+      setFinancialProfileLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     async function fetchUniversity() {
@@ -139,6 +222,10 @@ export default function UniversityDetailPage() {
   }, [slug])
 
   useEffect(() => {
+    refreshFinancialProfile()
+  }, [refreshFinancialProfile])
+
+  useEffect(() => {
     async function loadReviews() {
       try {
         if (university?.id) {
@@ -163,6 +250,140 @@ export default function UniversityDetailPage() {
       // no-op
     } finally {
       setSavingReview(false)
+    }
+  }
+
+  const handleCreateMicroContent = () => {
+    setEditingMicroContent(null)
+    setShowMicroContentEditor(true)
+  }
+
+  const handleEditMicroContent = (content: MicroContent) => {
+    setEditingMicroContent(content)
+    setShowMicroContentEditor(true)
+  }
+
+  const handleSaveMicroContent = (content: MicroContent) => {
+    setShowMicroContentEditor(false)
+    setEditingMicroContent(null)
+    // Refresh the micro-content section
+    window.location.reload()
+  }
+
+  const handleCancelMicroContent = () => {
+    setShowMicroContentEditor(false)
+    setEditingMicroContent(null)
+  }
+
+  const handleOpenFinancialProfileModal = () => {
+    const storedUser = getCurrentUser()
+    if (!storedUser) {
+      navigate('/login')
+      return
+    }
+
+    setCurrentUser(storedUser)
+    setFinancialProfileForm({
+      gpa: userProfile?.gpa !== undefined && userProfile?.gpa !== null ? String(userProfile.gpa) : '',
+      sat_score: userProfile?.sat_score !== undefined && userProfile?.sat_score !== null ? String(userProfile.sat_score) : '',
+      act_score: userProfile?.act_score !== undefined && userProfile?.act_score !== null ? String(userProfile.act_score) : '',
+      family_income: userProfile?.family_income !== undefined && userProfile?.family_income !== null ? String(userProfile.family_income) : '',
+      international_student: userProfile?.international_student ?? false,
+      in_state: userProfile?.in_state ?? false,
+      first_generation: userProfile?.first_generation ?? false,
+      special_talents: userProfile?.special_talents?.join(', ') || ''
+    })
+    setFinancialProfileModalError(null)
+    setShowFinancialProfileModal(true)
+  }
+
+  const handleCloseFinancialProfileModal = () => {
+    setShowFinancialProfileModal(false)
+    setFinancialProfileModalError(null)
+  }
+
+  const handleFinancialProfileInputChange = <K extends keyof FinancialProfileFormState>(field: K, value: FinancialProfileFormState[K]) => {
+    setFinancialProfileForm(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  const handleSubmitFinancialProfile = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const storedUser = currentUser || getCurrentUser()
+    if (!storedUser) {
+      navigate('/login')
+      return
+    }
+
+    const parseNumber = (value: string) => {
+      const trimmed = value.trim()
+      if (!trimmed) return null
+      const num = Number(trimmed)
+      return Number.isFinite(num) ? num : null
+    }
+
+    const gpaValue = parseNumber(financialProfileForm.gpa)
+    if (gpaValue !== null && (gpaValue < 0 || gpaValue > 4.5)) {
+      setFinancialProfileModalError('Please enter a GPA between 0.0 and 4.5')
+      return
+    }
+
+    const satValue = parseNumber(financialProfileForm.sat_score)
+    if (satValue !== null && (satValue < 400 || satValue > 1600)) {
+      setFinancialProfileModalError('SAT score should be between 400 and 1600')
+      return
+    }
+
+    const actValue = parseNumber(financialProfileForm.act_score)
+    if (actValue !== null && (actValue < 1 || actValue > 36)) {
+      setFinancialProfileModalError('ACT score should be between 1 and 36')
+      return
+    }
+
+    const incomeValue = parseNumber(financialProfileForm.family_income)
+    if (incomeValue !== null && incomeValue < 0) {
+      setFinancialProfileModalError('Family income cannot be negative')
+      return
+    }
+
+    setFinancialProfileSaving(true)
+    setFinancialProfileModalError(null)
+
+    try {
+      const payload = {
+        gpa: gpaValue,
+        sat_score: satValue,
+        act_score: actValue,
+        family_income: incomeValue,
+        international_student: financialProfileForm.international_student,
+        in_state: financialProfileForm.in_state,
+        first_generation: financialProfileForm.first_generation,
+        special_talents: financialProfileForm.special_talents
+          .split(',')
+          .map(item => item.trim())
+          .filter(Boolean)
+      }
+
+      const saved = await financialProfileAPI.updateProfile(payload)
+
+      setUserProfile({
+        gpa: saved.gpa ?? undefined,
+        sat_score: saved.sat_score ?? undefined,
+        act_score: saved.act_score ?? undefined,
+        family_income: saved.family_income ?? undefined,
+        international_student: saved.international_student ?? undefined,
+        in_state: saved.in_state ?? undefined,
+        first_generation: saved.first_generation ?? undefined,
+        special_talents: Array.isArray(saved.special_talents) ? saved.special_talents : []
+      })
+      setShowFinancialProfileModal(false)
+      await refreshFinancialProfile()
+    } catch (error: any) {
+      setFinancialProfileModalError(error.message || 'Failed to save financial profile')
+    } finally {
+      setFinancialProfileSaving(false)
     }
   }
 
@@ -729,6 +950,27 @@ export default function UniversityDetailPage() {
               </div>
             </SectionCard>
 
+            {/* Financial Aid Predictor */}
+            <div className="mt-6 space-y-3">
+              {financialProfileLoading && (
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Loading your financial profile...</span>
+                </div>
+              )}
+              {financialProfileError && (
+                <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>{financialProfileError}</span>
+                </div>
+              )}
+              <FinancialAidPredictor 
+                university={university} 
+                userProfile={userProfile}
+                onRequestCompleteProfile={handleOpenFinancialProfileModal}
+              />
+            </div>
+
             {/* 6. Student Demographics */}
             <SectionCard
               icon={<Users className="h-6 w-6" />}
@@ -907,6 +1149,40 @@ export default function UniversityDetailPage() {
                 </div>
               </div>
             </SectionCard>
+
+            {/* Career Trajectory Heatmap */}
+            <div className="mt-6">
+              <CareerTrajectoryHeatmap 
+                universities={[university]} 
+                userPreferences={{
+                  weight_salary: 0.5,
+                  weight_visa: 0.3,
+                  weight_career: 0.2
+                }}
+              />
+            </div>
+
+            {/* Mentorship System */}
+            <div className="mt-6">
+              <MentorshipSystem 
+                currentUser={{
+                  id: 'current-user',
+                  name: 'Current Student',
+                  university: university.name,
+                  international_student: true
+                }}
+              />
+            </div>
+
+            {/* University Micro-Content */}
+            <div className="mt-6">
+              <UniversityMicroContent 
+                universityId={university.id}
+                isOwner={isUniversityOwner}
+                onEdit={handleEditMicroContent}
+                onCreateNew={handleCreateMicroContent}
+              />
+            </div>
           </div>
 
           {/* Sidebar */}
@@ -1000,6 +1276,156 @@ export default function UniversityDetailPage() {
           </div>
         </div>
       </div>
+
+    {/* Financial Profile Modal */}
+    {showFinancialProfileModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="w-full max-w-xl rounded-2xl bg-white shadow-2xl">
+          <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Financial Aid Profile</h3>
+              <p className="text-sm text-gray-500">We use this to personalize your aid predictions.</p>
+            </div>
+            <button
+              onClick={handleCloseFinancialProfileModal}
+              className="rounded-full p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              type="button"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmitFinancialProfile} className="px-6 py-5 space-y-5">
+            {financialProfileModalError && (
+              <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+                <AlertCircle className="h-4 w-4" />
+                <span>{financialProfileModalError}</span>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">GPA</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="4.5"
+                  value={financialProfileForm.gpa}
+                  onChange={(e) => handleFinancialProfileInputChange('gpa', e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                  placeholder="e.g. 3.8"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">SAT Score</label>
+                <input
+                  type="number"
+                  min="400"
+                  max="1600"
+                  value={financialProfileForm.sat_score}
+                  onChange={(e) => handleFinancialProfileInputChange('sat_score', e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                  placeholder="Optional"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">ACT Score</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="36"
+                  value={financialProfileForm.act_score}
+                  onChange={(e) => handleFinancialProfileInputChange('act_score', e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                  placeholder="Optional"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Family Income (USD)</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="1000"
+                  value={financialProfileForm.family_income}
+                  onChange={(e) => handleFinancialProfileInputChange('family_income', e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                  placeholder="e.g. 65000"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+              <label className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                <input
+                  type="checkbox"
+                  checked={financialProfileForm.international_student}
+                  onChange={(e) => handleFinancialProfileInputChange('international_student', e.target.checked)}
+                />
+                <span>International student</span>
+              </label>
+              <label className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                <input
+                  type="checkbox"
+                  checked={financialProfileForm.in_state}
+                  onChange={(e) => handleFinancialProfileInputChange('in_state', e.target.checked)}
+                />
+                <span>In-state applicant</span>
+              </label>
+              <label className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+                <input
+                  type="checkbox"
+                  checked={financialProfileForm.first_generation}
+                  onChange={(e) => handleFinancialProfileInputChange('first_generation', e.target.checked)}
+                />
+                <span>First-generation</span>
+              </label>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Special talents or awards</label>
+              <textarea
+                value={financialProfileForm.special_talents}
+                onChange={(e) => handleFinancialProfileInputChange('special_talents', e.target.value)}
+                rows={3}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                placeholder="e.g. Research award, varsity athlete, music scholarship"
+              />
+              <p className="mt-1 text-xs text-gray-500">Separate multiple items with commas.</p>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={handleCloseFinancialProfileModal}
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
+                disabled={financialProfileSaving}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={financialProfileSaving}
+                className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {financialProfileSaving && <Loader2 className="h-4 w-4 animate-spin" />}
+                Save profile
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    )}
+
+      {/* Micro-Content Editor Modal */}
+      {showMicroContentEditor && (
+        <MicroContentEditor
+          universityId={university.id}
+          content={editingMicroContent}
+          onSave={handleSaveMicroContent}
+          onCancel={handleCancelMicroContent}
+        />
+      )}
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { usersPublicAPI } from '../lib/api'
+import SavedItemsCollaboration from '../components/SavedItemsCollaboration'
 
 export default function PublicUserProfilePage() {
   const { username } = useParams<{ username: string }>()
@@ -174,6 +175,11 @@ export default function PublicUserProfilePage() {
                 </div>
               </div>
             )}
+
+            {/* Saved Items Collaboration */}
+            <div className="mt-6">
+              <SavedItemsCollaboration userId={profile.id} />
+            </div>
           </>
         )}
       </div>

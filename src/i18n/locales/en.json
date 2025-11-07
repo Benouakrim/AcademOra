@@ -24,8 +24,8 @@
   "home": {
     "heroTitle": "Your Academic Journey Starts Here",
     "heroSubtitle": "Discover fields, explore schools, study abroad opportunities, and get expert guidance on your academic path with AcademOra.",
-    "exploreOrientation": "Explore Orientation",
-    "readBlog": "Read Our Blog",
+    "exploreOrientation": "Explore",
+    "readBlog": "Read Articles",
     "matcherTitle": "Find Your Perfect University",
     "matcherDescription": "Use our new matching engine to get a personalized list of universities based on your grades, budget, and interests.",
     "findYourMatch": "Find Your Match",
@@ -56,8 +56,8 @@
     "exploreResources": "Explore Resources"
   },
   "blog": {
-    "title": "AcademOra Blog",
-    "subtitle": "Insights, guides, and articles to help you navigate your academic journey",
+    "title": "AcademOra Read",
+    "subtitle": "Insights, guides, and articles for your academic journey",
     "loading": "Loading articles...",
     "noArticles": "No articles found.",
     "checkBack": "Check back soon for new content!",
@@ -65,10 +65,10 @@
     "author": "Author",
     "articleNotFound": "Article Not Found",
     "articleNotFoundDesc": "The article you're looking for doesn't exist.",
-    "backToBlog": "Back to Blog"
+    "backToRead": "Back to Read"
   },
   "orientation": {
-    "title": "Academic Orientation",
+    "title": "Academic Explore",
     "subtitle": "Comprehensive resources to guide your academic decisions and career path",
     "fields": "Fields",
     "fieldsDesc": "Explore different academic fields and programs",
@@ -81,7 +81,7 @@
     "comparisons": "Comparisons",
     "comparisonsDesc": "Compare programs, schools, and opportunities",
     "journeyTitle": "Your Academic Journey, Simplified",
-    "journeyDesc": "AcademOra provides comprehensive orientation resources to help you make informed decisions about your education. Whether you're choosing a field, selecting a school, planning to study abroad, or navigating procedures, we've got you covered.",
+    "journeyDesc": "AcademOra provides comprehensive explore resources to help you make informed decisions about your education. Whether you're choosing a field, selecting a school, planning to study abroad, or navigating procedures, we've got you covered.",
     "resources": "Resources",
     "schoolsCount": "Schools",
     "countries": "Countries",
@@ -119,7 +119,7 @@
     "welcomeBack": "Welcome back",
     "profile": "Profile",
     "quickActions": "Quick Actions",
-    "browseOrientation": "Browse Orientation",
+    "browseOrientation": "Browse Explore",
     "readArticles": "Read Articles",
     "account": "Account",
     "yourActivity": "Your Activity",
@@ -129,7 +129,7 @@
     "accessible": "Accessible"
   },
   "footer": {
-    "description": "Your comprehensive platform for academic orientation, study guidance, and educational resources. Explore fields, schools, study abroad opportunities, and more.",
+    "description": "Your comprehensive platform for academic explore, study guidance, and educational resources. Explore fields, schools, study abroad opportunities, and more.",
     "quickLinks": "Quick Links",
     "resources": "Resources",
     "fields": "Fields",

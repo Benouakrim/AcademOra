@@ -1,5 +1,6 @@
 import express from 'express';
 import { getAllUniversities, getUniversityBySlug } from '../data/universities.js';
+import { listMicroContentForUniversity } from '../data/microContent.js';
 
 const router = express.Router();
 
@@ -10,6 +11,18 @@ router.get('/', async (req, res) => {
     res.json(universities);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/universities/:id/micro-content - micro content for a university
+router.get('/:universityId/micro-content', async (req, res) => {
+  try {
+    const { universityId } = req.params;
+    const items = await listMicroContentForUniversity(universityId);
+    res.json(items);
+  } catch (error) {
+    console.error('Micro-content fetch error:', error);
+    res.status(500).json({ error: error.message || 'Failed to fetch micro-content' });
   }
 });
 

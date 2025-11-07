@@ -24,7 +24,8 @@ router.get('/university/:id', async (req, res) => {
 // Create or update a user's review for a university
 router.post('/university/:id', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Authentication required' });
     const universityId = req.params.id;
     const { rating, comment } = req.body || {};
     if (!rating || rating < 1 || rating > 5) return res.status(400).json({ error: 'rating must be 1-5' });
@@ -46,7 +47,8 @@ router.post('/university/:id', authenticateToken, async (req, res) => {
 // Delete current user's review
 router.delete('/university/:id', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Authentication required' });
     const universityId = req.params.id;
     const { error } = await supabase
       .from('reviews')

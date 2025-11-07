@@ -1,8 +1,8 @@
 {
   "common": {
     "home": "الرئيسية",
-    "blog": "المدونة",
-    "orientation": "التوجيه",
+    "blog": "اقرأ",
+    "orientation": "استكشف",
     "login": "تسجيل الدخول",
     "signup": "إنشاء حساب",
     "signOut": "تسجيل الخروج",

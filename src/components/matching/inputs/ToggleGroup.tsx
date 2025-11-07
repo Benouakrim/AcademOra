@@ -11,19 +11,19 @@ type Props = {
 
 export default function ToggleGroup({ options, value, onChange, label }: Props) {
   return (
-    <div className="space-y-2">
-      {label && <div className="text-xs font-medium text-gray-600">{label}</div>}
-      <div className="flex gap-2 flex-wrap">
+    <div className="space-y-2.5">
+      {label && <div className="text-sm font-semibold text-slate-800 tracking-tight">{label}</div>}
+      <div className="flex flex-wrap gap-2">
         {options.map((o) => {
           const active = o.value === value
           return (
             <button
               key={o.value}
               onClick={() => onChange(o.value)}
-              className={`px-3 py-1.5 rounded-full border text-sm font-medium transition-colors ${
+              className={`rounded-xl border px-4 py-2 text-sm font-semibold transition-all duration-150 ${
                 active
-                  ? 'bg-primary-100 border-primary-500 text-primary-700 shadow-sm'
-                  : 'bg-white border-gray-200 text-gray-700'
+                  ? 'border-transparent bg-primary-600 text-white shadow'
+                  : 'border-slate-200 bg-white text-slate-600 hover:border-primary-300 hover:text-primary-600'
               }`}
             >
               {o.label || o.value}

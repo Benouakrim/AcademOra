@@ -17,11 +17,12 @@ router.post('/', authenticateToken, async (req, res) => {
 
     // Fetch user preferences (weights) if available
     let weights = null;
-    if (req.user?.id) {
+    const userId = req.user?.userId;
+    if (userId) {
       const { data, error } = await supabase
         .from('user_preferences')
         .select('weight_tuition, weight_location, weight_ranking, weight_program, weight_language')
-        .eq('user_id', req.user.id)
+        .eq('user_id', userId)
         .maybeSingle();
       if (!error && data) {
         weights = data;

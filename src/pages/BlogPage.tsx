@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Calendar, User, ArrowRight, Edit, Trash2, Eye } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Calendar, User, ArrowRight, Edit, Trash2, Eye, BookOpen, FileText, Search, Filter, Tag as TagIcon } from 'lucide-react'
 import { adminAPI } from '../lib/api'
 import { BlogService } from '../lib/services/blogService'
 import SEO from '../components/SEO'
@@ -18,33 +18,140 @@ interface Article {
   author_id: string
 }
 
+interface Doc {
+  id: string
+  title: string
+  slug: string
+  description: string
+  category: string
+  created_at: string
+  updated_at: string
+}
+
 export default function BlogPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [articles, setArticles] = useState<Article[]>([])
+  const [docs, setDocs] = useState<Doc[]>([])
+  const [viewMode, setViewMode] = useState<'articles' | 'docs'>('articles')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState(() => searchParams.get('q') || '')
+  const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get('category') || 'all')
+  const [selectedTag, setSelectedTag] = useState(() => searchParams.get('tag') || 'all')
   const navigate = useNavigate()
+
+  // Initialize view mode from URL parameter
+  useEffect(() => {
+    const view = searchParams.get('view') as 'articles' | 'docs'
+    if (view === 'docs') {
+      setViewMode('docs')
+      setSelectedTag('all')
+    } else {
+      setViewMode('articles')
+    }
+  }, [searchParams])
+
+  const syncParams = useCallback((nextState: Partial<{ viewMode: 'articles' | 'docs'; searchTerm: string; selectedCategory: string; selectedTag: string }>) => {
+    setSearchParams(prev => {
+      const params = new URLSearchParams(prev)
+      const computedView = nextState.viewMode ?? viewMode
+      const computedSearch = nextState.searchTerm ?? searchTerm
+      const computedCategory = nextState.selectedCategory ?? selectedCategory
+      const computedTag = computedView === 'articles' ? (nextState.selectedTag ?? selectedTag) : 'all'
+
+      if (computedView === 'docs') {
+        params.set('view', 'docs')
+      } else {
+        params.delete('view')
+      }
+
+      if (computedSearch && computedSearch.trim().length > 0) {
+        params.set('q', computedSearch)
+      } else {
+        params.delete('q')
+      }
+
+      if (computedCategory && computedCategory !== 'all') {
+        params.set('category', computedCategory)
+      } else {
+        params.delete('category')
+      }
+
+      if (computedView === 'articles' && computedTag && computedTag !== 'all') {
+        params.set('tag', computedTag)
+      } else {
+        params.delete('tag')
+      }
+
+      return params
+    })
+  }, [searchTerm, selectedCategory, selectedTag, setSearchParams, viewMode])
+
+  // Update URL when view mode changes
+  const handleViewModeChange = (mode: 'articles' | 'docs') => {
+    setViewMode(mode)
+    if (mode === 'docs') {
+      setSelectedTag('all')
+    }
+    syncParams({ viewMode: mode, selectedTag: mode === 'articles' ? selectedTag : 'all' })
+  }
 
   // Check if current user is admin
   const currentUser = getCurrentUser()
   const isAdmin = currentUser && (currentUser.role === 'admin' || currentUser.email === 'admin@academora.com')
 
   useEffect(() => {
-    async function fetchArticles() {
+    async function fetchData() {
       try {
-        const data = await (BlogService as any).list ? await (BlogService as any).list() : await (BlogService as any).getArticles()
-        setArticles(data || [])
+        // Fetch articles
+        const articlesData = await (BlogService as any).list ? await (BlogService as any).list() : await (BlogService as any).getArticles()
+        setArticles(articlesData || [])
+        
+        // Fetch docs - this would be from a docs service
+        // For now, I'll create some mock docs data
+        const mockDocs: Doc[] = [
+          {
+            id: '1',
+            title: 'Getting Started Guide',
+            slug: 'getting-started',
+            description: 'Complete guide to getting started with AcademOra platform',
+            category: 'User Guide',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          },
+          {
+            id: '2',
+            title: 'API Documentation',
+            slug: 'api-docs',
+            description: 'Technical documentation for AcademOra API endpoints',
+            category: 'Technical',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          },
+          {
+            id: '3',
+            title: 'Feature Overview',
+            slug: 'feature-overview',
+            description: 'Comprehensive overview of all AcademOra features',
+            category: 'Features',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        ]
+        setDocs(mockDocs)
+        
         setError(null)
       } catch (error: any) {
-        console.error('Error fetching articles:', error)
-        const errorMessage = error?.message || 'Failed to fetch articles. Please check if the server is running and configured correctly.'
+        console.error('Error fetching data:', error)
+        const errorMessage = error?.message || 'Failed to fetch content. Please check if the server is running and configured correctly.'
         setError(errorMessage)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchArticles()
+    fetchData()
   }, [])
 
   const formatDate = (dateString: string) => {
@@ -76,50 +183,204 @@ export default function BlogPage() {
     }
   }
 
+  const articleCategories = useMemo(() => {
+    const categorySet = new Set<string>()
+    articles.forEach(article => {
+      if (article.category) {
+        categorySet.add(article.category)
+      }
+    })
+    return Array.from(categorySet).sort()
+  }, [articles])
+
+  const articleTags = useMemo(() => {
+    const tagMap = new Map<string, string>()
+    articles.forEach(article => {
+      const terms = (article as any)?.terms
+      if (Array.isArray(terms)) {
+        terms.forEach((term: any) => {
+          const value = (term?.slug || term?.name || '').trim()
+          if (value) {
+            tagMap.set(value, term?.name || value)
+          }
+        })
+      }
+    })
+    return Array.from(tagMap.entries()).map(([value, label]) => ({ value, label })).sort((a, b) => a.label.localeCompare(b.label))
+  }, [articles])
+
+  const docCategories = useMemo(() => {
+    const categorySet = new Set<string>()
+    docs.forEach(doc => {
+      if (doc.category) {
+        categorySet.add(doc.category)
+      }
+    })
+    return Array.from(categorySet).sort()
+  }, [docs])
+
+  const normalizedSearch = searchTerm.trim().toLowerCase()
+
+  const filteredArticles = useMemo(() => {
+    const normalizedSelectedCategory = selectedCategory.toLowerCase()
+    const normalizedSelectedTag = selectedTag.toLowerCase()
+    const tagFilterActive = normalizedSelectedTag !== 'all' && normalizedSelectedTag.length > 0
+    const tagExistsInOptions = tagFilterActive
+      ? articleTags.some(tag => tag.value.toLowerCase() === normalizedSelectedTag)
+      : false
+
+    return articles.filter(article => {
+      const matchesSearch = normalizedSearch
+        ? [article.title, article.excerpt, article.category]
+            .filter(Boolean)
+            .some(field => (field as string).toLowerCase().includes(normalizedSearch)) ||
+          (((article as any)?.terms as any[])?.some(term =>
+            (term?.name || term?.slug || '').toLowerCase().includes(normalizedSearch)
+          ) ?? false)
+        : true
+
+      const matchesCategory = selectedCategory === 'all' || !selectedCategory
+        ? true
+        : (article.category || '').toLowerCase() === normalizedSelectedCategory
+
+      const matchesTag = !tagFilterActive
+        ? true
+        : tagExistsInOptions
+          ? (((article as any)?.terms as any[])?.some(term => {
+              const tagValue = (term?.slug || term?.name || '').toLowerCase()
+              return tagValue === normalizedSelectedTag
+            }) ?? false)
+          : true
+
+      return matchesSearch && matchesCategory && matchesTag
+    })
+  }, [articleTags, articles, normalizedSearch, selectedCategory, selectedTag])
+
+  const filteredDocs = useMemo(() => {
+    return docs.filter(doc => {
+      const matchesSearch = normalizedSearch
+        ? [doc.title, doc.description, doc.category]
+            .filter(Boolean)
+            .some(field => (field as string).toLowerCase().includes(normalizedSearch))
+        : true
+
+      const matchesCategory = selectedCategory === 'all' || !selectedCategory
+        ? true
+        : (doc.category || '').toLowerCase() === selectedCategory.toLowerCase()
+
+      return matchesSearch && matchesCategory
+    })
+  }, [docs, normalizedSearch, selectedCategory])
+
+  const hasActiveFilters = Boolean(
+    normalizedSearch.length > 0 ||
+    (selectedCategory && selectedCategory !== 'all') ||
+    (viewMode === 'articles' && selectedTag !== 'all')
+  )
+
+  const handleSearchInputChange = (value: string) => {
+    setSearchTerm(value)
+    syncParams({ searchTerm: value })
+  }
+
+  const handleCategoryChange = (value: string) => {
+    setSelectedCategory(value)
+    syncParams({ selectedCategory: value })
+  }
+
+  const handleTagChange = (value: string) => {
+    setSelectedTag(value)
+    syncParams({ selectedTag: value })
+  }
+
+  const handleClearFilters = () => {
+    setSearchTerm('')
+    setSelectedCategory('all')
+    setSelectedTag('all')
+    syncParams({ searchTerm: '', selectedCategory: 'all', selectedTag: 'all' })
+  }
+
+  const activeArticles = filteredArticles
+  const activeDocs = filteredDocs
+  const categoryOptions = useMemo(() => {
+    const base = viewMode === 'articles' ? articleCategories : docCategories
+    if (selectedCategory !== 'all' && selectedCategory && !base.includes(selectedCategory)) {
+      return [...base, selectedCategory].sort()
+    }
+    return base
+  }, [articleCategories, docCategories, selectedCategory, viewMode])
+
+  useEffect(() => {
+    if (viewMode === 'docs' && selectedCategory !== 'all' && selectedCategory && !docCategories.includes(selectedCategory)) {
+      setSelectedCategory('all')
+      syncParams({ selectedCategory: 'all' })
+    }
+  }, [docCategories, selectedCategory, syncParams, viewMode])
+
   return (
-    <div className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 min-h-screen py-12 overflow-hidden">
-      <SEO title="AcademOra Blog" description="Insights, guides, and articles for your academic journey" />
+    <div className="relative bg-black text-white min-h-screen py-20 overflow-hidden">
+      <SEO title="AcademOra Read" description="Insights, guides, and articles for your academic journey" />
+      
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute top-20 left-20 w-96 h-96 bg-primary-200/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-20 w-80 h-80 bg-primary-300/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.3, 0.1, 0.3],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
+        {[...Array(4)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full mix-blend-screen"
+            style={{
+              left: `${15 + (i * 25)}%`,
+              top: `${20 + (i * 15)}%`,
+              width: `${150 + (i * 100)}px`,
+              height: `${150 + (i * 100)}px`,
+              background: `radial-gradient(circle, ${['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b'][i]} 0%, transparent 70%)`,
+            }}
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{
+              duration: 5 + (i * 0.5),
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.3
+            }}
+          />
+        ))}
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
-            AcademOra Blog
+          <div className="mb-8">
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20"
+              animate={{ 
+                boxShadow: ["0 0 20px rgba(139, 92, 246, 0.5)", "0 0 40px rgba(139, 92, 246, 0.8)", "0 0 20px rgba(139, 92, 246, 0.5)"]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <BookOpen className="w-4 h-4 text-purple-300" />
+              <span className="text-sm font-medium text-purple-200">AcademOra Read</span>
+            </motion.div>
+          </div>
+
+          <h1 className="text-5xl md:text-7xl font-black mb-6">
+            <span className="bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
+              Insights & Stories
+            </span>
+            <br />
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+              for Your Journey
+            </span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Insights, guides, and articles to help you navigate your academic journey
+          
+          <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
+            Navigate your academic path with expert guides, inspiring stories, and valuable insights
           </p>
           
           {/* Admin Indicator */}
@@ -128,18 +389,128 @@ export default function BlogPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
-              className="mt-6 inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200"
+              className="mt-6 inline-flex items-center gap-3 bg-green-500/20 backdrop-blur-sm text-green-300 px-6 py-3 rounded-full text-sm font-medium border border-green-500/30"
             >
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <motion.div
+                className="w-3 h-3 bg-green-400 rounded-full"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
               Admin Mode - Hover over articles for actions
             </motion.div>
           )}
         </motion.div>
 
+        {/* Controls */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex flex-col gap-6 mb-12"
+        >
+          <div className="flex justify-center">
+            <div className="inline-flex items-center bg-gray-800/50 backdrop-blur-sm rounded-full p-1 border border-gray-700/50">
+              <button
+                onClick={() => handleViewModeChange('articles')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                  viewMode === 'articles'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                <BookOpen className="h-4 w-4" />
+                Articles
+              </button>
+              <button
+                onClick={() => handleViewModeChange('docs')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                  viewMode === 'docs'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                <FileText className="h-4 w-4" />
+                Docs
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-gray-900/50 backdrop-blur-md border border-gray-800/70 rounded-2xl p-6">
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={event => handleSearchInputChange(event.target.value)}
+                    placeholder={viewMode === 'articles' ? 'Search articles by title, excerpt, category, or tag' : 'Search docs by title or description'}
+                    className="w-full bg-black/60 border border-gray-800 rounded-xl py-3 pl-12 pr-4 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 transition"
+                  />
+                </div>
+
+                <div className="flex flex-wrap gap-3 md:w-auto">
+                  <div className="relative">
+                    <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                    <select
+                      value={selectedCategory}
+                      onChange={event => handleCategoryChange(event.target.value)}
+                      className="appearance-none bg-black/60 border border-gray-800 rounded-xl py-3 pl-10 pr-8 text-sm text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 transition min-w-[160px]"
+                    >
+                      <option value="all">All Categories</option>
+                      {categoryOptions.map(category => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">▾</span>
+                  </div>
+
+                  {viewMode === 'articles' && articleTags.length > 0 && (
+                    <div className="relative">
+                      <TagIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                      <select
+                        value={selectedTag}
+                        onChange={event => handleTagChange(event.target.value)}
+                        className="appearance-none bg-black/60 border border-gray-800 rounded-xl py-3 pl-10 pr-8 text-sm text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 transition min-w-[160px]"
+                      >
+                        <option value="all">All Tags</option>
+                        {articleTags.map(tag => (
+                          <option key={tag.value} value={tag.value}>
+                            {tag.label}
+                          </option>
+                        ))}
+                      </select>
+                      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">▾</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {hasActiveFilters && (
+                <div className="flex justify-between flex-col gap-3 text-sm text-gray-400 md:flex-row md:items-center">
+                  <span>
+                    Showing {viewMode === 'articles' ? activeArticles.length : activeDocs.length}{' '}
+                    {viewMode === 'articles' ? 'article' : 'doc'}
+                    {(viewMode === 'articles' ? activeArticles : activeDocs).length === 1 ? '' : 's'}
+                  </span>
+                  <button
+                    onClick={handleClearFilters}
+                    className="inline-flex items-center gap-2 text-purple-300 hover:text-purple-200 transition-colors"
+                  >
+                    <span>Clear filters</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
         {loading ? (
           <div className="text-center py-20">
             <motion.div
-              className="inline-block rounded-full h-12 w-12 border-4 border-primary-200 border-t-primary-600"
+              className="inline-block rounded-full h-16 w-16 border-4 border-purple-500/30 border-t-purple-400 backdrop-blur-sm"
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             />
@@ -147,9 +518,9 @@ export default function BlogPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="mt-4 text-gray-600"
+              className="mt-6 text-gray-300 text-lg"
             >
-              Loading articles...
+              Loading amazing articles...
             </motion.p>
           </div>
         ) : error ? (
@@ -158,112 +529,214 @@ export default function BlogPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="text-center py-20"
           >
-            <div className="bg-red-50 border border-red-200 rounded-xl p-6 max-w-2xl mx-auto shadow-lg">
-              <h3 className="text-xl font-bold text-red-800 mb-2">Error Loading Articles</h3>
-              <p className="text-red-600 mb-4">{error}</p>
+            <div className="bg-red-900/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-8 max-w-2xl mx-auto">
+              <h3 className="text-xl font-bold text-red-300 mb-4">Error Loading Articles</h3>
+              <p className="text-red-400 mb-4">{error}</p>
               <p className="text-sm text-red-500">
                 Make sure the backend server is running on port 3001 and your environment variables are configured correctly.
               </p>
             </div>
           </motion.div>
-        ) : articles.length === 0 ? (
+        ) : viewMode === 'articles' && activeArticles.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center py-20"
           >
-            <p className="text-xl text-gray-600 mb-4">No articles found.</p>
-            <p className="text-gray-500">Check back soon for new content!</p>
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-12 border border-gray-700/50">
+              <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-6" />
+              <p className="text-xl text-gray-300 mb-4">
+                {articles.length === 0 ? 'No articles found.' : 'No articles match your search or filters.'}
+              </p>
+              <p className="text-gray-500">
+                {articles.length === 0 ? 'Check back soon for new content!' : 'Try adjusting your filters or search term to find something else.'}
+              </p>
+            </div>
+          </motion.div>
+        ) : viewMode === 'docs' && activeDocs.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-20"
+          >
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-12 border border-gray-700/50">
+              <FileText className="w-16 h-16 text-gray-400 mx-auto mb-6" />
+              <p className="text-xl text-gray-300 mb-4">
+                {docs.length === 0 ? 'No docs found.' : 'No docs match your search or filters.'}
+              </p>
+              <p className="text-gray-500">
+                {docs.length === 0 ? 'Documentation will be available soon!' : 'Reset your filters or try another search.'}
+              </p>
+            </div>
           </motion.div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {articles.map((article, index) => (
-              <motion.article
-                key={article.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                className="card group border border-gray-200 hover:border-primary-200 hover:shadow-2xl transition-all duration-300 rounded-xl overflow-hidden bg-white relative"
-              >
-                {/* Admin Action Buttons */}
-                {isAdmin && (
-                  <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={() => handleEditArticle(article.id)}
-                      className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors shadow-lg"
-                      title="Edit article"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteArticle(article.id, article.title)}
-                      disabled={deletingId === article.id}
-                      className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                      title="Delete article"
-                    >
-                      {deletingId === article.id ? (
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+            {viewMode === 'articles' 
+              ? activeArticles.map((article, index) => (
+                  <motion.article
+                    key={article.id}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{ y: -10, transition: { duration: 0.2 } }}
+                    className="group bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 overflow-hidden relative"
+                  >
+                    {/* Admin Action Buttons */}
+                    {isAdmin && (
+                      <motion.div 
+                        className="absolute top-4 right-4 z-10 flex gap-2"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <motion.button
+                          onClick={() => handleEditArticle(article.id)}
+                          className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-500 transition-colors shadow-lg backdrop-blur-sm"
+                          title="Edit article"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </motion.button>
+                        <motion.button
+                          onClick={() => handleDeleteArticle(article.id, article.title)}
+                          disabled={deletingId === article.id}
+                          className="bg-red-600 text-white p-2 rounded-full hover:bg-red-500 transition-colors shadow-lg backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                          title="Delete article"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          {deletingId === article.id ? (
+                            <motion.div
+                              className="rounded-full h-4 w-4 border-2 border-white border-t-transparent"
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                            />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
+                        </motion.button>
+                        <Link
+                          to={`/blog/${article.slug}`}
+                          className="bg-gray-700 text-white p-2 rounded-full hover:bg-gray-600 transition-colors shadow-lg backdrop-blur-sm"
+                          title="View article"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Link>
+                      </motion.div>
+                    )}
+                    
+                    {article.featured_image && (
+                      <div className="mb-6 rounded-xl overflow-hidden">
+                        <motion.img
+                          src={article.featured_image}
+                          alt={article.title}
+                          className="w-full h-48 object-cover"
+                          whileHover={{ scale: 1.1 }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </div>
+                    )}
+                    
+                    <div className="mb-4 flex flex-wrap gap-2 px-6">
+                      {Array.isArray((article as any).terms) && (article as any).terms.length > 0 ? (
+                        (article as any).terms.slice(0, 6).map((t: any) => (
+                          <motion.span 
+                            key={t.id} 
+                            className="inline-block bg-purple-500/20 backdrop-blur-sm text-purple-300 text-xs font-semibold px-3 py-1 rounded-full border border-purple-500/30"
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            {t.name}
+                          </motion.span>
+                        ))
                       ) : (
-                        <Trash2 className="h-4 w-4" />
+                        <motion.span 
+                          className="inline-block bg-purple-500/20 backdrop-blur-sm text-purple-300 text-xs font-semibold px-3 py-1 rounded-full border border-purple-500/30"
+                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          {article.category}
+                        </motion.span>
                       )}
-                    </button>
-                    <Link
-                      to={`/blog/${article.slug}`}
-                      className="bg-gray-700 text-white p-2 rounded-full hover:bg-gray-800 transition-colors shadow-lg"
-                      title="View article"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Link>
-                  </div>
-                )}
-                {article.featured_image && (
-                  <div className="mb-4 rounded-lg overflow-hidden">
-                    <motion.img
-                      src={article.featured_image}
-                      alt={article.title}
-                      className="w-full h-48 object-cover"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </div>
-                )}
-                <div className="mb-2 flex flex-wrap gap-2">
-                  {Array.isArray((article as any).terms) && (article as any).terms.length > 0 ? (
-                    (article as any).terms.slice(0, 6).map((t: any) => (
-                      <span key={t.id} className="inline-block bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 text-xs font-semibold px-3 py-1 rounded-full border border-primary-200 shadow-sm">
-                        {t.name}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="inline-block bg-gradient-to-r from-primary-100 to-primary-50 text-primary-700 text-xs font-semibold px-3 py-1 rounded-full border border-primary-200 shadow-sm">
-                      {article.category}
-                    </span>
-                  )}
-                </div>
-                <h2 className="text-xl font-bold mb-3 text-gray-900 group-hover:text-primary-600 transition-colors">
-                  <Link to={`/blog/${article.slug}`}>{article.title}</Link>
-                </h2>
-                <p className="text-gray-600 mb-4 line-clamp-3">{article.excerpt}</p>
-                <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
-                    <span>{formatDate(article.created_at)}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <User className="h-4 w-4" />
-                    <span>Author</span>
-                  </div>
-                </div>
-                <Link
-                  to={`/blog/${article.slug}`}
-                  className="inline-flex items-center text-primary-600 hover:text-primary-700 font-semibold group/ln transition"
-                >
-                  Read More <ArrowRight className="h-4 w-4 ml-1 group-hover/ln:translate-x-2 transition-transform duration-300" />
-                </Link>
-              </motion.article>
-            ))}
+                    </div>
+                    
+                    <div className="px-6">
+                      <h2 className="text-2xl font-bold mb-4 text-white group-hover:text-purple-300 transition-colors line-clamp-2">
+                        <Link to={`/blog/${article.slug}`}>{article.title}</Link>
+                      </h2>
+                      <p className="text-gray-400 mb-6 line-clamp-3 leading-relaxed">{article.excerpt}</p>
+                      <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-purple-400" />
+                          <span className="text-gray-300">{formatDate(article.created_at)}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-purple-400" />
+                          <span className="text-gray-300">Author</span>
+                        </div>
+                      </div>
+                      <Link
+                        to={`/blog/${article.slug}`}
+                        className="inline-flex items-center text-purple-400 hover:text-purple-300 font-semibold group/ln transition-all duration-300"
+                      >
+                        Read More 
+                        <motion.div
+                          className="ml-2"
+                          whileHover={{ x: 4 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ArrowRight className="h-4 w-4" />
+                        </motion.div>
+                      </Link>
+                    </div>
+                  </motion.article>
+                ))
+              : activeDocs.map((doc, index) => (
+                  <motion.div
+                    key={doc.id}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{ y: -10, transition: { duration: 0.2 } }}
+                    className="group bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 overflow-hidden relative"
+                  >
+                    {/* Doc Content */}
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <FileText className="h-8 w-8 text-blue-400" />
+                        <span className="text-xs font-medium text-blue-400 bg-blue-500/20 px-3 py-1 rounded-full">
+                          {doc.category}
+                        </span>
+                      </div>
+
+                      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors">
+                        {doc.title}
+                      </h3>
+
+                      <p className="text-gray-400 mb-6 leading-relaxed">
+                        {doc.description}
+                      </p>
+
+                      <div className="flex items-center justify-between">
+                        <Link
+                          to={`/docs/${doc.slug}`}
+                          className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium transition-colors group"
+                        >
+                          Read Doc
+                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                        
+                        <div className="text-xs text-gray-500">
+                          Updated {formatDate(doc.updated_at)}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+            }            
           </div>
         )}
       </div>

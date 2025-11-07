@@ -22,9 +22,11 @@ import userPreferencesRoutes from './routes/userPreferences.js';
 import savedMatchesRoutes from './routes/savedMatches.js';
 import reviewsRoutes from './routes/reviews.js';
 import notificationsRoutes from './routes/notifications.js';
+import microContentRoutes from './routes/microContent.js';
 import adminAnalyticsRoutes from './routes/adminAnalytics.js';
 import usersPublicRoutes from './routes/usersPublic.js';
 import profileSectionsRoutes from './routes/profileSections.js';
+import financialProfileRoutes from './routes/financialProfile.js';
 import devRoutes from './routes/dev.js';
 import sitemapRoutes from './routes/sitemap.js';
 
@@ -51,9 +53,11 @@ app.use('/api/user-preferences', userPreferencesRoutes);
 app.use('/api/saved-matches', savedMatchesRoutes);
 app.use('/api/reviews', reviewsRoutes);
 app.use('/api/notifications', notificationsRoutes);
+app.use('/api', microContentRoutes);
 app.use('/api/admin/analytics', adminAnalyticsRoutes);
 app.use('/api/users', usersPublicRoutes);
 app.use('/api/profile-sections', profileSectionsRoutes);
+app.use('/api/profile/financial', financialProfileRoutes);
 app.use('/api/dev', devRoutes);
 app.use('/', sitemapRoutes);
 // Public universities (no auth required)

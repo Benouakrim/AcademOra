@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { Menu, X, User, LogOut, GraduationCap, Settings, Bell } from 'lucide-react'
+import { Menu, X, User, LogOut, Sparkles, Settings, Bell, ChevronDown, BookOpen, FileText, Info, Phone, Shield, Heart } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { authAPI, getCurrentUser, staticPagesAPI, notificationsAPI } from '../lib/api'
 import LanguageSwitcher from './LanguageSwitcher'
@@ -28,13 +28,17 @@ interface StaticPage {
 
 // Permanent features that always appear in navbar
 const PERMANENT_FEATURES = [
-  { path: '/blog', label: 'Blog' },
-  { path: '/orientation', label: 'Orientation' },
+  { path: '/blog', label: 'Read' },
+  { path: '/orientation', label: 'Explore' },
+  { path: '/discover', label: 'Discover' },
+  { path: '/pricing', label: 'Pricing' },
 ];
 
 export default function Navbar({ onAdminMenuToggle, showAdminMenu }: NavbarProps = {}) {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
+  const [isReadDropdownOpen, setIsReadDropdownOpen] = useState(false)
+  const [isDiscoverDropdownOpen, setIsDiscoverDropdownOpen] = useState(false)
   const [user, setUser] = useState<User | null>(null)
   const [navbarPages, setNavbarPages] = useState<StaticPage[]>([])
   const [unreadCount, setUnreadCount] = useState<number>(0)
@@ -75,7 +79,12 @@ export default function Navbar({ onAdminMenuToggle, showAdminMenu }: NavbarProps
         if (!mounted) return
         setUnreadCount(Number(count || 0))
         setNotifications(Array.isArray(list) ? list.slice(0, 10) : [])
-      } catch {}
+      } catch (err) {
+        if (!mounted) return
+        console.warn('Notifications unavailable:', err)
+        setUnreadCount(0)
+        setNotifications([])
+      }
     }
     load()
     interval = setInterval(load, 15000)
@@ -110,180 +119,360 @@ export default function Navbar({ onAdminMenuToggle, showAdminMenu }: NavbarProps
     navigate('/')
   }
 
-  // Calculate spacing based on number of items
-  const permanentFeaturesCount = PERMANENT_FEATURES.length
-  const pagesCount = navbarPages.length
-  const matcherCount = user ? 1 : 0
-  const totalNavItems = permanentFeaturesCount + pagesCount + matcherCount
-  
-  // Calculate dynamic spacing (more items = less padding, fewer items = more padding)
-  const getNavItemSpacing = () => {
-    if (totalNavItems <= 3) return 'space-x-4'
-    if (totalNavItems <= 5) return 'space-x-3'
-    if (totalNavItems <= 7) return 'space-x-2'
-    return 'space-x-1'
-  }
-
-  const navItemSpacing = getNavItemSpacing()
-
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-gray-100"
+      className="bg-black/80 backdrop-blur-md shadow-2xl sticky top-0 z-50 border-b border-gray-800/50"
     >
-      <div className="w-full px-2 sm:px-3 lg:px-4">
+      {/* Animated background glow */}
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-black to-blue-900/10" />
+      
+      <div className="relative w-full px-2 sm:px-3 lg:px-4">
         <div className="flex justify-between items-center h-16 gap-2">
-          {/* Left side: Admin Menu Toggle (for admin users) + Logo */}
+          {/* Left side: Admin Menu Toggle + Logo */}
           <div className="flex items-center space-x-2 flex-shrink-0">
-            {/* Admin Menu Toggle Button (far left, only for admin) */}
+            {/* Admin Menu Toggle Button */}
             {user?.role === 'admin' && (
-              <button
+              <motion.button
                 onClick={onAdminMenuToggle}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors group"
+                className="p-2 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 group"
                 title="Admin Menu"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <Settings className={`h-5 w-5 transition-colors duration-200 ${
-                  showAdminMenu ? 'text-blue-600' : 'text-gray-600 group-hover:text-blue-600'
+                  showAdminMenu ? 'text-purple-400' : 'text-gray-400 group-hover:text-purple-400'
                 }`} />
-              </button>
+              </motion.button>
             )}
             
-            {/* Logo - Always navigates to home */}
+            {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group">
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ duration: 0.3 }}
+                className="relative"
               >
-                <GraduationCap className="h-8 w-8 text-primary-600" />
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur-md opacity-50 group-hover:opacity-75 transition-opacity" />
+                <Sparkles className="h-8 w-8 text-purple-400 relative z-10" />
               </motion.div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+              <span className="text-2xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
                 AcademOra
               </span>
             </Link>
           </div>
 
           {/* Center: Navigation Items */}
-          <div className={`hidden md:flex items-center ${navItemSpacing} flex-1 justify-center min-w-0`}>
-            {/* Permanent Features Section */}
+          <div className="hidden md:flex items-center space-x-8 flex-1 justify-center min-w-0">
+            {/* Permanent Features */}
             {PERMANENT_FEATURES.map((item) => (
-              <Link
+              <motion.div
                 key={item.path}
-                to={item.path}
-                className="relative text-gray-700 hover:text-primary-600 transition-colors px-1 py-1 group"
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.2 }}
+                className="relative"
+                onMouseEnter={() => {
+                      if (item.path === '/blog') setIsReadDropdownOpen(true)
+                      if (item.path === '/discover') setIsDiscoverDropdownOpen(true)
+                    }}
+                    onMouseLeave={() => {
+                      if (item.path === '/blog') setIsReadDropdownOpen(false)
+                      if (item.path === '/discover') setIsDiscoverDropdownOpen(false)
+                    }}
               >
-                <span className="relative z-10">{item.label}</span>
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </Link>
+                {item.path === '/blog' ? (
+                  <div className="relative">
+                    <Link
+                      to="/blog"
+                      className="relative text-gray-300 hover:text-white transition-colors px-3 py-2 group flex items-center gap-1"
+                      onClick={() => setIsReadDropdownOpen(false)}
+                    >
+                      <span className="relative z-10 font-medium">{item.label}</span>
+                      <ChevronDown className="h-4 w-4" />
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500"
+                        initial={{ scaleX: 0 }}
+                        whileHover={{ scaleX: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </Link>
+                    
+                    {/* Read Dropdown Menu */}
+                    <AnimatePresence>
+                      {isReadDropdownOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute top-full left-0 mt-2 w-48 bg-gray-900/95 backdrop-blur-md rounded-lg border border-gray-700/50 shadow-2xl"
+                        >
+                          <Link
+                            to="/blog"
+                            className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors rounded-t-lg"
+                            onClick={() => setIsReadDropdownOpen(false)}
+                          >
+                            <BookOpen className="h-4 w-4" />
+                            <span>Articles</span>
+                          </Link>
+                          <Link
+                            to="/blog?view=docs"
+                            className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors rounded-b-lg"
+                            onClick={() => setIsReadDropdownOpen(false)}
+                          >
+                            <FileText className="h-4 w-4" />
+                            <span>Docs</span>
+                          </Link>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : item.path === '/discover' ? (
+                  <div className="relative">
+                    <Link
+                      to="/about"
+                      className="relative text-gray-300 hover:text-white transition-colors px-3 py-2 group flex items-center gap-1"
+                      onClick={() => setIsDiscoverDropdownOpen(false)}
+                    >
+                      <span className="relative z-10 font-medium">{item.label}</span>
+                      <ChevronDown className="h-4 w-4" />
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500"
+                        initial={{ scaleX: 0 }}
+                        whileHover={{ scaleX: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </Link>
+                    
+                    {/* Discover Dropdown Menu */}
+                    <AnimatePresence>
+                      {isDiscoverDropdownOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute top-full left-0 mt-2 w-56 bg-gray-900/95 backdrop-blur-md rounded-lg border border-gray-700/50 shadow-2xl"
+                        >
+                          <Link
+                            to="/about"
+                            className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors rounded-t-lg"
+                            onClick={() => setIsDiscoverDropdownOpen(false)}
+                          >
+                            <Info className="h-4 w-4" />
+                            <span>About Us</span>
+                          </Link>
+                          <Link
+                            to="/contact"
+                            className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                            onClick={() => setIsDiscoverDropdownOpen(false)}
+                          >
+                            <Phone className="h-4 w-4" />
+                            <span>Contact Us</span>
+                          </Link>
+                          <Link
+                            to="/policy"
+                            className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                            onClick={() => setIsDiscoverDropdownOpen(false)}
+                          >
+                            <Shield className="h-4 w-4" />
+                            <span>Our Policy</span>
+                          </Link>
+                          <Link
+                            to="/careers"
+                            className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors rounded-b-lg"
+                            onClick={() => setIsDiscoverDropdownOpen(false)}
+                          >
+                            <Heart className="h-4 w-4" />
+                            <span>Join Our Team</span>
+                          </Link>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Link
+                    to={item.path}
+                    className="relative text-gray-300 hover:text-white transition-colors px-3 py-2 group"
+                  >
+                    <span className="relative z-10 font-medium">{item.label}</span>
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500"
+                      initial={{ scaleX: 0 }}
+                      whileHover={{ scaleX: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </Link>
+                )}
+              </motion.div>
             ))}
 
-            {/* Static Pages Section (from editor) */}
-            {navbarPages.map((page) => (
-              <Link
+            {/* Static Pages */}
+            {navbarPages.filter(page => page.slug !== 'about').map((page) => (
+              <motion.div
                 key={page.id}
-                to={`/${page.slug}`}
-                className="relative text-gray-700 hover:text-primary-600 transition-colors px-1 py-1 group"
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.2 }}
               >
-                <span className="relative z-10">{page.title}</span>
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </Link>
+                <Link
+                  to={`/${page.slug}`}
+                  className="relative text-gray-300 hover:text-white transition-colors px-3 py-2 group"
+                >
+                  <span className="relative z-10 font-medium">{page.title}</span>
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500"
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </Link>
+              </motion.div>
             ))}
-
-            {/* Matcher (only for logged-in users) */}
-            {user && (
-              <Link
-                to="/matching-engine"
-                className="relative text-gray-700 font-medium hover:text-primary-600 transition-colors px-1 py-1 group"
-              >
-                <span className="relative z-10">{t('common.matcher')}</span>
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </Link>
-            )}
           </div>
 
           {/* Right side: User Actions */}
-          <div className="hidden md:flex items-center space-x-2 flex-shrink-0 relative">
+          <div className="hidden md:flex items-center space-x-3 flex-shrink-0 relative">
             {user && (
               <div className="relative">
-                <button
+                <motion.button
                   onClick={() => setShowNotifs(!showNotifs)}
-                  className="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-colors group"
+                  className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 group"
                   title="Notifications"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <Bell className="h-5 w-5 text-gray-600 group-hover:text-primary-600" />
+                  <Bell className="h-5 w-5 text-gray-400 group-hover:text-purple-400" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+                    <motion.span 
+                      className="absolute -top-1 -right-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] px-1.5 py-0.5 rounded-full"
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
                       {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
+                    </motion.span>
                   )}
-                </button>
-                {showNotifs && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-[60]">
-                    <div className="flex items-center justify-between px-3 py-2 border-b">
-                      <div className="text-sm font-semibold">Notifications</div>
-                      <button className="text-xs text-primary-600 hover:underline" onClick={async()=>{ await notificationsAPI.markAllRead(); setUnreadCount(0) }}>Mark all read</button>
-                    </div>
-                    <div className="max-h-80 overflow-auto divide-y">
-                      {notifications.length === 0 ? (
-                        <div className="p-3 text-sm text-gray-500">No notifications</div>
-                      ) : notifications.map((n) => (
-                        <div key={n.id} className="p-3 text-sm">
-                          <div className="font-medium text-gray-900">{n.type}</div>
-                          {n.payload?.message && <div className="text-gray-600 mt-0.5">{n.payload.message}</div>}
-                          <div className="text-xs text-gray-400 mt-1">{new Date(n.created_at).toLocaleString()}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                </motion.button>
+                
+                <AnimatePresence>
+                  {showNotifs && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-2 w-80 bg-gray-900/95 backdrop-blur-md border border-gray-700/50 rounded-lg shadow-2xl z-[60]"
+                    >
+                      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700/50">
+                        <div className="text-sm font-semibold text-white">Notifications</div>
+                        <button 
+                          className="text-xs text-purple-400 hover:text-purple-300 transition-colors" 
+                          onClick={async()=>{ 
+                            await notificationsAPI.markAllRead();
+                            setUnreadCount(0);
+                            setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+                          }}
+                        >
+                          Mark all read
+                        </button>
+                      </div>
+                      <div className="max-h-80 overflow-auto divide-y divide-gray-700/50">
+                        {notifications.length === 0 ? (
+                          <div className="p-4 text-sm text-gray-400">No notifications</div>
+                        ) : notifications.map((n) => {
+                          const title = n.title || n.metadata?.title || n.type || 'Notification'
+                          const message = n.message || n.metadata?.message
+                          const createdAt = n.created_at ? new Date(n.created_at).toLocaleString() : ''
+
+                          return (
+                            <div key={n.id} className={`p-4 text-sm space-y-2 ${n.is_read ? '' : 'bg-white/5'}`}>
+                              <div className="flex items-center justify-between gap-3">
+                                <div className="font-medium text-white truncate" title={title}>{title}</div>
+                                {!n.is_read && <span className="text-[10px] uppercase text-purple-300">New</span>}
+                              </div>
+                              {message && <div className="text-gray-300 leading-snug">{message}</div>}
+                              {n.action_url && (
+                                <Link
+                                  to={n.action_url}
+                                  className="inline-flex items-center gap-1 text-xs text-purple-300 hover:text-purple-200 transition-colors"
+                                  onClick={() => setShowNotifs(false)}
+                                >
+                                  View
+                                  <ChevronDown className="h-3 w-3 rotate-[-90deg]" />
+                                </Link>
+                              )}
+                              {createdAt && <div className="text-xs text-gray-500">{createdAt}</div>}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             )}
-            {user ? (
-              <>
-                {/* Sign Out Button with Icon */}
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-colors group"
-                  title="Sign Out"
+            
+            {user && (
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  to="/dashboard"
+                  className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 group"
+                  title="My Profile"
                 >
-                  <LogOut className="h-5 w-5 text-gray-600 group-hover:text-red-600 transition-colors" />
-                </button>
-              </>
+                  {user?.avatar_url ? (
+                    <img
+                      src={user.avatar_url}
+                      alt="Profile"
+                      className="w-full h-full rounded-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none'
+                      }}
+                    />
+                  ) : (
+                    <User className="h-5 w-5 text-gray-400 group-hover:text-purple-400 transition-colors" />
+                  )}
+                </Link>
+              </motion.div>
+            )}
+
+            {user ? (
+              <motion.button
+                onClick={handleSignOut}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-red-500/20 hover:border-red-500/50 transition-all duration-300 group"
+                title="Sign Out"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <LogOut className="h-5 w-5 text-gray-400 group-hover:text-red-400 transition-colors" />
+              </motion.button>
             ) : (
-              <>
-                {/* Sign In Button with Icon */}
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <Link
                   to="/login"
-                  className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition-colors group"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-purple-500/20 hover:border-purple-500/50 transition-all duration-300 group"
                   title="Sign In"
                 >
-                  <User className="h-5 w-5 text-gray-600 group-hover:text-primary-600 transition-colors" />
+                  <User className="h-5 w-5 text-gray-400 group-hover:text-purple-400 transition-colors" />
                 </Link>
-              </>
+              </motion.div>
             )}
-            <LanguageSwitcher />
+            
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg px-3 py-2">
+              <LanguageSwitcher />
+            </div>
           </div>
 
           {/* Mobile menu button */}
           <motion.button
             whileTap={{ scale: 0.95 }}
-            className="md:hidden text-gray-700 hover:text-primary-600"
+            className="md:hidden text-gray-300 hover:text-white p-2 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10"
             onClick={() => setIsOpen(!isOpen)}
           >
             <AnimatePresence mode="wait">
@@ -319,79 +508,230 @@ export default function Navbar({ onAdminMenuToggle, showAdminMenu }: NavbarProps
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden border-t border-gray-200 overflow-hidden"
+            className="md:hidden border-t border-gray-800/50 overflow-hidden bg-black/80 backdrop-blur-md"
           >
-            <div className="px-4 pt-2 pb-3 space-y-1">
+            <div className="px-4 pt-4 pb-3 space-y-2">
               {/* Permanent Features */}
               {PERMANENT_FEATURES.map((item) => (
-                <Link
+                <motion.div
                   key={item.path}
-                  to={item.path}
-                  className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
-                  onClick={() => setIsOpen(false)}
+                  whileHover={{ x: 5 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  {item.label}
-                </Link>
+                  {item.path === '/blog' ? (
+                    <div>
+                      <Link
+                        to="/blog"
+                        className="w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 font-medium"
+                        onClick={() => {
+                          setIsReadDropdownOpen(!isReadDropdownOpen)
+                        }}
+                      >
+                        <span>{item.label}</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isReadDropdownOpen ? 'rotate-180' : ''}`} />
+                      </Link>
+                      
+                      {/* Mobile Read Dropdown Menu */}
+                      <AnimatePresence>
+                        {isReadDropdownOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                          >
+                            <Link
+                              to="/blog"
+                              className="flex items-center gap-3 pl-8 pr-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                              onClick={() => {
+                                setIsReadDropdownOpen(false)
+                                setIsOpen(false)
+                              }}
+                            >
+                              <BookOpen className="h-4 w-4" />
+                              <span>Articles</span>
+                            </Link>
+                            <Link
+                              to="/blog?view=docs"
+                              className="flex items-center gap-3 pl-8 pr-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                              onClick={() => {
+                                setIsReadDropdownOpen(false)
+                                setIsOpen(false)
+                              }}
+                            >
+                              <FileText className="h-4 w-4" />
+                              <span>Docs</span>
+                            </Link>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : item.path === '/discover' ? (
+                    <div>
+                      <Link
+                        to="/about"
+                        className="w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 font-medium"
+                        onClick={() => {
+                          setIsDiscoverDropdownOpen(!isDiscoverDropdownOpen)
+                        }}
+                      >
+                        <span>{item.label}</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isDiscoverDropdownOpen ? 'rotate-180' : ''}`} />
+                      </Link>
+                      
+                      {/* Mobile Discover Dropdown Menu */}
+                      <AnimatePresence>
+                        {isDiscoverDropdownOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                          >
+                            <Link
+                              to="/about"
+                              className="flex items-center gap-3 pl-8 pr-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                              onClick={() => {
+                                setIsDiscoverDropdownOpen(false)
+                                setIsOpen(false)
+                              }}
+                            >
+                              <Info className="h-4 w-4" />
+                              <span>About Us</span>
+                            </Link>
+                            <Link
+                              to="/contact"
+                              className="flex items-center gap-3 pl-8 pr-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                              onClick={() => {
+                                setIsDiscoverDropdownOpen(false)
+                                setIsOpen(false)
+                              }}
+                            >
+                              <Phone className="h-4 w-4" />
+                              <span>Contact Us</span>
+                            </Link>
+                            <Link
+                              to="/policy"
+                              className="flex items-center gap-3 pl-8 pr-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                              onClick={() => {
+                                setIsDiscoverDropdownOpen(false)
+                                setIsOpen(false)
+                              }}
+                            >
+                              <Shield className="h-4 w-4" />
+                              <span>Our Policy</span>
+                            </Link>
+                            <Link
+                              to="/careers"
+                              className="flex items-center gap-3 pl-8 pr-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                              onClick={() => {
+                                setIsDiscoverDropdownOpen(false)
+                                setIsOpen(false)
+                              }}
+                            >
+                              <Heart className="h-4 w-4" />
+                              <span>Join Our Team</span>
+                            </Link>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <Link
+                      to={item.path}
+                      className="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 font-medium"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                </motion.div>
               ))}
 
               {/* Static Pages */}
-              {navbarPages.map((page) => (
-                <Link
+              {navbarPages.filter(page => page.slug !== 'about').map((page) => (
+                <motion.div
                   key={page.id}
-                  to={`/${page.slug}`}
-                  className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
-                  onClick={() => setIsOpen(false)}
+                  whileHover={{ x: 5 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  {page.title}
-                </Link>
+                  <Link
+                    to={`/${page.slug}`}
+                    className="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 font-medium"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {page.title}
+                  </Link>
+                </motion.div>
               ))}
 
-              {/* Matcher (only for logged-in users) */}
-              {user && (
-                <Link
-                  to="/matching-engine"
-                  className="block px-3 py-2 text-gray-700 font-medium hover:bg-gray-100 rounded-md"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {t('common.matcher')}
-                </Link>
-              )}
-
-              {/* User Actions */}
-              {user ? (
-                <>
-                  <button
-                    onClick={() => {
-                      handleSignOut()
-                      setIsOpen(false)
-                    }}
-                    className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md flex items-center space-x-2"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    <span>{t('common.signOut')}</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md flex items-center space-x-2"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <User className="h-4 w-4" />
-                    <span>{t('common.login')}</span>
-                  </Link>
-                  <Link
-                    to="/signup"
-                    className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {t('common.signup')}
-                  </Link>
-                </>
-              )}
-              <div className="pt-2 border-t border-gray-200 mt-2">
-                <LanguageSwitcher />
+              <div className="pt-3 border-t border-gray-800/50 mt-3">
+                {/* User Actions */}
+                {user ? (
+                  <>
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Link
+                        to="/dashboard"
+                        className="block w-full text-left px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 font-medium flex items-center space-x-3"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <User className="h-5 w-5" />
+                        <span>My Profile</span>
+                      </Link>
+                    </motion.div>
+                    <motion.button
+                      whileHover={{ x: 5 }}
+                      transition={{ duration: 0.2 }}
+                      onClick={() => {
+                        handleSignOut()
+                        setIsOpen(false)
+                      }}
+                      className="block w-full text-left px-4 py-3 text-gray-300 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all duration-300 font-medium flex items-center space-x-3"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      <span>{t('common.signOut')}</span>
+                    </motion.button>
+                  </>
+                ) : (
+                  <>
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Link
+                        to="/login"
+                        className="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 font-medium flex items-center space-x-3"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <User className="h-5 w-5" />
+                        <span>{t('common.login')}</span>
+                      </Link>
+                    </motion.div>
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Link
+                        to="/signup"
+                        className="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-300 font-medium"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {t('common.signup')}
+                      </Link>
+                    </motion.div>
+                  </>
+                )}
+                
+                <div className="pt-3 mt-3">
+                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-3">
+                    <LanguageSwitcher />
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>

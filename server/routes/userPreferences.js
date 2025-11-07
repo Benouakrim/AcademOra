@@ -7,7 +7,8 @@ const router = express.Router();
 // Get current user's preferences
 router.get('/', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Authentication required' });
     const { data, error } = await supabase
       .from('user_preferences')
       .select('*')
@@ -25,7 +26,8 @@ router.get('/', authenticateToken, async (req, res) => {
 // Upsert user preferences
 router.post('/', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Authentication required' });
     const prefs = {
       user_id: userId,
       weight_tuition: req.body?.weight_tuition ?? 0.5,

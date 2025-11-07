@@ -19,17 +19,17 @@ const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
 const AdminClaimsPage = lazy(() => import('./pages/admin/AdminClaimsPage'))
 const ArticleEditor = lazy(() => import('./pages/ArticleEditor'))
 const ArticlesList = lazy(() => import('./pages/admin/ArticlesList'))
-const CategoriesPage = lazy(() => import('./pages/admin/CategoriesPage'))
 const TaxonomiesPage = lazy(() => import('./pages/admin/TaxonomiesPage'))
 const TagsPage = lazy(() => import('./pages/admin/TagsPage'))
 const AdminUsersPage = lazy(() => import('./pages/AdminUsersPage'))
-import AboutUsPage from './pages/AboutUsPage'
-import ContactUsPage from './pages/ContactUsPage'
+import PricingPage from './pages/PricingPage'
 import UnifiedPageEditor from './pages/admin/UnifiedPageEditor'
 import PagesManagementPage from './pages/PagesManagementPage'
 import MatchingDashboardPage from './pages/MatchingDashboardPage' // Future Mixer dashboard
 const AdminUniversitiesPage = lazy(() => import('./pages/admin/AdminUniversitiesPage'))
 const UniversityEditor = lazy(() => import('./pages/admin/UniversityEditor'))
+const LocalizedContentPage = lazy(() => import('./pages/LocalizedContentPage'))
+const AdvancedAnalyticsPage = lazy(() => import('./pages/AdvancedAnalyticsPage'))
 import UniversityDetailPage from './pages/UniversityDetailPage'
 import UniversityGroupDetailPage from './pages/UniversityGroupDetailPage'
 const AdminGroupsPage = lazy(() => import('./pages/admin/AdminGroupsPage'))
@@ -40,6 +40,12 @@ const AdminContactPage = lazy(() => import('./pages/admin/AdminContactPage'))
 import UniversityComparePage from './pages/UniversityComparePage'
 import PublicUserProfilePage from './pages/PublicUserProfilePage'
 const DevDashboard = lazy(() => import('./pages/DevDashboard'))
+import DocumentationPage from './pages/DocumentationPage'
+import DocsPage from './pages/DocsPage'
+import AboutPage from './pages/AboutPage'
+import ContactPage from './pages/ContactPage'
+import PolicyPage from './pages/PolicyPage'
+import CareersPage from './pages/CareersPage'
 
 function App() {
   return (
@@ -75,8 +81,13 @@ function App() {
           <Route path={track("/admin/categories")} element={<TaxonomiesPage />} />
           <Route path={track("/admin/taxonomies")} element={<TaxonomiesPage />} />
           <Route path={track("/admin/tags")} element={<TagsPage />} />
-          <Route path={track("/about")} element={<AboutUsPage />} />
-          <Route path={track("/contact")} element={<ContactUsPage />} />
+          <Route path={track("/admin/localized-content")} element={<LocalizedContentPage />} />
+          <Route path={track("/admin/analytics")} element={<AdvancedAnalyticsPage />} />
+          <Route path={track("/about")} element={<AboutPage />} />
+          <Route path={track("/contact")} element={<ContactPage />} />
+          <Route path={track("/policy")} element={<PolicyPage />} />
+          <Route path={track("/careers")} element={<CareersPage />} />
+          <Route path={track("/pricing")} element={<PricingPage />} />
           <Route path={track("/blog")} element={<BlogPage />} />
           <Route path={track("/blog/category/:categoryName")} element={<CategoryPage />} />
           <Route path={track("/blog/:slug")} element={<ArticlePage />} />
@@ -86,6 +97,8 @@ function App() {
           <Route path={track("/universities/:slug")} element={<UniversityDetailPage />} />
           <Route path={track("/university-groups/:slug")} element={<UniversityGroupDetailPage />} />
           <Route path={track("/compare")} element={<UniversityComparePage />} />
+          <Route path={track("/docs/:slug")} element={<DocumentationPage />} />
+          <Route path={track("/docs")} element={<DocsPage />} />
           <Route path={track("/u/:username")} element={<PublicUserProfilePage />} />
           {import.meta.env.DEV && (
             <Route path={track("/__dev")} element={<DevDashboard />} />

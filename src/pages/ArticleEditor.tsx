@@ -79,17 +79,10 @@ export default function ArticleEditor() {
     },
   });
 
-  // Debug logging and route validation
+  // Route validation
   useEffect(() => {
-    console.log('Current URL:', window.location.href);
-    console.log('Current pathname:', location.pathname);
-    console.log('Route params:', { id });
-    console.log('isEditMode:', isEditMode);
-    console.log('Expected route pattern:', '/admin/articles/edit/:id');
-
     // Check if we're on the wrong route
     if (!location.pathname.startsWith('/admin/articles/edit/')) {
-      console.error('Wrong route detected, redirecting...');
       setError('Wrong route detected. Redirecting to admin dashboard...');
       setTimeout(() => {
         navigate('/admin');

@@ -18,10 +18,13 @@ router.get('/:kind', async (req, res) => {
   const table = tableFor(req.params.kind);
   if (!table) return res.status(400).json({ error: 'Invalid kind' });
   try {
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+
     const { data, error } = await supabase
       .from(table)
       .select('*')
-      .eq('user_id', req.user.id)
+      .eq('user_id', userId)
       .order('created_at', { ascending: false });
     if (error) throw error;
     res.json(data || []);
@@ -35,7 +38,10 @@ router.post('/:kind', async (req, res) => {
   const table = tableFor(req.params.kind);
   if (!table) return res.status(400).json({ error: 'Invalid kind' });
   try {
-    const payload = { ...req.body, user_id: req.user.id };
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+
+    const payload = { ...req.body, user_id: userId };
     const { data, error } = await supabase
       .from(table)
       .insert([payload])
@@ -53,11 +59,14 @@ router.put('/:kind/:id', async (req, res) => {
   const table = tableFor(req.params.kind);
   if (!table) return res.status(400).json({ error: 'Invalid kind' });
   try {
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+
     const { data, error } = await supabase
       .from(table)
       .update(req.body)
       .eq('id', req.params.id)
-      .eq('user_id', req.user.id)
+      .eq('user_id', userId)
       .select('*')
       .single();
     if (error) throw error;
@@ -72,11 +81,14 @@ router.delete('/:kind/:id', async (req, res) => {
   const table = tableFor(req.params.kind);
   if (!table) return res.status(400).json({ error: 'Invalid kind' });
   try {
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+
     const { error } = await supabase
       .from(table)
       .delete()
       .eq('id', req.params.id)
-      .eq('user_id', req.user.id);
+      .eq('user_id', userId);
     if (error) throw error;
     res.json({ success: true });
   } catch (err) {

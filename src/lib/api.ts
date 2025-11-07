@@ -454,6 +454,19 @@ export const profileAPI = {
   },
 };
 
+// Financial profile API
+export const financialProfileAPI = {
+  async getProfile() {
+    return fetchAPI('/profile/financial');
+  },
+  async updateProfile(data: any) {
+    return fetchAPI('/profile/financial', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+};
+
 // Saved Items API
 export const savedItemsAPI = {
   async getSavedItems(type?: string) {
@@ -606,5 +619,194 @@ export const notificationsAPI = {
   },
   async markAllRead() {
     return fetchAPI('/notifications/read-all', { method: 'POST' });
+  },
+};
+
+// Micro-Content API
+export const microContentAPI = {
+  async getMicroContent(universityId: string) {
+    return fetchAPI(`/universities/${universityId}/micro-content`);
+  },
+
+  async getMicroContentItem(id: string) {
+    return fetchAPI(`/micro-content/${id}`);
+  },
+
+  async createMicroContent(data: any) {
+    return fetchAPI('/micro-content', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async updateMicroContent(id: string, data: any) {
+    return fetchAPI(`/micro-content/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async deleteMicroContent(id: string) {
+    return fetchAPI(`/micro-content/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  async getAllMicroContent() {
+    return fetchAPI('/admin/micro-content');
+  },
+};
+
+// Localized Content API
+export const localizedContentAPI = {
+  async getLocalizedContent(contentType: string, languageCode: string, entityId?: string) {
+    const params = new URLSearchParams({
+      content_type: contentType,
+      language_code: languageCode,
+    });
+    
+    if (entityId) {
+      params.append('entity_id', entityId);
+    }
+    
+    return fetchAPI(`/localized-content?${params.toString()}`);
+  },
+
+  async getLocalizedContentItem(id: string) {
+    return fetchAPI(`/localized-content/${id}`);
+  },
+
+  async createLocalizedContent(data: any) {
+    return fetchAPI('/localized-content', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async updateLocalizedContent(id: string, data: any) {
+    return fetchAPI(`/localized-content/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async deleteLocalizedContent(id: string) {
+    return fetchAPI(`/localized-content/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  async getAllLocalizedContent() {
+    return fetchAPI('/admin/localized-content');
+  },
+
+  async getLanguageStats() {
+    return fetchAPI('/admin/localized-content/stats');
+  },
+
+  async submitForReview(id: string) {
+    return fetchAPI(`/localized-content/${id}/submit`, {
+      method: 'POST',
+    });
+  },
+
+  async approveContent(id: string) {
+    return fetchAPI(`/admin/localized-content/${id}/approve`, {
+      method: 'POST',
+    });
+  },
+
+  async rejectContent(id: string, reason: string) {
+    return fetchAPI(`/admin/localized-content/${id}/reject`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    });
+  },
+};
+
+// Advanced Analytics API
+export const advancedAnalyticsAPI = {
+  async overview(filters?: any) {
+    const params = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+    }
+    return fetchAPI(`/admin/analytics/advanced/overview?${params.toString()}`);
+  },
+
+  async getUserAnalytics(filters?: any) {
+    const params = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+    }
+    return fetchAPI(`/admin/analytics/advanced/users?${params.toString()}`);
+  },
+
+  async getUniversityAnalytics(filters?: any) {
+    const params = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+    }
+    return fetchAPI(`/admin/analytics/advanced/universities?${params.toString()}`);
+  },
+
+  async getEngagementAnalytics(filters?: any) {
+    const params = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+    }
+    return fetchAPI(`/admin/analytics/advanced/engagement?${params.toString()}`);
+  },
+
+  async getConversionAnalytics(filters?: any) {
+    const params = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+    }
+    return fetchAPI(`/admin/analytics/advanced/conversions?${params.toString()}`);
+  },
+
+  async getContentAnalytics(filters?: any) {
+    const params = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+    }
+    return fetchAPI(`/admin/analytics/advanced/content?${params.toString()}`);
+  },
+
+  async getTimeSeriesData(metric: string, filters?: any) {
+    const params = new URLSearchParams({ metric });
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+    }
+    return fetchAPI(`/admin/analytics/advanced/timeseries?${params.toString()}`);
+  },
+
+  async exportData(type: string, format: string, filters?: any) {
+    const params = new URLSearchParams({ type, format });
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+    }
+    return fetchAPI(`/admin/analytics/advanced/export?${params.toString()}`);
+  },
+
+  async getRealTimeMetrics() {
+    return fetchAPI('/admin/analytics/advanced/realtime');
   },
 };

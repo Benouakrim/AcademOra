@@ -1,8 +1,8 @@
 {
   "common": {
     "home": "Accueil",
-    "blog": "Blog",
-    "orientation": "Orientation",
+    "blog": "Lire",
+    "orientation": "Explorer",
     "login": "Connexion",
     "signup": "S'inscrire",
     "signOut": "Déconnexion",

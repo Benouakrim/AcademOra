@@ -1,9 +1,10 @@
 import express from 'express';
 import supabase from '../database/supabase.js';
-import { authenticateToken } from './auth.js';
+import { parseUserToken, requireUser } from '../middleware/auth.js';
 
 const router = express.Router();
-router.use(authenticateToken);
+router.use(parseUserToken);
+router.use(requireUser);
 
 function tableFor(kind){
   if (kind === 'experiences') return 'experiences';
@@ -18,8 +19,7 @@ router.get('/:kind', async (req, res) => {
   const table = tableFor(req.params.kind);
   if (!table) return res.status(400).json({ error: 'Invalid kind' });
   try {
-    const userId = req.user?.userId;
-    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+    const userId = req.user?.id;
 
     const { data, error } = await supabase
       .from(table)
@@ -38,8 +38,7 @@ router.post('/:kind', async (req, res) => {
   const table = tableFor(req.params.kind);
   if (!table) return res.status(400).json({ error: 'Invalid kind' });
   try {
-    const userId = req.user?.userId;
-    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+    const userId = req.user?.id;
 
     const payload = { ...req.body, user_id: userId };
     const { data, error } = await supabase
@@ -59,8 +58,7 @@ router.put('/:kind/:id', async (req, res) => {
   const table = tableFor(req.params.kind);
   if (!table) return res.status(400).json({ error: 'Invalid kind' });
   try {
-    const userId = req.user?.userId;
-    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+    const userId = req.user?.id;
 
     const { data, error } = await supabase
       .from(table)
@@ -81,8 +79,7 @@ router.delete('/:kind/:id', async (req, res) => {
   const table = tableFor(req.params.kind);
   if (!table) return res.status(400).json({ error: 'Invalid kind' });
   try {
-    const userId = req.user?.userId;
-    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+    const userId = req.user?.id;
 
     const { error } = await supabase
       .from(table)

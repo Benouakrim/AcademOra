@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateToken, requireAdmin } from './auth.js';
+import { parseUserToken, requireAdmin } from '../middleware/auth.js';
 import {
   listAllMicroContent,
   getMicroContentById,
@@ -10,8 +10,11 @@ import {
 
 const router = express.Router();
 
+router.use(parseUserToken);
+router.use(requireAdmin);
+
 // List all micro-content (admin)
-router.get('/admin/micro-content', authenticateToken, requireAdmin, async (req, res) => {
+router.get('/admin/micro-content', async (req, res) => {
   try {
     const items = await listAllMicroContent();
     res.json(items);
@@ -22,7 +25,7 @@ router.get('/admin/micro-content', authenticateToken, requireAdmin, async (req, 
 });
 
 // Fetch single micro-content item
-router.get('/micro-content/:id', authenticateToken, requireAdmin, async (req, res) => {
+router.get('/micro-content/:id', async (req, res) => {
   try {
     const item = await getMicroContentById(req.params.id);
     if (!item) {
@@ -36,16 +39,13 @@ router.get('/micro-content/:id', authenticateToken, requireAdmin, async (req, re
 });
 
 // Create micro-content
-router.post('/micro-content', authenticateToken, requireAdmin, async (req, res) => {
+router.post('/micro-content', async (req, res) => {
   try {
     const payload = req.body || {};
     if (!payload.university_id || !payload.content_type || !payload.title || !payload.content) {
       return res.status(400).json({ error: 'Missing required fields: university_id, content_type, title, content' });
     }
-    payload.created_by = req.user?.userId;
-    if (!payload.created_by) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
+    payload.created_by = req.user?.id;
     const item = await createMicroContent(payload);
     res.status(201).json(item);
   } catch (err) {
@@ -55,7 +55,7 @@ router.post('/micro-content', authenticateToken, requireAdmin, async (req, res) 
 });
 
 // Update micro-content
-router.put('/micro-content/:id', authenticateToken, requireAdmin, async (req, res) => {
+router.put('/micro-content/:id', async (req, res) => {
   try {
     const item = await updateMicroContent(req.params.id, req.body || {});
     if (!item) {
@@ -69,7 +69,7 @@ router.put('/micro-content/:id', authenticateToken, requireAdmin, async (req, re
 });
 
 // Delete micro-content
-router.delete('/micro-content/:id', authenticateToken, requireAdmin, async (req, res) => {
+router.delete('/micro-content/:id', async (req, res) => {
   try {
     await deleteMicroContent(req.params.id);
     res.json({ success: true });

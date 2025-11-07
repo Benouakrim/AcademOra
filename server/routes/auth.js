@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { sendPasswordResetEmail } from '../services/email.js';
 import fetch from 'node-fetch';
+import { parseUserToken, requireUser } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -34,16 +35,14 @@ router.post('/signup', async (req, res) => {
 
     // Create user with 'user' role by default
     const user = await createUser(email, password, 'user');
-    
-    // Include role in JWT token
-    const token = jwt.sign(
-      { 
-        userId: user.id, 
-        email: user.email,
-        role: user.role 
-      }, 
-      JWT_SECRET
-    );
+
+    const tokenPayload = {
+      id: user.id,
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+    };
+    const token = jwt.sign(tokenPayload, JWT_SECRET);
 
     res.status(201).json({
       user: {
@@ -74,14 +73,13 @@ router.post('/login', async (req, res) => {
     }
 
     // Include role in JWT token
-    const token = jwt.sign(
-      { 
-        userId: user.id, 
-        email: user.email,
-        role: user.role 
-      }, 
-      JWT_SECRET
-    );
+    const tokenPayload = {
+      id: user.id,
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+    };
+    const token = jwt.sign(tokenPayload, JWT_SECRET);
 
     res.json({
       user: {
@@ -97,7 +95,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Get current user (protected route)
-router.get('/me', authenticateToken, async (req, res) => {
+router.get('/me', parseUserToken, requireUser, async (req, res) => {
   try {
     const user = await findUserByEmail(req.user.email);
     if (!user) {
@@ -107,42 +105,13 @@ router.get('/me', authenticateToken, async (req, res) => {
       id: user.id,
       email: user.email,
       role: user.role,
+      plan_id: user.plan_id,
+      subscription_status: user.subscription_status,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
-// Middleware to verify JWT token
-export function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({ error: 'Access token required' });
-  }
-
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ error: 'Invalid or expired token' });
-    }
-    req.user = user;
-    next();
-  });
-}
-
-// Middleware to check if user is admin
-export function requireAdmin(req, res, next) {
-  if (!req.user) {
-    return res.status(401).json({ error: 'Authentication required' });
-  }
-
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Admin access required' });
-  }
-
-  next();
-}
 
 // Request password reset (dev implementation: logs token link to console)
 router.post('/forgot', async (req, res) => {
@@ -268,7 +237,8 @@ router.get('/oauth/google/callback', async (req, res) => {
       user = await createUser(email, randomPassword, 'user');
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET);
+    const tokenPayload = { id: user.id, userId: user.id, email: user.email, role: user.role };
+    const token = jwt.sign(tokenPayload, JWT_SECRET);
 
     // Redirect to frontend with token
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
@@ -328,7 +298,8 @@ router.get('/oauth/linkedin/callback', async (req, res) => {
       user = await createUser(email, randomPassword, 'user');
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET);
+    const tokenPayload = { id: user.id, userId: user.id, email: user.email, role: user.role };
+    const token = jwt.sign(tokenPayload, JWT_SECRET);
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     const redirectTo = `${frontendUrl.replace(/\/$/, '')}/login?oauth=linkedin&token=${encodeURIComponent(token)}`;
     res.redirect(redirectTo);

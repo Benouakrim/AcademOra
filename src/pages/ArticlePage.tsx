@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Calendar, User, ArrowLeft, Edit, Trash2, Flame, Clock } from 'lucide-react'
+import { Calendar, User, ArrowLeft, Edit, Trash2, Flame, Clock, Lock } from 'lucide-react'
 import { adminAPI, blogAPI } from '../lib/api'
 import { BlogService } from '../lib/services/blogService'
 import { getCurrentUser } from '../lib/api'
@@ -18,6 +18,8 @@ interface Article {
   content: string
   excerpt: string
   category: string
+  is_premium?: boolean
+  premium?: boolean
   featured_image?: string
   created_at: string
   updated_at: string
@@ -31,6 +33,7 @@ export default function ArticlePage() {
   const [hotArticles, setHotArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState(false)
+  const [accessError, setAccessError] = useState<{ code: string; message: string } | null>(null)
   const navigate = useNavigate()
 
   // Check if current user is admin
@@ -43,9 +46,26 @@ export default function ArticlePage() {
 
       try {
         const data = await BlogService.getArticle(slug)
-        setArticle(data as Article)
-      } catch (error) {
+        const normalized: Article = {
+          ...(data as Article),
+          is_premium: (data as any)?.is_premium ?? (data as any)?.premium ?? false,
+        }
+        setArticle(normalized)
+        setAccessError(null)
+      } catch (error: any) {
         console.error('Error fetching article:', error)
+        if (error?.code === 'LOGIN_REQUIRED' || error?.code === 'UPGRADE_REQUIRED') {
+          setAccessError({
+            code: error.code,
+            message: error.error || error.message || '',
+          })
+        } else {
+          setAccessError({
+            code: error?.code || 'UNKNOWN',
+            message: error?.message || 'Failed to load article.',
+          })
+        }
+        setArticle(null)
       } finally {
         setLoading(false)
       }
@@ -120,6 +140,44 @@ export default function ArticlePage() {
           <div className="text-center py-20">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
             <p className="mt-4 text-gray-600">Loading article...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (accessError) {
+    return (
+      <div className="bg-gray-50 min-h-screen py-16">
+        <div className="max-w-3xl mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
+            <Lock className="h-16 w-16 text-primary-600 mx-auto mb-6" />
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              {accessError.code === 'LOGIN_REQUIRED' ? 'Premium Article' : 'Upgrade Required'}
+            </h1>
+            <p className="text-gray-600 mb-8">
+              {accessError.message ||
+                (accessError.code === 'LOGIN_REQUIRED'
+                  ? 'Please register for a free account to read this article.'
+                  : 'Upgrade to a Pro plan to unlock this premium article.')}
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                to={accessError.code === 'UPGRADE_REQUIRED' ? '/pricing' : '/signup'}
+                className="px-6 py-3 rounded-lg font-semibold text-white bg-primary-600 hover:bg-primary-700 transition-colors w-full sm:w-auto"
+              >
+                {accessError.code === 'UPGRADE_REQUIRED' ? 'Upgrade to Pro' : 'Create Free Account'}
+              </Link>
+              <Link
+                to="/login"
+                className="px-6 py-3 rounded-lg font-semibold border border-primary-200 text-primary-700 hover:bg-primary-50 transition-colors w-full sm:w-auto"
+              >
+                Log In
+              </Link>
+              <Link to="/blog" className="text-sm text-gray-500 hover:text-gray-700 mt-2 sm:mt-0">
+                Back to Blog
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -306,6 +364,12 @@ export default function ArticlePage() {
           )}
 
           <div className="mb-6 flex flex-wrap gap-2">
+            {article.is_premium && (
+              <span className="inline-flex items-center bg-yellow-100 text-yellow-800 text-sm font-semibold px-4 py-1 rounded-full">
+                <Lock className="h-3 w-3 mr-1" />
+                Premium
+              </span>
+            )}
             {Array.isArray((article as any).terms) && (article as any).terms.length > 0 ? (
               (article as any).terms.map((t: any) => (
                 <span key={t.id} className="inline-block bg-primary-100 text-primary-700 text-sm font-semibold px-4 py-1 rounded-full">

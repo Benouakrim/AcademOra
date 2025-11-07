@@ -27,6 +27,22 @@ export async function createUser(email, password, role = 'user') {
     const base = generateBaseUsername(email)
     const username = await ensureUniqueUsername(base)
 
+    // Determine default plan (free)
+    let planId = null;
+    try {
+      const { data: planData, error: planError } = await supabase
+        .from('plans')
+        .select('id')
+        .eq('key', 'free')
+        .maybeSingle();
+      if (planError) {
+        console.error('Failed to fetch free plan for new user:', planError);
+      }
+      planId = planData?.id || null;
+    } catch (planLookupError) {
+      console.error('Exception while fetching free plan:', planLookupError);
+    }
+
     // Insert user into Supabase
     const { data, error } = await supabase
       .from('users')
@@ -36,9 +52,10 @@ export async function createUser(email, password, role = 'user') {
           password: hashedPassword,
           role: role || 'user', // Default to 'user' role
           username,
+          plan_id: planId,
         },
       ])
-      .select('id, email, role, created_at, username')
+      .select('id, email, role, plan_id, subscription_status, created_at, username')
       .single();
 
     if (error) {
@@ -73,7 +90,7 @@ export async function findUserByEmail(email) {
   try {
     const { data, error } = await supabase
       .from('users')
-      .select('*')
+      .select('id, email, password, role, plan_id, subscription_status, created_at, username')
       .eq('email', email)
       .single();
 
@@ -95,7 +112,7 @@ export async function findUserById(id) {
   try {
     const { data, error } = await supabase
       .from('users')
-      .select('id, email, role, created_at')
+      .select('id, email, role, plan_id, subscription_status, created_at, username, full_name, avatar_url')
       .eq('id', id)
       .single();
 

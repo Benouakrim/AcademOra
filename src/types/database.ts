@@ -22,6 +22,7 @@ export interface Database {
           featured_image?: string
           created_at: string
           updated_at: string
+          is_premium: boolean
         }
         Insert: {
           id?: string
@@ -35,6 +36,7 @@ export interface Database {
           featured_image?: string
           created_at?: string
           updated_at?: string
+          is_premium?: boolean
         }
         Update: {
           id?: string
@@ -48,6 +50,7 @@ export interface Database {
           featured_image?: string
           created_at?: string
           updated_at?: string
+          is_premium?: boolean
         }
       }
       universities: {
@@ -192,7 +195,8 @@ export interface Database {
           content: string
           category: 'fields' | 'schools' | 'study-abroad' | 'procedures' | 'comparisons'
           featured: boolean
-          premium: boolean
+          is_premium: boolean
+          premium?: boolean
           created_at: string
           updated_at: string
         }
@@ -203,6 +207,7 @@ export interface Database {
           content: string
           category: 'fields' | 'schools' | 'study-abroad' | 'procedures' | 'comparisons'
           featured?: boolean
+          is_premium?: boolean
           premium?: boolean
           created_at?: string
           updated_at?: string
@@ -214,6 +219,7 @@ export interface Database {
           content?: string
           category?: 'fields' | 'schools' | 'study-abroad' | 'procedures' | 'comparisons'
           featured?: boolean
+          is_premium?: boolean
           premium?: boolean
           created_at?: string
           updated_at?: string

@@ -6,11 +6,13 @@ import authRoutes from './routes/auth.js';
 import blogRoutes from './routes/blog.js';
 import orientationRoutes from './routes/orientation.js';
 import adminRoutes from './routes/admin.js';
+import adminFeaturesRoutes from './routes/adminFeatures.js';
 import uploadRoutes from './routes/upload.js';
 import matchingRoutes from './routes/matching.js';
 import adminUniversityRoutes from './routes/adminUniversities.js';
 import universitiesRoutes from './routes/universities.js';
 import universityGroupsRoutes from './routes/universityGroups.js';
+import compareRoutes from './routes/compare.js';
 import adminUniversityGroupsRoutes from './routes/adminUniversityGroups.js';
 import profileRoutes from './routes/profile.js';
 import savedItemsRoutes from './routes/savedItems.js';
@@ -29,6 +31,7 @@ import profileSectionsRoutes from './routes/profileSections.js';
 import financialProfileRoutes from './routes/financialProfile.js';
 import devRoutes from './routes/dev.js';
 import sitemapRoutes from './routes/sitemap.js';
+import accessStatusRoutes from './routes/accessStatus.js';
 
 dotenv.config();
 
@@ -46,6 +49,7 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'public', 'uploads')
 app.use('/api/auth', authRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/orientation', orientationRoutes);
+app.use('/api/admin/features', adminFeaturesRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/matching', matchingRoutes);
@@ -64,6 +68,8 @@ app.use('/', sitemapRoutes);
 app.use('/api/universities', universitiesRoutes);
 // Public university groups (no auth required)
 app.use('/api/university-groups', universityGroupsRoutes);
+// University comparison workspace (feature-gated)
+app.use('/api/compare', compareRoutes);
 // Admin universities CRUD
 app.use('/api/admin/universities', adminUniversityRoutes);
 // Admin university groups CRUD
@@ -80,6 +86,8 @@ app.use('/api/admin/university-claims', adminUniversityClaimsRoutes);
 app.use('/api/pages', staticPagesRoutes);
 // Admin static pages management
 app.use('/api/admin/pages', adminStaticPagesRoutes);
+// Feature access status
+app.use('/api/access', accessStatusRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

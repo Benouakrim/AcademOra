@@ -1,16 +1,17 @@
 import express from 'express';
-import { authenticateToken } from './auth.js';
+import { parseUserToken, requireUser } from '../middleware/auth.js';
 import { updateUserProfile, updatePasswordById, getUserProfile } from '../data/users.js';
 
 const router = express.Router();
 
 // All routes require authentication
-router.use(authenticateToken);
+router.use(parseUserToken);
+router.use(requireUser);
 
 // GET /api/profile - Get current user profile
 router.get('/', async (req, res) => {
   try {
-    const profile = await getUserProfile(req.user.userId);
+    const profile = await getUserProfile(req.user.id);
     if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
@@ -34,7 +35,7 @@ router.put('/', async (req, res) => {
     if (subscription_status !== undefined) updates.subscription_status = subscription_status;
     if (subscription_expires_at !== undefined) updates.subscription_expires_at = subscription_expires_at;
 
-    const updated = await updateUserProfile(req.user.userId, updates);
+    const updated = await updateUserProfile(req.user.id, updates);
     res.json(updated);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -54,7 +55,7 @@ router.put('/password', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
 
-    const updated = await updatePasswordById(req.user.userId, currentPassword, newPassword);
+    const updated = await updatePasswordById(req.user.id, currentPassword, newPassword);
     res.json({ message: 'Password updated successfully', user: updated });
   } catch (error) {
     if (error.message === 'Current password is incorrect') {

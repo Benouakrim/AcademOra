@@ -10,7 +10,8 @@ interface Resource {
   slug: string
   content: string
   category: string
-  premium: boolean
+  is_premium?: boolean
+  premium?: boolean
   created_at: string
 }
 
@@ -32,13 +33,18 @@ export default function OrientationDetailPage() {
 
       try {
         const resourceData = await orientationAPI.getResource(category, slug)
-        
+
         if (resourceData) {
-          setResource(resourceData as Resource)
+          const normalized: Resource = {
+            ...resourceData,
+            is_premium: resourceData.is_premium ?? resourceData.premium ?? false,
+          }
+
+          setResource(normalized)
 
           // If resource is premium and user is not authenticated, redirect to login
           const user = getCurrentUser()
-          if (resourceData.premium && !user) {
+          if (normalized.is_premium && !user) {
             navigate('/login')
             return
           }
@@ -83,7 +89,7 @@ export default function OrientationDetailPage() {
     )
   }
 
-  if (resource.premium && !isAuthenticated) {
+  if (resource.is_premium && !isAuthenticated) {
     return (
       <div className="bg-gray-50 min-h-screen py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,7 +130,7 @@ export default function OrientationDetailPage() {
               {category}
             </span>
             <div className="flex items-center gap-3">
-              {resource.premium && (
+              {resource.is_premium && (
                 <span className="inline-flex items-center bg-yellow-100 text-yellow-800 text-sm font-semibold px-4 py-1 rounded-full">
                   <Lock className="h-3 w-3 mr-1" />
                   Premium

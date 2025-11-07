@@ -1,166 +1,393 @@
 import { getAllUniversities } from '../data/universities.js';
+import { supabase } from '../database/supabase.js';
 
-/**
- * New simplified scoring per Phase 2 requirements.
- * Accepts a complex criteria object with module toggles. Each enabled module
- * can deduct fixed points for mismatches. Starts from base 100.
- *
- * Input example:
- * {
- *   academics: { enabled: boolean, filters: { minGpa, testPolicy, degreeLevels: [] } },
- *   financials: { enabled: boolean, filters: { maxBudget, requireScholarships } },
- *   lifestyle: { enabled: boolean, filters: { countries: [], settings: [], climates: [] } },
- *   future: { enabled: boolean, filters: { minVisaMonths, minSalary } }
- * }
- */
-function scoreUniversity(uni = {}, criteria = {}) {
-  const explanations = [];
-
-  // Start with base score of 100
-  let score = 100;
-  // Weights from user preferences, default 0.5 each
-  const weights = criteria._weights || {};
-  const wTuition = clamp01(Number(weights.weight_tuition ?? 0.5));
-  const wLocation = clamp01(Number(weights.weight_location ?? 0.5));
-  const wRanking = clamp01(Number(weights.weight_ranking ?? 0.5));
-  const wProgram = clamp01(Number(weights.weight_program ?? 0.5));
-  const wLanguage = clamp01(Number(weights.weight_language ?? 0.5));
-
-  function clamp01(n){
-    if (Number.isNaN(n)) return 0.5;
-    if (n < 0) return 0;
-    if (n > 1) return 1;
-    return n;
+async function resolvePlanKey(user) {
+  if (!user) {
+    return 'anonymous';
   }
 
-  // Helper getters and safe normalization
-  const get = (obj, path, fallback = undefined) => {
-    try {
-      return path.split('.').reduce((o, k) => (o && o[k] !== undefined ? o[k] : fallback), obj);
-    } catch (e) {
-      return fallback;
+  // Default to free if user has no plan reference
+  if (!user.plan_id) {
+    return 'free';
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('plans')
+      .select('key')
+      .eq('id', user.plan_id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Failed to fetch plan for user in matching service:', error);
+    }
+
+    return data?.key || 'free';
+  } catch (err) {
+    console.error('Unexpected error while resolving plan key:', err);
+    return 'free';
+  }
+}
+
+const isNumber = (value) => typeof value === 'number' && !Number.isNaN(value);
+
+const normalizeString = (value) =>
+  value === undefined || value === null ? null : String(value).trim().toLowerCase();
+
+const pickValue = (source, keys) => {
+  for (const key of keys) {
+    const value = source?.[key];
+    if (value !== undefined && value !== null) return value;
+  }
+  return undefined;
+};
+
+const arrayFromValue = (value) => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  return [value];
+};
+
+function buildCriteriaChecks(criteria = {}) {
+  const checks = [];
+
+  const addCheck = (fn) => {
+    if (typeof fn === 'function') {
+      checks.push(fn);
     }
   };
 
-  // Academics: -20 if GPA below min; -10 if test policy mismatch
-  const academicsEnabled = get(criteria, 'academics.enabled') === true;
-  if (academicsEnabled) {
-    const minGpa = get(criteria, 'academics.filters.minGpa', null);
-    if (typeof minGpa === 'number' && typeof uni.min_gpa === 'number') {
-      if (uni.min_gpa < minGpa) {
-        const penalty = Math.round(20 * wProgram);
-        score -= penalty;
-        explanations.push(`Academics: university min_gpa ${uni.min_gpa} < required ${minGpa} (-${penalty})`);
-      } else {
-        explanations.push(`Academics: university min_gpa ${uni.min_gpa} >= required ${minGpa} (ok)`);
-      }
-    }
-
-    const testPolicy = get(criteria, 'academics.filters.testPolicy', null);
-    if (testPolicy) {
-      const uniTests = Array.isArray(uni.required_tests) ? uni.required_tests.map((t) => String(t).toLowerCase()) : [];
-      const tp = String(testPolicy).toLowerCase();
-      let mismatch = false;
-
-      if (tp === 'no-test') {
-        if (uniTests.length > 0) mismatch = true;
-      } else if (tp === 'requires-test') {
-        if (uniTests.length === 0) mismatch = true;
-      } else {
-        // treat as specific test name; mismatch if not present
-        if (!uniTests.includes(tp)) mismatch = true;
-      }
-
-      if (mismatch) {
-        const penalty = Math.round(10 * wProgram);
-        score -= penalty;
-        explanations.push(`Academics: test policy mismatch (${testPolicy}) (-${penalty})`);
-      } else {
-        explanations.push(`Academics: test policy OK (${testPolicy})`);
-      }
-    }
-  } else {
-    explanations.push('Academics disabled — neutral');
+  const country = normalizeString(criteria.country);
+  if (country && country !== 'any') {
+    addCheck((uni) => {
+      const uniCountry = pickValue(uni, ['country', 'location_country']);
+      if (!uniCountry) return null;
+      return normalizeString(uniCountry) === country;
+    });
   }
 
-  // Financials: -30 if tuition_intl > maxBudget (we map to avg_tuition_per_year)
-  const financialsEnabled = get(criteria, 'financials.enabled') === true;
-  if (financialsEnabled) {
-    const maxBudget = get(criteria, 'financials.filters.maxBudget', null);
-    if (typeof maxBudget === 'number' && typeof uni.avg_tuition_per_year === 'number') {
-      if (uni.avg_tuition_per_year > maxBudget) {
-        const penalty = Math.round(30 * wTuition);
-        score -= penalty;
-        explanations.push(`Financials: tuition ${uni.avg_tuition_per_year} > maxBudget ${maxBudget} (-${penalty})`);
-      } else {
-        explanations.push(`Financials: tuition ${uni.avg_tuition_per_year} <= maxBudget ${maxBudget} (ok)`);
-      }
-    }
-  } else {
-    explanations.push('Financials disabled — neutral');
+  const maxTuition = criteria.maxTuition ?? criteria.maxBudget;
+  if (isNumber(maxTuition)) {
+    addCheck((uni) => {
+      const tuition = pickValue(uni, ['avg_tuition_per_year', 'tuition_international', 'tuition']);
+      if (!isNumber(tuition)) return null;
+      return Number(tuition) <= maxTuition;
+    });
   }
 
-  // Lifestyle: -15 if country NOT in preferred list (if list not empty)
-  const lifestyleEnabled = get(criteria, 'lifestyle.enabled') === true;
-  if (lifestyleEnabled) {
-    const countries = get(criteria, 'lifestyle.filters.countries', []);
-    if (Array.isArray(countries) && countries.length > 0) {
-      const uniCountry = uni.country ? String(uni.country).toLowerCase() : '';
-      const normalized = countries.map((c) => String(c).toLowerCase());
-      if (!normalized.includes(uniCountry)) {
-        const penalty = Math.round(15 * wLocation);
-        score -= penalty;
-        explanations.push(`Lifestyle: country ${uni.country || 'unknown'} not in preferred list (-${penalty})`);
-      } else {
-        explanations.push(`Lifestyle: country ${uni.country} preferred (ok)`);
-      }
-    } else {
-      explanations.push('Lifestyle: no country preferences provided — neutral');
-    }
-  } else {
-    explanations.push('Lifestyle disabled — neutral');
+  const minTuition = criteria.minTuition;
+  if (isNumber(minTuition)) {
+    addCheck((uni) => {
+      const tuition = pickValue(uni, ['avg_tuition_per_year', 'tuition_international', 'tuition']);
+      if (!isNumber(tuition)) return null;
+      return Number(tuition) >= minTuition;
+    });
   }
 
-  // Future: -20 if post_study_visa_months < minVisaMonths (map to post_grad_visa_strength)
-  const futureEnabled = get(criteria, 'future.enabled') === true;
-  if (futureEnabled) {
-    const minVisaMonths = get(criteria, 'future.filters.minVisaMonths', null);
-    if (typeof minVisaMonths === 'number' && typeof uni.post_grad_visa_strength === 'number') {
-      if (uni.post_grad_visa_strength < minVisaMonths) {
-        const penalty = Math.round(20 * wRanking);
-        score -= penalty;
-        explanations.push(`Future: visa months ${uni.post_grad_visa_strength} < required ${minVisaMonths} (-${penalty})`);
-      } else {
-        explanations.push(`Future: visa months ${uni.post_grad_visa_strength} >= required ${minVisaMonths} (ok)`);
-      }
+  const interests = Array.isArray(criteria.interests) ? criteria.interests : [];
+  if (interests.length > 0) {
+    const target = interests.map((item) => normalizeString(item)).filter(Boolean);
+    if (target.length > 0) {
+      addCheck((uni) => {
+        const uniInterests = arrayFromValue(pickValue(uni, ['interests', 'focus_areas'])).map((item) => normalizeString(item)).filter(Boolean);
+        if (uniInterests.length === 0) return null;
+        return target.every((interest) => uniInterests.includes(interest));
+      });
     }
-  } else {
-    explanations.push('Future disabled — neutral');
   }
 
-  // Ensure score is between 0 and 100
-  if (score < 0) score = 0;
-  if (score > 100) score = 100;
+  const academics = criteria.academics;
+  if (academics?.enabled) {
+    const filters = academics.filters || {};
 
-  return { score: Math.round(score), explanations };
+    if (isNumber(filters.minGpa)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['min_gpa', 'gpa_requirement']);
+        if (!isNumber(value)) return null;
+        return Number(value) >= filters.minGpa;
+      });
+    }
+
+    if (filters.degreeLevel && filters.degreeLevel !== 'Any') {
+      const target = normalizeString(filters.degreeLevel);
+      addCheck((uni) => {
+        const levels = arrayFromValue(pickValue(uni, ['degree_levels', 'degree_options'])).map((item) => normalizeString(item)).filter(Boolean);
+        if (levels.length === 0) return null;
+        return levels.includes(target);
+      });
+    }
+
+    if (Array.isArray(filters.languages) && filters.languages.length > 0) {
+      const target = filters.languages.map((item) => normalizeString(item)).filter(Boolean);
+      if (target.length > 0) {
+        addCheck((uni) => {
+          const languages = arrayFromValue(pickValue(uni, ['languages', 'instruction_languages'])).map((item) => normalizeString(item)).filter(Boolean);
+          if (languages.length === 0) return null;
+          return target.every((lang) => languages.includes(lang));
+        });
+      }
+    }
+
+    if (filters.testPolicy && filters.testPolicy !== 'Any') {
+      const desired = normalizeString(filters.testPolicy);
+      addCheck((uni) => {
+        const tests = arrayFromValue(pickValue(uni, ['required_tests', 'testing_policy'])).map((item) => normalizeString(item)).filter(Boolean);
+        if (tests.length === 0) return null;
+        if (desired === 'no-test') {
+          return tests.length === 0;
+        }
+        if (desired === 'requires-test') {
+          return tests.length > 0;
+        }
+        return tests.includes(desired);
+      });
+    }
+  }
+
+  const financials = criteria.financials;
+  if (financials?.enabled) {
+    const filters = financials.filters || {};
+
+    if (isNumber(filters.maxBudget)) {
+      addCheck((uni) => {
+        const tuition = pickValue(uni, ['avg_tuition_per_year', 'tuition_international', 'tuition']);
+        if (!isNumber(tuition)) return null;
+        return Number(tuition) <= filters.maxBudget;
+      });
+    }
+
+    if (isNumber(filters.maxCostOfLiving)) {
+      addCheck((uni) => {
+        const cost = pickValue(uni, ['cost_of_living_index', 'cost_of_living']);
+        if (!isNumber(cost)) return null;
+        return Number(cost) <= filters.maxCostOfLiving;
+      });
+    }
+
+    if (isNumber(filters.minScholarship)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['scholarship_availability', 'scholarships_available']);
+        if (!isNumber(value)) return null;
+        return Number(value) >= filters.minScholarship;
+      });
+    }
+
+    if (filters.scholarshipsInternational === true) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['scholarships_international', 'international_scholarships_available']);
+        if (value === undefined) return null;
+        return Boolean(value) === true;
+      });
+    }
+
+    if (filters.needBlind === true) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['need_blind_admissions', 'need_blind']);
+        if (value === undefined) return null;
+        return Boolean(value) === true;
+      });
+    }
+  }
+
+  const lifestyle = criteria.lifestyle;
+  if (lifestyle?.enabled) {
+    const filters = lifestyle.filters || {};
+
+    if (filters.country && filters.country !== 'Any') {
+      const target = normalizeString(filters.country);
+      addCheck((uni) => {
+        const value = pickValue(uni, ['country', 'location_country']);
+        if (!value) return null;
+        return normalizeString(value) === target;
+      });
+    }
+
+    if (filters.city) {
+      const target = normalizeString(filters.city);
+      addCheck((uni) => {
+        const value = pickValue(uni, ['location_city', 'city']);
+        if (!value) return null;
+        return normalizeString(value) === target;
+      });
+    }
+
+    if (filters.climate && filters.climate !== 'Any') {
+      const target = normalizeString(filters.climate);
+      addCheck((uni) => {
+        const value = pickValue(uni, ['climate']);
+        if (!value) return null;
+        return normalizeString(value) === target;
+      });
+    }
+
+    if (filters.campusSetting && filters.campusSetting !== 'Any') {
+      const target = normalizeString(filters.campusSetting);
+      addCheck((uni) => {
+        const value = pickValue(uni, ['campus_setting']);
+        if (!value) return null;
+        return normalizeString(value) === target;
+      });
+    }
+  }
+
+  const admissions = criteria.admissions;
+  if (admissions?.enabled) {
+    const filters = admissions.filters || {};
+
+    if (isNumber(filters.maxAcceptanceRate)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['acceptance_rate']);
+        if (!isNumber(value)) return null;
+        return Number(value) <= filters.maxAcceptanceRate;
+      });
+    }
+
+    if (isNumber(filters.minSat)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['sat_average', 'sat_minimum']);
+        if (!isNumber(value)) return null;
+        return Number(value) >= filters.minSat;
+      });
+    }
+  }
+
+  const demographics = criteria.demographics;
+  if (demographics?.enabled) {
+    const filters = demographics.filters || {};
+
+    if (isNumber(filters.minEnrollment)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['enrollment', 'student_population']);
+        if (!isNumber(value)) return null;
+        return Number(value) >= filters.minEnrollment;
+      });
+    }
+
+    if (isNumber(filters.maxEnrollment)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['enrollment', 'student_population']);
+        if (!isNumber(value)) return null;
+        return Number(value) <= filters.maxEnrollment;
+      });
+    }
+
+    if (isNumber(filters.minInternationalPct)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['international_student_percentage', 'intl_student_percentage']);
+        if (!isNumber(value)) return null;
+        return Number(value) >= filters.minInternationalPct;
+      });
+    }
+
+    if (isNumber(filters.maxInternationalPct)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['international_student_percentage', 'intl_student_percentage']);
+        if (!isNumber(value)) return null;
+        return Number(value) <= filters.maxInternationalPct;
+      });
+    }
+  }
+
+  const future = criteria.future;
+  if (future?.enabled) {
+    const filters = future.filters || {};
+
+    if (isNumber(filters.minVisaMonths)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['post_grad_visa_strength', 'post_study_work_visa_months']);
+        if (!isNumber(value)) return null;
+        return Number(value) >= filters.minVisaMonths;
+      });
+    }
+
+    if (isNumber(filters.minInternshipStrength)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['internship_strength']);
+        if (!isNumber(value)) return null;
+        return Number(value) >= filters.minInternshipStrength;
+      });
+    }
+
+    if (isNumber(filters.minAlumniStrength)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['alumni_network_strength']);
+        if (!isNumber(value)) return null;
+        return Number(value) >= filters.minAlumniStrength;
+      });
+    }
+
+    if (isNumber(filters.minGraduationRate)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['graduation_rate']);
+        if (!isNumber(value)) return null;
+        return Number(value) >= filters.minGraduationRate;
+      });
+    }
+
+    if (isNumber(filters.minEmploymentRate)) {
+      addCheck((uni) => {
+        const value = pickValue(uni, ['employment_rate', 'graduate_employment_rate']);
+        if (!isNumber(value)) return null;
+        return Number(value) >= filters.minEmploymentRate;
+      });
+    }
+  }
+
+  return checks;
 }
 
-export async function matchUniversities(criteria = {}, topN = 10) {
+export async function getMatchingUniversities(criteria = {}, user = null) {
   const universities = await getAllUniversities();
+  const minPercentage = isNumber(criteria.minMatchPercentage) ? Number(criteria.minMatchPercentage) : 0;
+  const criteriaChecks = buildCriteriaChecks(criteria);
 
-  const scored = universities.map((u) => {
-    const { score, explanations } = scoreUniversity(u, criteria);
-    return { ...u, score, explanations };
+  const evaluated = universities.map((uni) => {
+    if (criteriaChecks.length === 0) {
+      return { ...uni, matchPercentage: 100 };
+    }
+
+    let total = 0;
+    let matched = 0;
+
+    for (const check of criteriaChecks) {
+      const outcome = check(uni);
+      if (outcome === null) continue;
+      total += 1;
+      if (outcome) matched += 1;
+    }
+
+    const percentage = total === 0 ? 100 : (matched / total) * 100;
+
+    return {
+      ...uni,
+      matchPercentage: Math.round(percentage),
+    };
   });
 
-  const filtered = scored.filter((s) => s.score >= 1);
+  const filtered = evaluated.filter((uni) => uni.matchPercentage >= minPercentage);
 
   filtered.sort((a, b) => {
-    if (b.score !== a.score) return b.score - a.score;
-    const aTuition = typeof a.avg_tuition_per_year === 'number' ? a.avg_tuition_per_year : Infinity;
-    const bTuition = typeof b.avg_tuition_per_year === 'number' ? b.avg_tuition_per_year : Infinity;
+    if (b.matchPercentage !== a.matchPercentage) {
+      return b.matchPercentage - a.matchPercentage;
+    }
+    const aTuition = isNumber(a.avg_tuition_per_year) ? a.avg_tuition_per_year : Infinity;
+    const bTuition = isNumber(b.avg_tuition_per_year) ? b.avg_tuition_per_year : Infinity;
     return aTuition - bTuition;
   });
 
-  return filtered.slice(0, topN);
+  const totalCount = filtered.length;
+  const planKey = await resolvePlanKey(user);
+
+  if (planKey === 'anonymous') {
+    return {
+      matches: filtered.slice(0, 3),
+      totalCount,
+    };
+  }
+
+  return {
+    matches: filtered,
+    totalCount,
+  };
 }
+

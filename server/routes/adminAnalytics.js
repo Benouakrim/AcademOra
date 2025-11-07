@@ -1,10 +1,13 @@
 import express from 'express';
 import supabase from '../database/supabase.js';
-import { authenticateToken, requireAdmin } from './auth.js';
+import { parseUserToken, requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/overview', authenticateToken, requireAdmin, async (req, res) => {
+router.use(parseUserToken);
+router.use(requireAdmin);
+
+router.get('/overview', async (req, res) => {
   try {
     const [usersCountRes, unisCountRes, reviewsCountRes, savedCountRes] = await Promise.all([
       supabase.from('users').select('id', { count: 'exact', head: true }),
@@ -25,7 +28,7 @@ router.get('/overview', authenticateToken, requireAdmin, async (req, res) => {
   }
 });
 
-router.get('/registrations/last7', authenticateToken, requireAdmin, async (req, res) => {
+router.get('/registrations/last7', async (req, res) => {
   try {
     const since = new Date();
     since.setDate(since.getDate() - 7);

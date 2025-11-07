@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateToken, requireAdmin } from './auth.js';
+import { parseUserToken, requireAdmin } from '../middleware/auth.js';
 import {
   getAllClaimRequests,
   getClaimRequestById,
@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 // All routes require admin authentication
-router.use(authenticateToken);
+router.use(parseUserToken);
 router.use(requireAdmin);
 
 // GET /api/admin/university-claims - Get all claim requests
@@ -53,7 +53,7 @@ router.put('/:id/status', async (req, res) => {
       return res.status(400).json({ error: `status must be one of: ${validStatuses.join(', ')}` });
     }
 
-    const updated = await updateClaimRequestStatus(id, status, req.user.userId, admin_notes || null);
+    const updated = await updateClaimRequestStatus(id, status, req.user.id, admin_notes || null);
     res.json(updated);
   } catch (error) {
     res.status(500).json({ error: error.message });

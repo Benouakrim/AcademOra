@@ -1,45 +1,42 @@
-import express from 'express';
-import { authenticateToken } from './auth.js';
-import { matchUniversities } from '../services/matchingService.js';
+import { Router } from 'express';
 import supabase from '../database/supabase.js';
+import { getMatchingUniversities } from '../services/matchingService.js';
+import { parseUserToken } from '../middleware/auth.js';
+import { checkFeatureAccess, logUsage } from '../middleware/accessControl.js';
 
-const router = express.Router();
+const router = Router();
 
-/**
- * POST /api/matching
- * Protected route to get university matches based on user criteria.
- * Criteria are sent in the request body.
- */
-router.post('/', authenticateToken, async (req, res) => {
-  try {
-    // Accept any object shape for the new complex criteria; default to {}
-    const criteria = req.body || {};
+// This endpoint is now public, with access controlled via middleware.
+router.post(
+  '/',
+  parseUserToken,
+  checkFeatureAccess('matching-engine'),
+  logUsage('matching-engine'),
+  async (req, res) => {
+    try {
+      const criteria = req.body || {};
 
-    // Fetch user preferences (weights) if available
-    let weights = null;
-    const userId = req.user?.userId;
-    if (userId) {
-      const { data, error } = await supabase
-        .from('user_preferences')
-        .select('weight_tuition, weight_location, weight_ranking, weight_program, weight_language')
-        .eq('user_id', userId)
-        .maybeSingle();
-      if (!error && data) {
-        weights = data;
+      // Fetch user preference weights if available to inform scoring
+      const userId = req.user?.id;
+      if (userId) {
+        const { data, error } = await supabase
+          .from('user_preferences')
+          .select('weight_tuition, weight_location, weight_ranking, weight_program, weight_language')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+        if (!error && data) {
+          criteria._weights = data;
+        }
       }
-    }
 
-    // Attach weights to criteria for the service layer
-    if (weights) {
-      criteria._weights = weights;
+      const result = await getMatchingUniversities(criteria, req.user);
+      res.json(result);
+    } catch (error) {
+      console.error('Error in matching route:', error);
+      res.status(500).json({ error: 'Failed to get matching universities.' });
     }
-
-    const results = await matchUniversities(criteria, 20);
-    res.json(results);
-  } catch (error) {
-    console.error('Matching route error:', error);
-    res.status(500).json({ error: error.message });
   }
-});
+);
 
 export default router;

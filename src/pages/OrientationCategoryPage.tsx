@@ -11,7 +11,8 @@ interface Resource {
   content: string
   category: string
   featured: boolean
-  premium: boolean
+  is_premium?: boolean
+  premium?: boolean
   created_at: string
 }
 
@@ -105,7 +106,11 @@ export default function OrientationCategoryPage() {
           setFilteredGroups(groupsData || [])
         } else {
           const data = await orientationAPI.getResourcesByCategory(category)
-          setResources(data || [])
+          const normalized = (data || []).map((item: Resource) => ({
+            ...item,
+            is_premium: item.is_premium ?? item.premium ?? false,
+          }))
+          setResources(normalized as Resource[])
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -230,7 +235,7 @@ export default function OrientationCategoryPage() {
   const campusSettings = Array.from(new Set(universities.map(u => u.campus_setting).filter(Boolean))).sort()
 
   const handleResourceClick = (resource: Resource) => {
-    if (resource.premium) {
+    if (resource.is_premium) {
       // Check if user is authenticated
       const user = getCurrentUser()
       if (user) {
@@ -557,7 +562,7 @@ export default function OrientationCategoryPage() {
                     Featured
                   </div>
                 )}
-                {resource.premium && (
+                {resource.is_premium && (
                   <div className="absolute top-4 left-4 bg-primary-600 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center">
                     <Lock className="h-3 w-3 mr-1" />
                     Premium
@@ -570,7 +575,7 @@ export default function OrientationCategoryPage() {
                   {resource.content ? resource.content.substring(0, 150) + '...' : 'No content available'}
                 </p>
                 <div className="flex items-center text-primary-600 font-semibold">
-                  {resource.premium ? (
+                  {resource.is_premium ? (
                     <>
                       <Lock className="h-4 w-4 mr-1" />
                       <span>Premium Content</span>

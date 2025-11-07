@@ -3,7 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
-import { authenticateToken, requireAdmin } from './auth.js';
+import { parseUserToken, requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -43,7 +43,7 @@ const upload = multer({
 });
 
 // Upload image endpoint
-router.post('/image', authenticateToken, requireAdmin, upload.single('image'), (req, res) => {
+router.post('/image', parseUserToken, requireAdmin, upload.single('image'), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No image file provided' });
@@ -66,7 +66,7 @@ router.post('/image', authenticateToken, requireAdmin, upload.single('image'), (
 });
 
 // Delete image endpoint (optional)
-router.delete('/image/:filename', authenticateToken, requireAdmin, (req, res) => {
+router.delete('/image/:filename', parseUserToken, requireAdmin, (req, res) => {
   try {
     const filename = req.params.filename;
     const filePath = path.join(uploadsDir, filename);

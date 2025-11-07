@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateToken } from './auth.js';
+import { parseUserToken, requireAdmin } from '../middleware/auth.js';
 import {
   getAllStaticPages,
   getStaticPageBySlug,
@@ -10,7 +10,8 @@ import {
 const router = express.Router();
 
 // All routes require authentication
-router.use(authenticateToken);
+router.use(parseUserToken);
+router.use(requireAdmin);
 
 // Get all static pages
 router.get('/', async (req, res) => {

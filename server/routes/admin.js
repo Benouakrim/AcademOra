@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateToken, requireAdmin } from './auth.js';
+import { parseUserToken, requireAdmin } from '../middleware/auth.js';
 import { listUsers } from '../data/users.js';
 import {
   getAllArticles,
@@ -30,7 +30,7 @@ import {
 const router = express.Router();
 
 // All admin routes require authentication AND admin role
-router.use(authenticateToken);
+router.use(parseUserToken);
 router.use(requireAdmin);
 
 // Get all articles (including unpublished)
@@ -94,7 +94,7 @@ router.post('/articles', async (req, res) => {
       category,
       published,
       featured_image,
-      author_id: req.user.userId,
+      author_id: req.user.id,
     });
 
     res.status(201).json(article);

@@ -49,12 +49,18 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ 
-        error: response.status === 0 || response.status >= 500 
-          ? 'Server is not responding. Make sure the backend server is running on port 3001.' 
-          : `HTTP error! status: ${response.status}` 
+      const errorBody = await response.json().catch(() => ({
+        error:
+          response.status === 0 || response.status >= 500
+            ? 'Server is not responding. Make sure the backend server is running on port 3001.'
+            : `HTTP error! status: ${response.status}`,
+        code: 'UNKNOWN',
+        status: response.status,
       }));
-      throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      if (errorBody && !errorBody.message) {
+        errorBody.message = errorBody.error || 'Request failed';
+      }
+      throw errorBody;
     }
 
     return response.json();
@@ -190,6 +196,35 @@ export const adminAPI = {
     return fetchAPI('/admin/users');
   },
 
+  async getFeatureUsage(params?: { userId?: string; featureKey?: string }) {
+    const searchParams = new URLSearchParams();
+    if (params?.userId) searchParams.set('userId', params.userId);
+    if (params?.featureKey) searchParams.set('featureKey', params.featureKey);
+    const qs = searchParams.toString();
+    return fetchAPI(`/admin/features/usage${qs ? `?${qs}` : ''}`);
+  },
+
+  async resetFeatureUsage(payload: { user_id: string; feature_key: string }) {
+    return fetchAPI('/admin/features/usage/reset', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  async setFeatureOverride(payload: { user_id: string; feature_key: string; access_level?: string; limit_value?: number | null }) {
+    return fetchAPI('/admin/features/overrides', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  async deleteFeatureOverride(payload: { user_id: string; feature_key: string }) {
+    return fetchAPI('/admin/features/overrides', {
+      method: 'DELETE',
+      body: JSON.stringify(payload),
+    });
+  },
+
   // Categories
   async getAllCategories(type?: string) {
     const url = type ? `/admin/categories?type=${encodeURIComponent(type)}` : '/admin/categories';
@@ -302,6 +337,19 @@ export const matchingAPI = {
       method: 'POST',
       body: JSON.stringify(criteria),
     });
+  },
+};
+
+// Compare API
+export const compareAPI = {
+  async getUniversities() {
+    return fetchAPI('/compare');
+  },
+};
+
+export const accessAPI = {
+  async getUsage(featureKey: string) {
+    return fetchAPI(`/access/usage/${encodeURIComponent(featureKey)}`);
   },
 };
 
@@ -808,5 +856,26 @@ export const advancedAnalyticsAPI = {
 
   async getRealTimeMetrics() {
     return fetchAPI('/admin/analytics/advanced/realtime');
+  },
+};
+
+export const api = {
+  get(endpoint: string) {
+    return fetchAPI(endpoint);
+  },
+  post(endpoint: string, body: any) {
+    return fetchAPI(endpoint, {
+      method: 'POST',
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  },
+  put(endpoint: string, body: any) {
+    return fetchAPI(endpoint, {
+      method: 'PUT',
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  },
+  delete(endpoint: string) {
+    return fetchAPI(endpoint, { method: 'DELETE' });
   },
 };

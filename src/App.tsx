@@ -22,6 +22,7 @@ const ArticlesList = lazy(() => import('./pages/admin/ArticlesList'))
 const TaxonomiesPage = lazy(() => import('./pages/admin/TaxonomiesPage'))
 const TagsPage = lazy(() => import('./pages/admin/TagsPage'))
 const AdminUsersPage = lazy(() => import('./pages/AdminUsersPage'))
+const PlansManagementPage = lazy(() => import('./pages/admin/PlansManagementPage'))
 import PricingPage from './pages/PricingPage'
 import UnifiedPageEditor from './pages/admin/UnifiedPageEditor'
 import PagesManagementPage from './pages/PagesManagementPage'
@@ -46,9 +47,12 @@ import AboutPage from './pages/AboutPage'
 import ContactPage from './pages/ContactPage'
 import PolicyPage from './pages/PolicyPage'
 import CareersPage from './pages/CareersPage'
+import { AccessControlProvider } from './context/AccessControlContext'
+const FeatureUsagePage = lazy(() => import('./pages/admin/FeatureUsagePage'))
 
 function App() {
   return (
+    <AccessControlProvider>
     <Router>
       <Layout>
         <Suspense fallback={<div className="p-6">Loading...</div>}>
@@ -70,6 +74,7 @@ function App() {
           <Route path={track("/admin/university-groups")} element={<AdminGroupsPage />} />
           <Route path={track("/admin/university-groups/new")} element={<GroupEditor />} />
           <Route path={track("/admin/university-groups/edit/:id")} element={<GroupEditor />} />
+          <Route path={track("/admin/plans")} element={<PlansManagementPage />} />
           <Route path={track("/admin/articles")} element={<ArticlesList />} />
           <Route path={track("/admin/articles/new")} element={<ArticleEditor />} />
           <Route path={track("/admin/articles/edit/:id")} element={<ArticleEditor />} />
@@ -78,6 +83,7 @@ function App() {
           <Route path={track("/admin/pages/:slug/edit")} element={<UnifiedPageEditor />} />
           <Route path={track("/admin/about")} element={<AdminAboutPage />} />
           <Route path={track("/admin/contact")} element={<AdminContactPage />} />
+          <Route path={track("/admin/features/usage")} element={<FeatureUsagePage />} />
           <Route path={track("/admin/categories")} element={<TaxonomiesPage />} />
           <Route path={track("/admin/taxonomies")} element={<TaxonomiesPage />} />
           <Route path={track("/admin/tags")} element={<TagsPage />} />
@@ -109,6 +115,7 @@ function App() {
         </Suspense>
       </Layout>
     </Router>
+    </AccessControlProvider>
   )
 }
 

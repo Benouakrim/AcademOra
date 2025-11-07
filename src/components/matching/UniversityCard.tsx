@@ -13,6 +13,9 @@ export default function UniversityCard({ university }: Props) {
   const tuition = university.tuition_international || university.avg_tuition_per_year || null
   const acceptance = university.acceptance_rate || null
   const visaMonths = university.post_study_work_visa_months || null
+  const matchPercentage = typeof university.matchPercentage === 'number'
+    ? Math.round(university.matchPercentage)
+    : (typeof university.score === 'number' ? Math.round(university.score) : null)
   const [imageError, setImageError] = React.useState(false)
   const logoUrl = university.logo_url || university.image_url
   const navigate = useNavigate()
@@ -91,7 +94,11 @@ export default function UniversityCard({ university }: Props) {
               >
                 {saved ? 'Saved' : 'Save'}
               </button>
-              <div className="text-xs font-bold text-primary-600 whitespace-nowrap">{university.score ?? 0}%</div>
+              {matchPercentage !== null && (
+                <div className="text-xs font-bold text-primary-600 whitespace-nowrap" title="Match percentage">
+                  {matchPercentage}% match
+                </div>
+              )}
             </div>
           </div>
           <p className="text-xs text-gray-600 mt-1 line-clamp-2">{university.description}</p>

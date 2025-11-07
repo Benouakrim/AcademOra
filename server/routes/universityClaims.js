@@ -1,11 +1,12 @@
 import express from 'express';
-import { authenticateToken } from './auth.js';
+import { parseUserToken, requireUser } from '../middleware/auth.js';
 import { createClaimRequest, getClaimRequestById, getClaimRequestsByUser, getClaimByUserId } from '../data/universityClaims.js';
 
 const router = express.Router();
 
 // All routes require authentication
-router.use(authenticateToken);
+router.use(parseUserToken);
+router.use(requireUser);
 
 // POST /api/university-claims/request - Create a claim request
 router.post('/request', async (req, res) => {
@@ -55,7 +56,7 @@ router.post('/request', async (req, res) => {
 // GET /api/university-claims/my-requests - Get current user's claim requests
 router.get('/my-requests', async (req, res) => {
   try {
-    const requests = await getClaimRequestsByUser(req.user.userId);
+    const requests = await getClaimRequestsByUser(req.user.id);
     res.json(requests);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -65,7 +66,7 @@ router.get('/my-requests', async (req, res) => {
 // GET /api/university-claims/my-claims - Get current user's approved claims
 router.get('/my-claims', async (req, res) => {
   try {
-    const claims = await getClaimByUserId(req.user.userId);
+    const claims = await getClaimByUserId(req.user.id);
     res.json(claims);
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -1,17 +1,15 @@
 import express from 'express';
-import { authenticateToken } from './auth.js';
+import { parseUserToken, requireUser } from '../middleware/auth.js';
 import { getFinancialProfile, upsertFinancialProfile } from '../data/userFinancialProfiles.js';
 
 const router = express.Router();
 
-router.use(authenticateToken);
+router.use(parseUserToken);
+router.use(requireUser);
 
 router.get('/', async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
+    const userId = req.user?.id;
 
     const profile = await getFinancialProfile(userId);
     const result = profile || {
@@ -44,10 +42,7 @@ router.get('/', async (req, res) => {
 
 router.put('/', async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
+    const userId = req.user?.id;
 
     const updated = await upsertFinancialProfile(userId, req.body || {});
 

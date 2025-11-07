@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { universitiesAPI } from '../lib/api'
+import { compareAPI } from '../lib/api'
+import { useAccessControl } from '../context/AccessControlContext'
 
 type University = any
 
@@ -8,15 +9,33 @@ export default function UniversityComparePage() {
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState<University[]>([])
   const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { showUpgradeModal } = useAccessControl()
 
   useEffect(() => {
     let mounted = true
     async function load() {
       try {
         setLoading(true)
-        const list = await universitiesAPI.getUniversities()
+        const list = await compareAPI.getUniversities()
         if (!mounted) return
         setAll(Array.isArray(list) ? list : [])
+        setErrorMessage(null)
+      } catch (error: any) {
+        if (error && (error.code === 'LOGIN_REQUIRED' || error.code === 'UPGRADE_REQUIRED')) {
+          const fallback =
+            error.code === 'LOGIN_REQUIRED'
+              ? 'Please log in to compare universities.'
+              : 'Upgrade to a Pro plan to unlock university comparison.'
+          const message = error.error || error.message || fallback
+          setErrorMessage(message)
+          showUpgradeModal({ message, code: error.code })
+        } else {
+          console.error('Failed to load comparison universities:', error)
+          setErrorMessage('Unable to load universities. Please try again later.')
+        }
+        if (!mounted) return
+        setAll([])
       } finally {
         setLoading(false)
       }
@@ -56,6 +75,12 @@ export default function UniversityComparePage() {
         <h1 className="text-2xl font-bold">Compare Universities</h1>
         <div className="text-sm text-gray-500">Select up to 3</div>
       </div>
+
+      {errorMessage && (
+        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+          {errorMessage}
+        </div>
+      )}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]">
         <div>

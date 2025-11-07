@@ -81,7 +81,7 @@ WHERE email = 'your-admin-email@example.com';
 - **Signup**: Always creates users with `role: 'user'`
 - **Login**: JWT token includes `role` field
 - **Protected Routes**: 
-  - `/api/admin/*` requires `authenticateToken` + `requireAdmin`
+  - `/api/admin/*` requires `parseUserToken` + `requireAdmin`
   - Regular users get 403 error when accessing admin routes
 
 ### Frontend:

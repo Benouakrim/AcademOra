@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateToken } from './auth.js';
+import { parseUserToken, requireUser } from '../middleware/auth.js';
 import {
   listNotificationsByUser,
   getUnreadCount,
@@ -9,13 +9,13 @@ import {
 
 const router = express.Router();
 
+router.use(parseUserToken);
+router.use(requireUser);
+
 // List notifications for current user
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
+    const userId = req.user?.id;
     const items = await listNotificationsByUser(userId);
     res.json(items);
   } catch (err) {
@@ -25,12 +25,9 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // Unread count
-router.get('/unread/count', authenticateToken, async (req, res) => {
+router.get('/unread/count', async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
+    const userId = req.user?.id;
     const count = await getUnreadCount(userId);
     res.json({ count });
   } catch (err) {
@@ -40,12 +37,9 @@ router.get('/unread/count', authenticateToken, async (req, res) => {
 });
 
 // Mark one as read
-router.post('/:id/read', authenticateToken, async (req, res) => {
+router.post('/:id/read', async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
+    const userId = req.user?.id;
     const id = req.params.id;
     const notification = await markNotificationRead(userId, id);
     res.json(notification);
@@ -56,12 +50,9 @@ router.post('/:id/read', authenticateToken, async (req, res) => {
 });
 
 // Mark all as read
-router.post('/read-all', authenticateToken, async (req, res) => {
+router.post('/read-all', async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
+    const userId = req.user?.id;
     await markAllNotificationsRead(userId);
     res.json({ success: true });
   } catch (err) {

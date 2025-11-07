@@ -13,7 +13,9 @@ import {
   Shield,
   School,
   Mail,
-  Tags
+  Tags,
+  Settings,
+  BarChart3
 } from 'lucide-react';
 
 interface AdminMenuProps {
@@ -54,6 +56,18 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
       icon: Building2,
       path: '/admin/university-groups',
       description: 'Manage university groups'
+    },
+    {
+      name: 'Feature Plans',
+      icon: Settings,
+      path: '/admin/plans',
+      description: 'Configure plan-based feature access'
+    },
+    {
+      name: 'Feature Usage',
+      icon: BarChart3,
+      path: '/admin/features/usage',
+      description: 'Review and adjust feature limits'
     },
     {
       name: 'Claim Requests',

@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import MixerModule from '../components/matching/MixerModule'
 import RangeSlider from '../components/matching/inputs/RangeSlider'
 import ToggleGroup from '../components/matching/inputs/ToggleGroup'
 import MultiSelectPills from '../components/matching/inputs/MultiSelectPills'
 import UniversityCard from '../components/matching/UniversityCard'
-import { matchingAPI, userPreferencesAPI } from '../lib/api'
+import { matchingAPI, userPreferencesAPI, accessAPI } from '../lib/api'
+import { useAccessControl } from '../context/AccessControlContext'
 import {
   SlidersHorizontal,
   GraduationCap,
@@ -17,6 +19,7 @@ import {
   Dot,
   AlertTriangle,
   CheckCircle2,
+  Lock,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -85,6 +88,16 @@ const STATUS_ICON: Record<TabStatus, LucideIcon> = {
   incomplete: AlertTriangle,
 }
 
+type UsageSummary = {
+  configured: boolean
+  accessLevel: 'count' | 'unlimited' | null
+  limitValue: number | null
+  remaining: number | null
+  used: number
+  source: 'plan' | 'override' | null
+  planKey?: string | null
+}
+
 function arraysEqual<T>(a: T[] = [], b: T[] = []) {
   if (a.length !== b.length) return false
   return a.every((value, index) => value === b[index])
@@ -135,35 +148,43 @@ function computeTabStatus(tabId: TabId, state: MatchingState, weights: WeightsSt
 
 export default function MatchingDashboardPage() {
   const [state, setState] = useState(defaultState)
-  const debouncedState = useDebouncedValue(state, 500)
-  const [results, setResults] = useState<any[]>([])
+  const [matches, setMatches] = useState<any[]>([])
+  const [totalCount, setTotalCount] = useState(0)
   const [flash, setFlash] = useState<string | null>(null)
   const [weights, setWeights] = useState(defaultWeights)
   const [activeTab, setActiveTab] = useState<TabId>('weights')
   const debouncedWeights = useDebouncedValue(weights, 600)
+  const { showUpgradeModal } = useAccessControl()
+  const [isLoading, setIsLoading] = useState(false)
+  const [minMatchPercentage, setMinMatchPercentage] = useState(50)
+const [usage, setUsage] = useState<UsageSummary | null>(null)
+const [usageLoading, setUsageLoading] = useState(false)
+const [limitNotice, setLimitNotice] = useState<{ code: 'LOGIN_REQUIRED' | 'UPGRADE_REQUIRED'; message: string } | null>(null)
 
-  useEffect(() => {
-    let mounted = true
-    async function load() {
-      try {
-        const res = await matchingAPI.getMatches(debouncedState)
-        if (!mounted) return
-        const prev = results.length
-        setResults(res || [])
-        if (Math.abs((res?.length || 0) - prev) > 0) {
-          setFlash(`${res.length - prev > 0 ? '+' : ''}${res.length - prev} matches`)
-          setTimeout(() => setFlash(null), 1200)
-        }
-      } catch (error) {
-        console.error('Matching error', error)
-      }
-    }
-    load()
-    return () => {
-      mounted = false
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedState])
+const loadUsage = useCallback(async () => {
+  setUsageLoading(true)
+  try {
+    const data = await accessAPI.getUsage('matching-engine')
+    setUsage(data as UsageSummary)
+  } catch (error) {
+    console.warn('Failed to load usage summary:', error)
+    setUsage({
+      configured: false,
+      accessLevel: null,
+      limitValue: null,
+      remaining: null,
+      used: 0,
+      source: null,
+      planKey: null,
+    })
+  } finally {
+    setUsageLoading(false)
+  }
+}, [])
+
+useEffect(() => {
+  loadUsage()
+}, [loadUsage])
 
   // Load existing weights on mount
   useEffect(() => {
@@ -190,10 +211,56 @@ export default function MatchingDashboardPage() {
     async function savePrefs() {
       try {
         await userPreferencesAPI.savePreferences(debouncedWeights)
-      } catch {}
+      } catch (error: any) {
+        if (error && error.code === 'LOGIN_REQUIRED') {
+          showUpgradeModal({ message: error.error || 'Please log in to save preferences.', code: error.code })
+        }
+      }
     }
     savePrefs()
-  }, [debouncedWeights])
+  }, [debouncedWeights, showUpgradeModal])
+
+  const handleGenerateMatches = async () => {
+    if (isLoading) return
+
+    setIsLoading(true)
+    setFlash(null)
+    setLimitNotice(null)
+
+    const payload = {
+      ...state,
+      weights,
+      interests: state.interests,
+      minMatchPercentage,
+    }
+
+    try {
+      const res = await matchingAPI.getMatches(payload)
+      const nextMatches = Array.isArray(res?.matches) ? res.matches : Array.isArray(res) ? res : []
+      const count = typeof res?.totalCount === 'number' ? res.totalCount : nextMatches.length
+      setMatches(nextMatches)
+      setTotalCount(count)
+      setFlash(`${count} matches found`)
+      setTimeout(() => setFlash(null), 1500)
+    } catch (error: any) {
+      if (error && (error.code === 'LOGIN_REQUIRED' || error.code === 'UPGRADE_REQUIRED')) {
+        const code: 'LOGIN_REQUIRED' | 'UPGRADE_REQUIRED' = error.code === 'LOGIN_REQUIRED' ? 'LOGIN_REQUIRED' : 'UPGRADE_REQUIRED'
+        const fallback =
+          code === 'LOGIN_REQUIRED'
+            ? 'Create a free account or sign in to reveal every matching university.'
+            : 'You have reached the limit for this feature on your current plan. Upgrade to keep generating matches without interruption.'
+        const message = error.error || error.message || fallback
+        setLimitNotice({ code, message })
+      } else {
+        console.error('Failed to fetch matches:', error)
+        setFlash('Unable to generate matches right now')
+        setTimeout(() => setFlash(null), 2000)
+      }
+    } finally {
+      setIsLoading(false)
+      loadUsage()
+    }
+  }
 
   // modules list intentionally omitted (unused) to avoid unused local errors
 
@@ -493,6 +560,36 @@ export default function MatchingDashboardPage() {
           </div>
           <div className="p-5">
             {renderTabContent(activeTab)}
+            <div className="mt-6 space-y-4">
+              <div>
+                <label htmlFor="percentage-filter" className="block text-sm font-medium text-gray-700">
+                  Minimum Match Percentage: {minMatchPercentage}%
+                </label>
+                <input
+                  type="range"
+                  id="percentage-filter"
+                  min={0}
+                  max={100}
+                  value={minMatchPercentage}
+                  onChange={(e) => setMinMatchPercentage(Number(e.target.value))}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                />
+              </div>
+              <div className="my-6">
+                <button
+                  onClick={handleGenerateMatches}
+                  disabled={isLoading}
+                  className="w-full px-6 py-3 text-lg font-bold text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Generating...' : 'Generate Matches'}
+                </button>
+                {isLoading && (
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 mt-4">
+                    <div className="bg-blue-600 h-2.5 rounded-full animate-pulse" style={{ width: '100%' }} />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -500,22 +597,145 @@ export default function MatchingDashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-lg font-semibold text-gray-900">Matching Results</h2>
-              <p className="text-sm text-gray-500">{results.length} universities match your current settings.</p>
+              <p className="text-sm text-gray-500">{totalCount} universities match your current settings.</p>
             </div>
             {flash && <div className="text-sm font-semibold text-emerald-600">{flash}</div>}
           </div>
 
-          {results.length === 0 ? (
+          {usage && (
+            <div className="mb-4 flex items-start gap-3 rounded-2xl border border-gray-200 bg-white/90 px-4 py-4 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                <TrendingUp className="h-5 w-5" />
+              </div>
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-semibold text-gray-800">
+                    {usage.configured
+                      ? usage.accessLevel === 'unlimited'
+                        ? 'Unlimited match runs enabled.'
+                        : `${Math.max(usage.remaining ?? 0, 0)} of ${usage.limitValue ?? 0} match runs remaining.`
+                      : 'Usage details are temporarily unavailable.'}
+                  </span>
+                  <span className="rounded-full bg-gray-100 px-3 py-0.5 text-xs font-semibold text-gray-500">
+                    {usage.planKey === 'anonymous'
+                      ? 'Anonymous preview'
+                      : usage.planKey === 'free'
+                      ? 'Free plan'
+                      : usage.planKey === 'pro'
+                      ? 'Pro plan'
+                      : usage.planKey === 'admin'
+                      ? 'Admin'
+                      : usage.planKey || 'Plan'}
+                  </span>
+                  {usageLoading && <span className="text-xs text-gray-400">Updating…</span>}
+                </div>
+                <p className="mt-1 text-sm text-gray-600">
+                  {usage.configured
+                    ? usage.accessLevel === 'unlimited'
+                      ? `You've generated ${usage.used} matches so far—feel free to keep exploring.`
+                      : `You've generated ${usage.used} matches in this window. Keep an eye on the counter to get the most out of your remaining runs.`
+                    : 'We could not load your quota details. Try again after another attempt.'}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {limitNotice && (
+            <div
+              className={`mb-4 flex items-start gap-3 rounded-2xl border px-4 py-4 text-sm ${
+                limitNotice.code === 'LOGIN_REQUIRED'
+                  ? 'border-sky-200 bg-sky-50 text-sky-900'
+                  : 'border-amber-200 bg-amber-50 text-amber-900'
+              }`}
+            >
+              <Lock
+                className={`mt-1 h-5 w-5 ${
+                  limitNotice.code === 'LOGIN_REQUIRED' ? 'text-sky-500' : 'text-amber-500'
+                }`}
+              />
+              <div>
+                <div className="text-sm font-semibold">
+                  {limitNotice.code === 'LOGIN_REQUIRED'
+                    ? 'Create a free account to unlock every match result.'
+                    : 'Upgrade to keep generating unlimited matches.'}
+                </div>
+                <p className="mt-1 text-sm leading-relaxed">{limitNotice.message}</p>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  {limitNotice.code === 'LOGIN_REQUIRED' ? (
+                    <>
+                      <Link
+                        to="/signup"
+                        className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-sky-700"
+                      >
+                        Create Free Account
+                      </Link>
+                      <Link
+                        to="/login"
+                        className="inline-flex items-center gap-2 rounded-lg border border-sky-200 px-3 py-2 text-sm font-semibold text-sky-700 hover:bg-sky-100"
+                      >
+                        Log In
+                      </Link>
+                    </>
+                  ) : (
+                    <Link
+                      to="/pricing"
+                      className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-amber-700"
+                    >
+                      View Pro Plans
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!isLoading && totalCount === 0 && matches.length === 0 ? (
             <div className="border border-dashed border-gray-200 rounded-xl p-10 text-center text-gray-500">
               Adjust the criteria above to discover universities tailored to you.
             </div>
-          ) : (
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {results.map((u) => (
-                <UniversityCard key={u.id} university={u} />
-              ))}
+          ) : null}
+
+          {isLoading ? (
+            <div className="border border-dashed border-gray-200 rounded-xl p-10 text-center text-gray-500">
+              Generating matches...
             </div>
-          )}
+          ) : matches.length > 0 ? (
+            <>
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {matches.map((u) => (
+                  <UniversityCard key={u.id} university={u} />
+                ))}
+                {totalCount > matches.length &&
+                  Array.from({ length: Math.min(totalCount - matches.length, 4 * 3) }, (_, index) => (
+                    <div
+                      key={`locked-${index}`}
+                      className="relative border border-dashed border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center text-center bg-gray-50"
+                    >
+                      <Lock className="h-8 w-8 text-gray-400 mb-3" />
+                      <p className="text-sm font-semibold text-gray-600">Locked match</p>
+                      <p className="text-xs text-gray-500 mt-1">Create a free account to reveal this result.</p>
+                    </div>
+                  ))}
+              </div>
+
+              {totalCount > matches.length && (
+                <div className="mt-6 bg-slate-900 text-white rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <h3 className="text-xl font-semibold">You found {totalCount} matches!</h3>
+                    <p className="text-sm text-slate-200 mt-1">
+                      Register for a free account to unlock all results and save your progress.
+                    </p>
+                  </div>
+                  <Link
+                    to="/signup"
+                    className="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-white text-slate-900 font-semibold hover:bg-slate-100 transition-colors"
+                  >
+                    Create Free Account
+                  </Link>
+                </div>
+              )}
+            </>
+          ) : null}
         </section>
       </div>
     </div>

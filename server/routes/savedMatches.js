@@ -1,14 +1,16 @@
 import express from 'express';
 import supabase from '../database/supabase.js';
-import { authenticateToken } from './auth.js';
+import { parseUserToken, requireUser } from '../middleware/auth.js';
 
 const router = express.Router();
 
+router.use(parseUserToken);
+router.use(requireUser);
+
 // List saved matches for current user
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+    const userId = req.user?.id;
     const { data, error } = await supabase
       .from('saved_matches')
       .select('id, university_id, note, created_at')
@@ -23,10 +25,9 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // Check if a university is saved
-router.get('/check/:universityId', authenticateToken, async (req, res) => {
+router.get('/check/:universityId', async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+    const userId = req.user?.id;
     const universityId = req.params.universityId;
     const { data, error } = await supabase
       .from('saved_matches')
@@ -43,10 +44,9 @@ router.get('/check/:universityId', authenticateToken, async (req, res) => {
 });
 
 // Save a university
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+    const userId = req.user?.id;
     const { university_id, note } = req.body || {};
     if (!university_id) return res.status(400).json({ error: 'university_id is required' });
 
@@ -64,10 +64,9 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // Unsave a university
-router.delete('/:universityId', authenticateToken, async (req, res) => {
+router.delete('/:universityId', async (req, res) => {
   try {
-    const userId = req.user?.userId;
-    if (!userId) return res.status(401).json({ error: 'Authentication required' });
+    const userId = req.user?.id;
     const universityId = req.params.universityId;
     const { error } = await supabase
       .from('saved_matches')

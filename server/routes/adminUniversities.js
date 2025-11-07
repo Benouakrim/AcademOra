@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateToken, requireAdmin } from './auth.js';
+import { parseUserToken, requireAdmin } from '../middleware/auth.js';
 import {
   getAllUniversities,
   getUniversityById,
@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 // All routes in this file are protected and require admin
-router.use(authenticateToken);
+router.use(parseUserToken);
 router.use(requireAdmin);
 
 // GET /api/admin/universities - Get all universities

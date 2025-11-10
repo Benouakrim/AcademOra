@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { 
-  Check, X, Star, Users, BookOpen, Award, 
-  Globe, ArrowRight, ChevronDown, Sparkles, Zap, Heart, Coffee
+  Check, X, Star, Users, Sparkles, Zap, Heart, 
+  TrendingUp, Shield, Crown, Rocket, Gift, ArrowRight,
+  ChevronDown, Globe, Award, Target
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -9,16 +10,18 @@ import { motion, AnimatePresence } from 'framer-motion'
 interface PricingPlan {
   id: string
   name: string
+  tagline: string
   description: string
   price: number
   yearlyPrice?: number
   features: string[]
   notIncluded?: string[]
-  popular?: boolean
+  highlighted?: boolean
   icon: React.ReactNode
-  color: string
+  gradient: string
   buttonText: string
   comingSoon?: boolean
+  badge?: string
 }
 
 export default function PricingPage() {
@@ -28,89 +31,100 @@ export default function PricingPage() {
   const plans: PricingPlan[] = [
     {
       id: 'free',
-      name: 'Free',
-      description: 'Perfect for exploring academic options',
+      name: 'Explorer',
+      tagline: 'Start Your Journey',
+      description: 'Perfect for discovering your academic path',
       price: 0,
       features: [
-        'University search and filtering',
-        'Basic university information',
-        'Save up to 10 universities',
-        'Access to public articles (with ads)',
-        'Basic matching algorithm',
-        'Community forum access',
-        'Email support'
+        'Browse 1000+ universities worldwide',
+        'Advanced search & smart filters',
+        'Save up to 10 favorite universities',
+        'Basic university comparison (up to 3)',
+        'Access public articles & guides',
+        'Join our student community',
+        'University application deadlines',
+        'Email support within 48 hours'
       ],
       notIncluded: [
-        'Advanced financial aid calculator',
-        'Priority support',
-        'Ad-free experience'
+        'Advanced AI matching',
+        'Financial aid predictions',
+        'Unlimited saves & comparisons'
       ],
-      icon: <BookOpen className="h-6 w-6" />,
-      color: 'gray',
-      buttonText: 'Get Started Free'
+      icon: <Rocket className="w-6 h-6" />,
+      gradient: 'from-blue-500 to-cyan-500',
+      buttonText: 'Start Free Forever'
     },
     {
       id: 'plus',
       name: 'Plus',
-      description: 'Enhanced features for serious students',
+      tagline: 'Power Up Your Search',
+      description: 'Advanced tools for serious applicants',
       price: 2.99,
       yearlyPrice: 29.99,
+      badge: '7-Day Free Trial',
       features: [
-        'Everything in Free',
-        'Advanced financial aid predictor',
+        'Everything in Explorer, plus:',
+        'AI-powered university matching',
         'Save unlimited universities',
-        'Personalized matching scores',
-        'Application deadline tracking',
-        'Priority email support',
-        'Ad-free articles experience'
+        'Compare up to 5 universities',
+        'Advanced financial aid predictor',
+        'Personalized application timeline',
+        'Interactive data visualizations',
+        'Ad-free experience',
+        'Email & chat support within 24hrs',
+        'Export comparison reports (PDF)'
       ],
-      notIncluded: [
-        '1-on-1 mentorship sessions',
-        'Premium counselor access'
-      ],
-      icon: <Users className="h-6 w-6" />,
-      color: 'blue',
-      buttonText: 'Start 7-Day Free Trial',
-      popular: true
+      icon: <Star className="w-6 h-6" />,
+      gradient: 'from-purple-500 via-pink-500 to-rose-500',
+      buttonText: 'Try Plus Free',
+      highlighted: true
     },
     {
       id: 'pro',
       name: 'Pro',
+      tagline: 'Expert Guidance',
       description: 'Complete support for dream universities',
       price: 9.99,
       yearlyPrice: 99.99,
       features: [
-        'Everything in Plus',
-        '1-on-1 mentorship sessions',
-        'Premium counselor access',
-        'Custom application strategy',
-        'Priority application review',
-        'Essay review service',
-        'Interview preparation',
-        'Priority 24/7 support'
+        'Everything in Plus, plus:',
+        'Monthly 1-on-1 counselor sessions',
+        'Personalized application strategy',
+        'Essay review & feedback (2/month)',
+        'Interview preparation resources',
+        'Scholarship opportunity alerts',
+        'University ambassador connections',
+        'Priority support (response in 2hrs)',
+        'Custom comparison analytics',
+        'Family dashboard access'
       ],
-      icon: <Award className="h-6 w-6" />,
-      color: 'purple',
+      icon: <Crown className="w-6 h-6" />,
+      gradient: 'from-amber-500 to-orange-500',
       buttonText: 'Coming Soon',
       comingSoon: true
     },
     {
       id: 'ultimate',
       name: 'Ultimate',
-      description: 'Maximum support for academic success',
+      tagline: 'VIP Experience',
+      description: 'White-glove service for maximum success',
       price: 19.99,
       yearlyPrice: 199.99,
       features: [
-        'Everything in Pro',
-        'Unlimited mentorship connections',
-        'Collaborative saved lists with sharing',
-        'Family dashboard and analytics',
-        'Custom family application strategy',
+        'Everything in Pro, plus:',
+        'Weekly 1-on-1 mentorship sessions',
+        'Unlimited essay reviews',
+        'Mock interview sessions',
+        'Direct admissions office connections',
         'Dedicated success manager',
-        'Exclusive workshops and events'
+        'Custom research projects',
+        'Priority application review service',
+        'Exclusive webinars & workshops',
+        'VIP 24/7 priority support',
+        'Lifetime career guidance access'
       ],
-      icon: <Globe className="h-6 w-6" />,
-      color: 'green',
+      icon: <Gift className="w-6 h-6" />,
+      gradient: 'from-emerald-500 to-teal-500',
       buttonText: 'Coming Soon',
       comingSoon: true
     }
@@ -118,57 +132,75 @@ export default function PricingPage() {
 
   const faqs = [
     {
-      question: 'What\'s included in the Plus plan free trial?',
-      answer: 'The 7-day free trial gives you full access to all Plus plan features including the advanced financial aid predictor, unlimited university saves, personalized matching scores, and ad-free articles. No credit card required to start.'
+      question: 'What happens after my 7-day Plus trial ends?',
+      answer: 'After your trial, you can choose to continue with Plus at $2.99/month or $29.99/year. If you don\'t subscribe, you\'ll automatically return to our generous Explorer (free) plan with no interruption to your saved data.'
     },
     {
-      question: 'Why do articles have ads in the Free plan?',
-      answer: 'As a startup focused on making education accessible, we use minimal ads to support our mission and keep the platform free for everyone. Ads will be removed as our revenue stabilizes, ensuring a better experience for all users.'
+      question: 'Can I upgrade or downgrade my plan anytime?',
+      answer: 'Absolutely! You can upgrade, downgrade, or cancel your subscription at any time. Changes take effect immediately for upgrades, or at the next billing cycle for downgrades. You always keep your saved data.'
     },
     {
-      question: 'How can I support AcademOra\'s mission?',
-      answer: 'You can support us in several ways: upgrading to Plus plan, making a donation through our partnered platforms, or referring friends to join the community. Every contribution helps us improve and expand our services.'
+      question: 'Why are some features "Coming Soon"?',
+      answer: 'AcademOra is a growing platform, and we\'re actively building advanced features like counselor matching, essay reviews, and interview prep. Pro and Ultimate plans will launch as these features become available. Current Plus subscribers will get early access!'
     },
     {
-      question: 'When will Pro and Ultimate plans be available?',
-      answer: 'Pro and Ultimate plans will be launched as we add more advanced features like mentorship programs and counselor services. We\'re working hard to build these features and expect to launch them in the coming months.'
-    },
-    {
-      question: 'Can I change or cancel my subscription anytime?',
-      answer: 'Yes! You can upgrade, downgrade, or cancel your subscription at any time. Changes take effect at the next billing cycle, and you keep access to paid features until the end of your current period.'
+      question: 'Do you offer student or educator discounts?',
+      answer: 'Yes! We offer a 20% discount for verified students with a .edu email and a 30% discount for educators and counselors. Contact our support team with your credentials to receive your discount code.'
     },
     {
       question: 'What payment methods do you accept?',
-      answer: 'We accept all major credit cards, debit cards, and PayPal. All payments are processed securely through our payment partners.'
+      answer: 'We accept all major credit cards (Visa, Mastercard, American Express, Discover), debit cards, and PayPal. All payments are securely processed through Stripe with industry-standard encryption.'
+    },
+    {
+      question: 'Is my data safe and private?',
+      answer: 'Absolutely. We never sell your data to third parties. Your information is encrypted and stored securely. We only use your data to provide personalized recommendations and improve our platform. Read our Privacy Policy for full details.'
+    },
+    {
+      question: 'What if I\'m not satisfied with my subscription?',
+      answer: 'We offer a 30-day money-back guarantee for all paid plans. If you\'re not completely satisfied, contact us within 30 days of your purchase for a full refund, no questions asked.'
+    },
+    {
+      question: 'How can I support AcademOra as a startup?',
+      answer: 'We appreciate your support! You can help by: upgrading to Plus, referring friends (get rewards!), leaving reviews, making a donation, or spreading the word on social media. Every bit helps us continue our mission of making education accessible.'
     }
   ]
 
+  const stats = [
+    { label: 'Students Helped', value: '10,000+', icon: <Users className="w-6 h-6" /> },
+    { label: 'Universities Listed', value: '1,000+', icon: <Globe className="w-6 h-6" /> },
+    { label: 'Success Rate', value: '94%', icon: <TrendingUp className="w-6 h-6" /> },
+    { label: 'Countries Covered', value: '50+', icon: <Award className="w-6 h-6" /> }
+  ]
+
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20">
+      <section className="relative overflow-hidden py-20 lg:py-32">
         {/* Animated Background */}
-        <div className="absolute inset-0">
-          {[...Array(4)].map((_, i) => (
+        <div className="absolute inset-0 opacity-30">
+          {[...Array(6)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute rounded-full mix-blend-screen"
+              className="absolute rounded-full blur-3xl"
               style={{
-                left: `${15 + (i * 25)}%`,
-                top: `${20 + (i * 15)}%`,
-                width: `${150 + (i * 100)}px`,
-                height: `${150 + (i * 100)}px`,
-                background: `radial-gradient(circle, ${['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b'][i]} 0%, transparent 70%)`,
+                left: `${10 + (i * 15)}%`,
+                top: `${10 + (i * 12)}%`,
+                width: `${200 + (i * 50)}px`,
+                height: `${200 + (i * 50)}px`,
+                background: `radial-gradient(circle, ${
+                  ['#8b5cf6', '#ec4899', '#10b981', '#f59e0b', '#3b82f6', '#ef4444'][i]
+                } 0%, transparent 70%)`,
               }}
               animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.2, 0.4, 0.2],
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.5, 0.3],
+                rotate: [0, 180, 360],
               }}
               transition={{
-                duration: 5 + (i * 0.5),
+                duration: 8 + (i * 2),
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: i * 0.3
+                delay: i * 0.5
               }}
             />
           ))}
@@ -176,364 +208,283 @@ export default function PricingPage() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <div className="mb-8">
-              <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20"
-                animate={{ 
-                  boxShadow: ["0 0 20px rgba(139, 92, 246, 0.5)", "0 0 40px rgba(139, 92, 246, 0.8)", "0 0 20px rgba(139, 92, 246, 0.5)"]
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Sparkles className="w-4 h-4 text-purple-300" />
-                <span className="text-sm font-medium text-purple-200">Simple, Transparent Pricing</span>
-              </motion.div>
-            </div>
-
-            <h1 className="text-5xl md:text-7xl font-black mb-6">
-              <span className="bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
-                Choose Your Plan
+            {/* Badge */}
+            <motion.div
+              className="inline-flex items-center gap-2 px-6 py-3 mb-8 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-full border border-purple-500/30"
+              animate={{ 
+                boxShadow: [
+                  "0 0 20px rgba(168, 85, 247, 0.4)", 
+                  "0 0 40px rgba(236, 72, 153, 0.6)", 
+                  "0 0 20px rgba(168, 85, 247, 0.4)"
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              <Sparkles className="w-5 h-5 text-purple-300" />
+              <span className="text-sm font-semibold text-white">
+                Transparent Pricing • No Hidden Fees
               </span>
-              <br />
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-                to Success
+            </motion.div>
+
+            {/* Main Heading */}
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight">
+              <span className="block bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+                Choose Your Path
+              </span>
+              <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 bg-clip-text text-transparent">
+                to Academic Success
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto">
-              Start free, upgrade when you need more power. We're just getting started!
+            <p className="text-xl sm:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Start with our <span className="text-green-400 font-semibold">free plan forever</span>, 
+              or unlock powerful tools with <span className="text-purple-400 font-semibold">Plus</span> — 
+              now with a 7-day free trial!
             </p>
-            
-            {/* Billing Toggle */}
-            <motion.div 
-              className="flex items-center justify-center gap-6 mb-12"
+
+            {/* Stats */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
+              className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-12 max-w-4xl mx-auto"
             >
-              <span className={`text-lg font-medium ${!isYearly ? 'text-white' : 'text-gray-400'}`}>
-                Monthly
-              </span>
-              <motion.button
-                onClick={() => setIsYearly(!isYearly)}
-                className={`relative inline-flex h-10 w-20 items-center rounded-full transition-colors ${
-                  isYearly ? 'bg-gradient-to-r from-purple-600 to-pink-600' : 'bg-gray-700'
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
+                >
+                  <div className="flex justify-center mb-3 text-purple-400">
+                    {stat.icon}
+                  </div>
+                  <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
+                  <div className="text-sm text-gray-400">{stat.label}</div>
+                </motion.div>
+              ))}
+            </motion.div>
+            
+            {/* Billing Toggle */}
+            <motion.div 
+              className="inline-flex items-center gap-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full p-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            >
+              <button
+                onClick={() => setIsYearly(false)}
+                className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 ${
+                  !isYearly 
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50' 
+                    : 'text-gray-400 hover:text-white'
                 }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
-                <motion.span
-                  className="inline-block h-8 w-8 transform rounded-full bg-white shadow-lg"
-                  animate={{ x: isYearly ? 44 : 4 }}
-                  transition={{ duration: 0.2 }}
-                />
-              </motion.button>
-              <span className={`text-lg font-medium ${isYearly ? 'text-white' : 'text-gray-400'}`}>
+                Monthly
+              </button>
+              <button
+                onClick={() => setIsYearly(true)}
+                className={`px-8 py-3 rounded-full font-semibold transition-all duration-300 relative ${
+                  isYearly 
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50' 
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
                 Yearly
                 <motion.span 
-                  className="ml-2 text-sm bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-full font-medium"
-                  animate={{ scale: [1, 1.05, 1] }}
+                  className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs px-2 py-1 rounded-full font-bold"
+                  animate={{ scale: [1, 1.1, 1], rotate: [-5, 5, -5] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
                   Save 17%
                 </motion.span>
-              </span>
+              </button>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Startup Message */}
-      <section className="py-12 bg-gradient-to-b from-black to-gray-900">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-500/30 p-8 text-center"
-          >
-            <Coffee className="h-12 w-12 text-blue-400 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-white mb-4">We're Just Getting Started! ☕</h3>
-            <p className="text-gray-300 leading-relaxed mb-6">
-              AcademOra is a growing platform focused on making education accessible to everyone. 
-              We're currently building advanced features and our revenue is still developing. 
-              Your support helps us continue our mission and improve the platform for all students.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Heart className="h-4 w-4 text-red-400" />
-                <span>Support our mission</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Users className="h-4 w-4 text-blue-400" />
-                <span>Refer friends</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Star className="h-4 w-4 text-yellow-400" />
-                <span>Help us grow</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* Pricing Cards */}
-      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
+      <section className="py-20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {plans.map((plan, index) => {
               const displayPrice = isYearly && plan.yearlyPrice ? plan.yearlyPrice / 12 : plan.price
-              const isPaid = plan.price > 0
+              const totalYearlyPrice = isYearly && plan.yearlyPrice ? plan.yearlyPrice : plan.price * 12
               
               return (
                 <motion.div
                   key={plan.id}
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -10 }}
-                  className={`relative group ${plan.comingSoon ? 'opacity-75' : ''}`}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  whileHover={{ y: -8, scale: plan.highlighted ? 1.02 : 1 }}
+                  className={`relative ${plan.highlighted ? 'lg:scale-105 z-10' : ''}`}
                 >
-                  <div className={`h-full bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl border ${
-                    plan.popular ? 'border-purple-500/50' : 'border-gray-700/50'
-                  } transition-all duration-300 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/25`}>
-                    {plan.popular && !plan.comingSoon && (
-                      <motion.div 
-                        className="absolute top-0 right-0 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-bl-lg text-sm font-semibold"
-                        animate={{ 
-                          boxShadow: ["0 0 20px rgba(139, 92, 246, 0.5)", "0 0 40px rgba(139, 92, 246, 0.8)", "0 0 20px rgba(139, 92, 246, 0.5)"]
-                        }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        Most Popular
-                      </motion.div>
+                  {/* Card */}
+                  <div className={`h-full bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-xl rounded-3xl border ${
+                    plan.highlighted 
+                      ? 'border-purple-500/50 shadow-2xl shadow-purple-500/20' 
+                      : 'border-gray-800/50'
+                  } overflow-hidden transition-all duration-300 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10`}>
+                    
+                    {/* Badge */}
+                    {plan.badge && !plan.comingSoon && (
+                      <div className="absolute top-0 left-0 right-0">
+                        <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 text-white text-center py-2 px-4 text-sm font-bold">
+                          <Sparkles className="w-4 h-4 inline mr-2" />
+                          {plan.badge}
+                        </div>
+                      </div>
                     )}
                     
                     {plan.comingSoon && (
-                      <div className="absolute top-0 right-0 bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-4 py-2 rounded-bl-lg text-sm font-semibold">
-                        Coming Soon
+                      <div className="absolute top-0 left-0 right-0">
+                        <div className="bg-gradient-to-r from-amber-600 to-orange-600 text-white text-center py-2 px-4 text-sm font-bold">
+                          <Zap className="w-4 h-4 inline mr-2" />
+                          Coming Soon
+                        </div>
                       </div>
                     )}
                     
-                    <div className="p-8">
-                      {/* Plan Header */}
-                      <div className="text-center mb-8">
+                    <div className={`p-8 ${plan.badge || plan.comingSoon ? 'pt-16' : ''}`}>
+                      {/* Icon & Name */}
+                      <div className="mb-6">
                         <motion.div 
-                          className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
-                            plan.color === 'blue' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white' :
-                            plan.color === 'purple' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' :
-                            plan.color === 'green' ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white' :
-                            'bg-gradient-to-r from-gray-600 to-gray-700 text-white'
-                          } ${plan.comingSoon ? 'opacity-50' : ''}`}
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                          transition={{ duration: 0.3 }}
+                          className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${plan.gradient} text-white mb-4 shadow-lg`}
+                          whileHover={{ rotate: 360, scale: 1.1 }}
+                          transition={{ duration: 0.6 }}
                         >
                           {plan.icon}
                         </motion.div>
-                        <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
-                        <p className="text-gray-400 mb-6">{plan.description}</p>
-                        
-                        {/* Price */}
-                        <div className="mb-6">
-                          {!plan.comingSoon ? (
-                            <>
-                              <div className="flex items-baseline justify-center">
-                                <span className="text-5xl font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                                  ${displayPrice}
-                                </span>
-                                <span className="text-gray-400 ml-2">/month</span>
-                              </div>
-                              {isYearly && plan.yearlyPrice && (
-                                <p className="text-sm text-gray-500 mt-2">
-                                  ${plan.yearlyPrice} billed annually
-                                </p>
-                              )}
-                              {plan.id === 'plus' && (
-                                <p className="text-sm text-green-400 mt-2 font-medium">
-                                  7-day free trial
-                                </p>
-                              )}
-                            </>
-                          ) : (
-                            <div className="flex items-center justify-center">
-                              <span className="text-3xl font-bold text-yellow-400">
-                                Coming Soon
-                              </span>
-                            </div>
-                          )}
+                        <h3 className="text-2xl font-bold text-white mb-1">{plan.name}</h3>
+                        <div className="text-sm font-semibold bg-gradient-to-r from-gray-400 to-gray-500 bg-clip-text text-transparent mb-2">
+                          {plan.tagline}
                         </div>
+                        <p className="text-gray-400 text-sm">{plan.description}</p>
+                      </div>
+
+                      {/* Price */}
+                      <div className="mb-8">
+                        {!plan.comingSoon ? (
+                          <>
+                            <div className="flex items-baseline mb-2">
+                              <span className="text-5xl font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                                ${displayPrice}
+                              </span>
+                              <span className="text-gray-500 ml-2 font-medium">/month</span>
+                            </div>
+                            {isYearly && plan.yearlyPrice && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm text-gray-500">
+                                  ${totalYearlyPrice}/year
+                                </span>
+                                <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-semibold">
+                                  Save ${((plan.price * 12) - totalYearlyPrice).toFixed(0)}
+                                </span>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="text-3xl font-bold text-amber-400">
+                            Launching Soon
+                          </div>
+                        )}
                       </div>
 
                       {/* Features */}
-                      <div className="space-y-4 mb-8">
-                        {plan.features.map((feature, index) => (
+                      <div className="space-y-3 mb-8">
+                        {plan.features.map((feature, idx) => (
                           <motion.div 
-                            key={index} 
+                            key={idx} 
                             className="flex items-start gap-3"
-                            initial={{ opacity: 0, x: -20 }}
+                            initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.3, delay: 0.5 + (index * 0.05) }}
+                            transition={{ duration: 0.3, delay: 0.6 + (idx * 0.05) }}
                           >
-                            <Check className="h-5 w-5 text-green-400 flex-shrink-0 mt-0.5" />
-                            <span className="text-gray-300 text-sm">{feature}</span>
+                            <div className="flex-shrink-0 mt-0.5">
+                              <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${plan.gradient} flex items-center justify-center`}>
+                                <Check className="w-3 h-3 text-white" />
+                              </div>
+                            </div>
+                            <span className="text-gray-300 text-sm leading-tight">{feature}</span>
                           </motion.div>
                         ))}
                         
-                        {plan.notIncluded?.map((feature, index) => (
-                          <div key={index} className="flex items-start gap-3 opacity-40">
-                            <X className="h-5 w-5 text-gray-500 flex-shrink-0 mt-0.5" />
-                            <span className="text-gray-500 text-sm line-through">{feature}</span>
+                        {plan.notIncluded?.map((feature, idx) => (
+                          <div key={idx} className="flex items-start gap-3 opacity-30">
+                            <div className="flex-shrink-0 mt-0.5">
+                              <div className="w-5 h-5 rounded-full bg-gray-700 flex items-center justify-center">
+                                <X className="w-3 h-3 text-gray-500" />
+                              </div>
+                            </div>
+                            <span className="text-gray-600 text-sm leading-tight line-through">{feature}</span>
                           </div>
                         ))}
                       </div>
 
                       {/* CTA Button */}
-                      <motion.button
-                        className={`w-full py-3 px-6 rounded-full font-semibold transition-all duration-300 ${
-                          plan.comingSoon
-                            ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                            : plan.popular
-                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:shadow-2xl hover:shadow-purple-500/25 text-white'
-                            : plan.color === 'purple'
-                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:shadow-2xl hover:shadow-purple-500/25 text-white'
-                            : plan.color === 'green'
-                            ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:shadow-2xl hover:shadow-green-500/25 text-white'
-                            : isPaid
-                            ? 'bg-gradient-to-r from-gray-700 to-gray-800 hover:bg-gray-600 text-white'
-                            : 'bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white'
-                        }`}
-                        whileHover={plan.comingSoon ? {} : { scale: 1.02 }}
-                        whileTap={plan.comingSoon ? {} : { scale: 0.98 }}
-                        disabled={plan.comingSoon}
+                      <Link
+                        to={plan.comingSoon ? '#' : '/register'}
+                        onClick={(e) => plan.comingSoon && e.preventDefault()}
                       >
-                        {plan.buttonText}
-                      </motion.button>
+                        <motion.button
+                          className={`w-full py-4 px-6 rounded-xl font-bold text-sm transition-all duration-300 ${
+                            plan.comingSoon
+                              ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
+                              : plan.highlighted
+                              ? `bg-gradient-to-r ${plan.gradient} text-white shadow-lg hover:shadow-2xl hover:shadow-purple-500/30`
+                              : plan.id === 'free'
+                              ? 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
+                              : `bg-gradient-to-r ${plan.gradient} text-white hover:shadow-xl`
+                          }`}
+                          whileHover={plan.comingSoon ? {} : { scale: 1.02 }}
+                          whileTap={plan.comingSoon ? {} : { scale: 0.98 }}
+                          disabled={plan.comingSoon}
+                        >
+                          <span className="flex items-center justify-center gap-2">
+                            {plan.buttonText}
+                            {!plan.comingSoon && <ArrowRight className="w-4 h-4" />}
+                          </span>
+                        </motion.button>
+                      </Link>
                     </div>
                   </div>
                 </motion.div>
               )
             })}
           </div>
-        </div>
-      </section>
 
-      {/* Support Section */}
-      <section className="py-20 bg-gradient-to-b from-black to-gray-900">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Trust Indicators */}
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-16 flex flex-wrap items-center justify-center gap-8 text-gray-400 text-sm"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-red-400 to-pink-400 bg-clip-text text-transparent">
-                Support Our Mission
-              </span>
-            </h2>
-            <p className="text-xl text-gray-300">
-              Help us make education accessible for everyone
-            </p>
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-green-400" />
+              <span>Secure Payment</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Target className="w-5 h-5 text-blue-400" />
+              <span>30-Day Money Back</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Heart className="w-5 h-5 text-red-400" />
+              <span>Cancel Anytime</span>
+            </div>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              whileHover={{ y: -10 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-8 hover:border-red-500/50 transition-all duration-300"
-            >
-              <Heart className="h-12 w-12 text-red-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-3">Make a Donation</h3>
-              <p className="text-gray-300 mb-6">
-                Direct support helps us maintain and improve the platform for all students.
-              </p>
-              <div className="space-y-2">
-                <a 
-                  href="https://www.buymeacoffee.com/academora" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="block w-full py-2 px-4 bg-yellow-500/20 border border-yellow-500/30 rounded-lg text-yellow-300 hover:bg-yellow-500/30 transition-all duration-300 text-center"
-                >
-                  Buy Us a Coffee
-                </a>
-                <a 
-                  href="https://paypal.me/academora" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="block w-full py-2 px-4 bg-blue-500/20 border border-blue-500/30 rounded-lg text-blue-300 hover:bg-blue-500/30 transition-all duration-300 text-center"
-                >
-                  Donate via PayPal
-                </a>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              whileHover={{ y: -10 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-8 hover:border-green-500/50 transition-all duration-300"
-            >
-              <Users className="h-12 w-12 text-green-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-3">Refer Friends</h3>
-              <p className="text-gray-300 mb-6">
-                Share AcademOra with your friends and help grow our community of learners.
-              </p>
-              <motion.button
-                className="w-full py-2 px-4 bg-green-500/20 border border-green-500/30 rounded-lg text-green-300 hover:bg-green-500/30 transition-all duration-300"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({
-                      title: 'AcademOra - Find Your Perfect University',
-                      text: 'Check out AcademOra! It\'s helping me find my dream university.',
-                      url: window.location.origin
-                    })
-                  } else {
-                    navigator.clipboard.writeText(window.location.origin)
-                    alert('Link copied to clipboard!')
-                  }
-                }}
-              >
-                Share with Friends
-              </motion.button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              whileHover={{ y: -10 }}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-8 hover:border-purple-500/50 transition-all duration-300"
-            >
-              <Star className="h-12 w-12 text-purple-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-3">Upgrade to Plus</h3>
-              <p className="text-gray-300 mb-6">
-                Get premium features and directly support platform development.
-              </p>
-              <Link
-                to="/register"
-                className="block w-full py-2 px-4 bg-purple-500/20 border border-purple-500/30 rounded-lg text-purple-300 hover:bg-purple-500/30 transition-all duration-300 text-center"
-              >
-                Start Guided Setup
-              </Link>
-            </motion.div>
-          </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-900 to-black">
+      <section className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
@@ -542,12 +493,12 @@ export default function PricingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Frequently Asked Questions
               </span>
             </h2>
-            <p className="text-xl text-gray-300">
-              Got questions? We've got answers
+            <p className="text-xl text-gray-400">
+              Everything you need to know about our pricing
             </p>
           </motion.div>
 
@@ -558,20 +509,21 @@ export default function PricingPage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="bg-gray-900/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 overflow-hidden"
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className="bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-xl rounded-2xl border border-gray-800/50 overflow-hidden hover:border-purple-500/30 transition-all duration-300"
               >
                 <motion.button
                   onClick={() => setActiveFaq(activeFaq === index ? null : index)}
-                  className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-white/5 transition-all duration-300"
-                  whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}
+                  className="w-full px-8 py-6 text-left flex items-center justify-between group"
+                  whileHover={{ backgroundColor: "rgba(139, 92, 246, 0.05)" }}
                 >
-                  <span className="font-semibold text-white text-lg">{faq.question}</span>
+                  <span className="font-semibold text-white text-lg pr-8 group-hover:text-purple-300 transition-colors">{faq.question}</span>
                   <motion.div
                     animate={{ rotate: activeFaq === index ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
+                    className="flex-shrink-0"
                   >
-                    <ChevronDown className="h-6 w-6 text-purple-400" />
+                    <ChevronDown className="w-6 h-6 text-purple-400" />
                   </motion.div>
                 </motion.button>
                 <AnimatePresence>
@@ -581,9 +533,11 @@ export default function PricingPage() {
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="px-8 pb-6"
+                      className="overflow-hidden"
                     >
-                      <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
+                      <div className="px-8 pb-6">
+                        <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -593,49 +547,99 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-purple-900/50 via-black to-pink-900/50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* Final CTA */}
+      <section className="py-20 relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-black to-pink-900/30" />
+        <div className="absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white/5 backdrop-blur-md rounded-3xl p-12 border border-white/10"
+            transition={{ duration: 0.8 }}
+            className="text-center"
           >
-            <div className="mb-8">
-              <Zap className="w-16 h-16 mx-auto text-yellow-400 mb-4" />
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                  Start Your Journey Today
-                </span>
-              </h2>
-              <p className="text-xl text-gray-300 mb-8">
-                Join thousands of students finding their perfect academic match
-              </p>
-            </div>
-            
+            {/* Badge */}
             <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
+              className="inline-flex items-center gap-2 px-6 py-3 mb-8 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-full border border-green-500/30"
+              animate={{ 
+                boxShadow: [
+                  "0 0 20px rgba(16, 185, 129, 0.3)", 
+                  "0 0 40px rgba(16, 185, 129, 0.5)", 
+                  "0 0 20px rgba(16, 185, 129, 0.3)"
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
             >
-              <Link
-                to="/register"
-                className="group px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-green-500/25 transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                Begin Guided Registration
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <a 
-                href="https://www.buymeacoffee.com/academora" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="px-8 py-4 border border-white/30 rounded-full font-semibold text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-sm flex items-center justify-center gap-2"
-              >
-                <Coffee className="w-5 h-5" />
-                Support Us
-              </a>
+              <Rocket className="w-5 h-5 text-green-300" />
+              <span className="text-sm font-semibold text-white">
+                Ready to Start Your Journey?
+              </span>
             </motion.div>
+
+            {/* Heading */}
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-tight">
+              <span className="block bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent mb-2">
+                Begin Your Search Today
+              </span>
+              <span className="block bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                Start Free Forever
+              </span>
+            </h2>
+            
+            <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Join thousands of students who found their perfect university match with AcademOra. 
+              No credit card required. Upgrade anytime.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link to="/register">
+                <motion.button
+                  className="group px-10 py-5 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full font-bold text-lg text-white shadow-2xl shadow-green-500/25 hover:shadow-green-500/40 transition-all duration-300 flex items-center gap-3"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Get Started Free
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+              </Link>
+              
+              <Link to="/universities">
+                <motion.button
+                  className="px-10 py-5 bg-white/10 backdrop-blur-xl border-2 border-white/20 rounded-full font-bold text-lg text-white hover:bg-white/20 hover:border-white/30 transition-all duration-300"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Browse Universities
+                </motion.button>
+              </Link>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-gray-400 text-sm">
+              <div className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-green-400" />
+                <span>100% Secure</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="w-5 h-5 text-yellow-400" />
+                <span>4.9/5 Rating</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-blue-400" />
+                <span>10,000+ Students</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-purple-400" />
+                <span>Instant Access</span>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>

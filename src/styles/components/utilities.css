@@ -1,0 +1,374 @@
+/**
+ * Component Styles - Utilities
+ * 
+ * This file contains utility classes that use design tokens.
+ */
+
+/* ========================================
+ * SCROLLBAR UTILITIES
+ * ======================================== */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: var(--radius-base);
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400);
+}
+
+.scrollbar-primary::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--color-primary-500), var(--color-primary-700));
+}
+
+.scrollbar-primary::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, var(--color-primary-600), var(--color-primary-800));
+}
+
+/* ========================================
+ * LOADING/SKELETON UTILITIES
+ * ======================================== */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-200) 0%,
+    var(--color-neutral-100) 50%,
+    var(--color-neutral-200) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-base);
+}
+
+.skeleton-text {
+  height: 1rem;
+  margin-bottom: var(--spacing-2);
+}
+
+.skeleton-heading {
+  height: 2rem;
+  margin-bottom: var(--spacing-4);
+  width: 60%;
+}
+
+.skeleton-circle {
+  border-radius: var(--radius-full);
+  aspect-ratio: 1;
+}
+
+/* ========================================
+ * BADGE UTILITIES
+ * ======================================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-badge);
+  line-height: var(--line-height-none);
+}
+
+.badge-primary {
+  background: var(--color-primary-100);
+  color: var(--color-primary-800);
+}
+
+.badge-success {
+  background: var(--color-success-100);
+  color: var(--color-success-800);
+}
+
+.badge-error {
+  background: var(--color-error-100);
+  color: var(--color-error-800);
+}
+
+.badge-warning {
+  background: var(--color-warning-100);
+  color: var(--color-warning-800);
+}
+
+.badge-info {
+  background: var(--color-info-100);
+  color: var(--color-info-800);
+}
+
+.badge-purple {
+  background: rgba(139, 92, 246, 0.2);
+  color: var(--color-purple-400);
+  border: var(--border-width-1) solid rgba(139, 92, 246, 0.3);
+}
+
+.badge-outline {
+  background: transparent;
+  border: var(--border-width-1) solid currentColor;
+}
+
+/* ========================================
+ * DIVIDER UTILITIES
+ * ======================================== */
+.divider {
+  height: var(--border-width-1);
+  background: var(--color-border-primary);
+  border: none;
+  margin: var(--spacing-4) 0;
+}
+
+.divider-vertical {
+  width: var(--border-width-1);
+  height: auto;
+  margin: 0 var(--spacing-4);
+}
+
+.divider-gradient {
+  background: linear-gradient(90deg, transparent, var(--color-info-500), transparent);
+  opacity: 0.5;
+}
+
+/* ========================================
+ * TOOLTIP UTILITIES
+ * ======================================== */
+.tooltip {
+  position: relative;
+}
+
+.tooltip-content {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  padding: var(--spacing-2) var(--spacing-3);
+  background: var(--color-gray-900);
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-normal) var(--ease-default);
+  z-index: var(--z-tooltip);
+  box-shadow: var(--shadow-tooltip);
+}
+
+.tooltip:hover .tooltip-content {
+  opacity: 1;
+}
+
+/* ========================================
+ * ALERT/NOTIFICATION UTILITIES
+ * ======================================== */
+.alert {
+  padding: var(--spacing-4);
+  border-radius: var(--radius-xl);
+  border: var(--border-width-1) solid;
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: flex-start;
+}
+
+.alert-success {
+  background: var(--color-success-50);
+  border-color: var(--color-success-200);
+  color: var(--color-success-800);
+}
+
+.alert-error {
+  background: var(--color-error-50);
+  border-color: var(--color-error-200);
+  color: var(--color-error-800);
+}
+
+.alert-warning {
+  background: var(--color-warning-50);
+  border-color: var(--color-warning-200);
+  color: var(--color-warning-800);
+}
+
+.alert-info {
+  background: var(--color-info-50);
+  border-color: var(--color-info-200);
+  color: var(--color-info-800);
+}
+
+/* ========================================
+ * MODAL/OVERLAY UTILITIES
+ * ======================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg-overlay);
+  backdrop-filter: var(--backdrop-glass-light);
+  z-index: var(--z-modal-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4);
+}
+
+.modal-content {
+  background: var(--color-white);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--shadow-modal);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  z-index: var(--z-modal);
+}
+
+/* ========================================
+ * CONTAINER UTILITIES
+ * ======================================== */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-container-md);
+  padding-right: var(--spacing-container-md);
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding-left: var(--spacing-container-lg);
+    padding-right: var(--spacing-container-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+    padding-left: var(--spacing-container-xl);
+    padding-right: var(--spacing-container-xl);
+  }
+}
+
+/* ========================================
+ * AVATAR UTILITIES
+ * ======================================== */
+.avatar {
+  display: inline-block;
+  border-radius: var(--radius-avatar);
+  overflow: hidden;
+  background: var(--color-neutral-200);
+}
+
+.avatar-sm {
+  width: 2rem;
+  height: 2rem;
+}
+
+.avatar-md {
+  width: 3rem;
+  height: 3rem;
+}
+
+.avatar-lg {
+  width: 4rem;
+  height: 4rem;
+}
+
+.avatar-xl {
+  width: 6rem;
+  height: 6rem;
+}
+
+/* ========================================
+ * SPINNER/LOADER UTILITIES
+ * ======================================== */
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--color-neutral-200);
+  border-top-color: var(--color-primary-600);
+  border-radius: var(--radius-full);
+  animation: spin var(--duration-1000) var(--ease-linear) var(--iteration-infinite);
+}
+
+.spinner-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 2px;
+}
+
+.spinner-lg {
+  width: 3rem;
+  height: 3rem;
+  border-width: 4px;
+}
+
+/* ========================================
+ * PROGRESS BAR UTILITIES
+ * ======================================== */
+.progress {
+  width: 100%;
+  height: 0.5rem;
+  background: var(--color-neutral-200);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--gradient-primary);
+  transition: width var(--duration-300) var(--ease-default);
+}
+
+.progress-bar-success {
+  background: var(--gradient-green);
+}
+
+.progress-bar-error {
+  background: var(--gradient-red);
+}
+
+.progress-bar-warning {
+  background: var(--gradient-orange);
+}
+
+.progress-bar-gradient {
+  background: var(--gradient-purple-pink);
+}
+
+/* ========================================
+ * TRUNCATE TEXT UTILITIES
+ * ======================================== */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

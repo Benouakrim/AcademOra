@@ -1,0 +1,30 @@
+/**
+ * Design Tokens Index
+ * 
+ * This file imports all design token files.
+ * All CSS variables are now centralized for easy theme management.
+ * 
+ * To change the global theme:
+ * 1. Modify values in individual token files (colors.css, spacing.css, etc.)
+ * 2. Changes will automatically propagate throughout the application
+ * 
+ * Token Categories:
+ * - colors.css: All color variables
+ * - spacing.css: Padding, margin, gap values
+ * - typography.css: Font families, sizes, weights
+ * - borders.css: Border widths and radius values
+ * - shadows.css: Box shadows and elevation
+ * - animations.css: Transitions and keyframe animations
+ * - effects.css: Opacity, blur, filters, z-index
+ * - gradients.css: Gradient definitions
+ */
+
+/* Import all design tokens */
+@import './colors.css';
+@import './spacing.css';
+@import './typography.css';
+@import './borders.css';
+@import './shadows.css';
+@import './animations.css';
+@import './effects.css';
+@import './gradients.css';

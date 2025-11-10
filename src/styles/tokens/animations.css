@@ -1,0 +1,444 @@
+/**
+ * Design Tokens - Animations & Transitions
+ * 
+ * This file contains all animation and transition-related variables
+ * including durations, timing functions, and keyframe animations.
+ */
+
+:root {
+  /* ========================================
+   * TRANSITION DURATIONS
+   * ======================================== */
+  --duration-75: 75ms;
+  --duration-100: 100ms;
+  --duration-150: 150ms;
+  --duration-200: 200ms;
+  --duration-300: 300ms;
+  --duration-400: 400ms;
+  --duration-500: 500ms;
+  --duration-700: 700ms;
+  --duration-1000: 1000ms;
+
+  /* Semantic durations */
+  --duration-fast: var(--duration-150);
+  --duration-normal: var(--duration-300);
+  --duration-slow: var(--duration-500);
+
+  /* ========================================
+   * TIMING FUNCTIONS (Easing)
+   * ======================================== */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Custom easing */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.6, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* Default easing */
+  --ease-default: var(--ease-in-out);
+
+  /* ========================================
+   * TRANSITION PROPERTIES
+   * ======================================== */
+  --transition-all: all var(--duration-normal) var(--ease-default);
+  --transition-colors: background-color, border-color, color, fill, stroke var(--duration-normal) var(--ease-default);
+  --transition-opacity: opacity var(--duration-normal) var(--ease-default);
+  --transition-shadow: box-shadow var(--duration-normal) var(--ease-default);
+  --transition-transform: transform var(--duration-normal) var(--ease-default);
+
+  /* ========================================
+   * ANIMATION DELAYS
+   * ======================================== */
+  --delay-0: 0ms;
+  --delay-75: 75ms;
+  --delay-100: 100ms;
+  --delay-150: 150ms;
+  --delay-200: 200ms;
+  --delay-300: 300ms;
+  --delay-500: 500ms;
+  --delay-700: 700ms;
+  --delay-1000: 1000ms;
+
+  /* ========================================
+   * ANIMATION ITERATION COUNTS
+   * ======================================== */
+  --iteration-once: 1;
+  --iteration-infinite: infinite;
+
+  /* ========================================
+   * ANIMATION DIRECTIONS
+   * ======================================== */
+  --direction-normal: normal;
+  --direction-reverse: reverse;
+  --direction-alternate: alternate;
+  --direction-alternate-reverse: alternate-reverse;
+
+  /* ========================================
+   * ANIMATION FILL MODES
+   * ======================================== */
+  --fill-none: none;
+  --fill-forwards: forwards;
+  --fill-backwards: backwards;
+  --fill-both: both;
+}
+
+/* ========================================
+ * KEYFRAME ANIMATIONS
+ * ======================================== */
+
+/* Fade animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale animations */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+/* Spin animations */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Pulse animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Bounce animations */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(-25%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Shake animation */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-10px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(10px);
+  }
+}
+
+/* Wiggle animation */
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+}
+
+/* Glow/Ping animation */
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.8);
+  }
+}
+
+/* Progress animation */
+@keyframes progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Shimmer/Skeleton loading */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Float animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Gradient animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ========================================
+ * ANIMATION UTILITY CLASSES
+ * ======================================== */
+.animate-fadeIn {
+  animation: fadeIn var(--duration-400) var(--ease-out) var(--fill-both);
+}
+
+.animate-fadeOut {
+  animation: fadeOut var(--duration-400) var(--ease-in) var(--fill-both);
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp var(--duration-400) var(--ease-out) var(--fill-both);
+}
+
+.animate-fadeInDown {
+  animation: fadeInDown var(--duration-400) var(--ease-out) var(--fill-both);
+}
+
+.animate-slideDown {
+  animation: slideDown var(--duration-300) var(--ease-out) var(--fill-both);
+}
+
+.animate-slideUp {
+  animation: slideUp var(--duration-300) var(--ease-out) var(--fill-both);
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft var(--duration-300) var(--ease-out) var(--fill-both);
+}
+
+.animate-slideInRight {
+  animation: slideInRight var(--duration-300) var(--ease-out) var(--fill-both);
+}
+
+.animate-scaleIn {
+  animation: scaleIn var(--duration-300) var(--ease-out) var(--fill-both);
+}
+
+.animate-spin {
+  animation: spin var(--duration-1000) var(--ease-linear) var(--iteration-infinite);
+}
+
+.animate-spinSlow {
+  animation: spinSlow 3s var(--ease-linear) var(--iteration-infinite);
+}
+
+.animate-pulse {
+  animation: pulse 2s var(--ease-smooth) var(--iteration-infinite);
+}
+
+.animate-pulseSlow {
+  animation: pulseSlow 3s var(--ease-smooth) var(--iteration-infinite);
+}
+
+.animate-bounce {
+  animation: bounce var(--duration-1000) var(--iteration-infinite);
+}
+
+.animate-bounceIn {
+  animation: bounceIn var(--duration-500) var(--ease-out) var(--fill-both);
+}
+
+.animate-shake {
+  animation: shake var(--duration-500) var(--ease-in-out);
+}
+
+.animate-wiggle {
+  animation: wiggle var(--duration-500) var(--ease-in-out);
+}
+
+.animate-ping {
+  animation: ping var(--duration-1000) var(--ease-smooth) var(--iteration-infinite);
+}
+
+.animate-glow {
+  animation: glow 2s var(--ease-in-out) var(--iteration-infinite);
+}
+
+.animate-shimmer {
+  animation: shimmer 2s var(--ease-linear) var(--iteration-infinite);
+}
+
+.animate-float {
+  animation: float 3s var(--ease-in-out) var(--iteration-infinite);
+}
+
+.animate-gradientShift {
+  animation: gradientShift 3s var(--ease-linear) var(--iteration-infinite);
+  background-size: 200% 200%;
+}

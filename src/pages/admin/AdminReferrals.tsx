@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import {
   Users,
   Gift,
   TrendingUp,
   Search,
-  Filter,
   Download,
   Settings,
   Award,
   CheckCircle,
   XCircle,
   Clock,
-  Calendar,
   Mail,
-  ExternalLink,
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
 
 interface Stats {
   total_referrals: number;
@@ -61,9 +56,11 @@ interface ReferralSettings {
 }
 
 const AdminReferrals: React.FC = () => {
-  const { token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'referrals' | 'codes' | 'settings'>('overview');
+
+  // Get token from localStorage
+  const getToken = () => localStorage.getItem('token');
 
   // Overview state
   const [stats, setStats] = useState<Stats | null>(null);
@@ -93,9 +90,10 @@ const AdminReferrals: React.FC = () => {
     } else if (activeTab === 'settings') {
       fetchSettings();
     }
-  }, [activeTab, referralsPage, searchTerm, statusFilter, token]);
+  }, [activeTab, referralsPage, searchTerm, statusFilter]);
 
   const fetchOverviewData = async () => {
+    const token = getToken();
     if (!token) return;
 
     try {
@@ -119,6 +117,7 @@ const AdminReferrals: React.FC = () => {
   };
 
   const fetchReferrals = async () => {
+    const token = getToken();
     if (!token) return;
 
     try {
@@ -150,6 +149,7 @@ const AdminReferrals: React.FC = () => {
   };
 
   const fetchCodes = async () => {
+    const token = getToken();
     if (!token) return;
 
     try {
@@ -172,6 +172,7 @@ const AdminReferrals: React.FC = () => {
   };
 
   const fetchSettings = async () => {
+    const token = getToken();
     if (!token) return;
 
     try {
@@ -194,6 +195,7 @@ const AdminReferrals: React.FC = () => {
   };
 
   const toggleCodeStatus = async (code: string, currentStatus: boolean) => {
+    const token = getToken();
     if (!token) return;
 
     try {
@@ -215,6 +217,7 @@ const AdminReferrals: React.FC = () => {
   };
 
   const saveSettings = async () => {
+    const token = getToken();
     if (!token || !settings) return;
 
     try {

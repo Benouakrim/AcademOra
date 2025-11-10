@@ -1,0 +1,112 @@
+/**
+ * Design Tokens - Shadows & Elevation
+ * 
+ * This file contains all shadow variables for creating depth
+ * and elevation in the UI.
+ */
+
+:root {
+  /* ========================================
+   * BOX SHADOWS
+   * ======================================== */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --shadow-none: none;
+
+  /* ========================================
+   * COLORED SHADOWS
+   * ======================================== */
+  
+  /* Primary shadows */
+  --shadow-primary-sm: 0 1px 2px 0 rgba(79, 124, 172, 0.3);
+  --shadow-primary-md: 0 4px 6px -1px rgba(79, 124, 172, 0.3), 0 2px 4px -2px rgba(79, 124, 172, 0.3);
+  --shadow-primary-lg: 0 10px 15px -3px rgba(79, 124, 172, 0.3), 0 4px 6px -4px rgba(79, 124, 172, 0.3);
+  --shadow-primary-xl: 0 20px 25px -5px rgba(79, 124, 172, 0.3), 0 8px 10px -6px rgba(79, 124, 172, 0.3);
+
+  /* Success shadows */
+  --shadow-success-sm: 0 1px 2px 0 rgba(16, 185, 129, 0.3);
+  --shadow-success-md: 0 4px 6px -1px rgba(16, 185, 129, 0.3), 0 2px 4px -2px rgba(16, 185, 129, 0.3);
+  --shadow-success-lg: 0 10px 15px -3px rgba(16, 185, 129, 0.3), 0 4px 6px -4px rgba(16, 185, 129, 0.3);
+
+  /* Error shadows */
+  --shadow-error-sm: 0 1px 2px 0 rgba(239, 68, 68, 0.3);
+  --shadow-error-md: 0 4px 6px -1px rgba(239, 68, 68, 0.3), 0 2px 4px -2px rgba(239, 68, 68, 0.3);
+  --shadow-error-lg: 0 10px 15px -3px rgba(239, 68, 68, 0.3), 0 4px 6px -4px rgba(239, 68, 68, 0.3);
+
+  /* Warning shadows */
+  --shadow-warning-sm: 0 1px 2px 0 rgba(245, 158, 11, 0.3);
+  --shadow-warning-md: 0 4px 6px -1px rgba(245, 158, 11, 0.3), 0 2px 4px -2px rgba(245, 158, 11, 0.3);
+  --shadow-warning-lg: 0 10px 15px -3px rgba(245, 158, 11, 0.3), 0 4px 6px -4px rgba(245, 158, 11, 0.3);
+
+  /* Info shadows */
+  --shadow-info-sm: 0 1px 2px 0 rgba(59, 130, 246, 0.3);
+  --shadow-info-md: 0 4px 6px -1px rgba(59, 130, 246, 0.3), 0 2px 4px -2px rgba(59, 130, 246, 0.3);
+  --shadow-info-lg: 0 10px 15px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -4px rgba(59, 130, 246, 0.3);
+
+  /* Purple shadows */
+  --shadow-purple-sm: 0 1px 2px 0 rgba(139, 92, 246, 0.3);
+  --shadow-purple-md: 0 4px 6px -1px rgba(139, 92, 246, 0.3), 0 2px 4px -2px rgba(139, 92, 246, 0.3);
+  --shadow-purple-lg: 0 10px 15px -3px rgba(139, 92, 246, 0.3), 0 4px 6px -4px rgba(139, 92, 246, 0.3);
+  --shadow-purple-xl: 0 20px 25px -5px rgba(139, 92, 246, 0.5), 0 8px 10px -6px rgba(139, 92, 246, 0.5);
+
+  /* Pink shadows */
+  --shadow-pink-sm: 0 1px 2px 0 rgba(236, 72, 153, 0.3);
+  --shadow-pink-md: 0 4px 6px -1px rgba(236, 72, 153, 0.3), 0 2px 4px -2px rgba(236, 72, 153, 0.3);
+  --shadow-pink-lg: 0 10px 15px -3px rgba(236, 72, 153, 0.3), 0 4px 6px -4px rgba(236, 72, 153, 0.3);
+
+  /* Green shadows */
+  --shadow-green-sm: 0 1px 2px 0 rgba(34, 197, 94, 0.3);
+  --shadow-green-md: 0 4px 6px -1px rgba(34, 197, 94, 0.3), 0 2px 4px -2px rgba(34, 197, 94, 0.3);
+  --shadow-green-lg: 0 10px 15px -3px rgba(34, 197, 94, 0.3), 0 4px 6px -4px rgba(34, 197, 94, 0.3);
+
+  /* Red shadows */
+  --shadow-red-sm: 0 1px 2px 0 rgba(220, 38, 38, 0.3);
+  --shadow-red-md: 0 4px 6px -1px rgba(220, 38, 38, 0.3), 0 2px 4px -2px rgba(220, 38, 38, 0.3);
+  --shadow-red-lg: 0 10px 15px -3px rgba(220, 38, 38, 0.3), 0 4px 6px -4px rgba(220, 38, 38, 0.3);
+
+  /* ========================================
+   * GLOW EFFECTS (for animations)
+   * ======================================== */
+  --shadow-glow-primary: 0 0 20px rgba(79, 124, 172, 0.5);
+  --shadow-glow-primary-lg: 0 0 40px rgba(79, 124, 172, 0.8);
+  
+  --shadow-glow-purple: 0 0 20px rgba(139, 92, 246, 0.5);
+  --shadow-glow-purple-lg: 0 0 40px rgba(139, 92, 246, 0.8);
+  
+  --shadow-glow-pink: 0 0 20px rgba(236, 72, 153, 0.5);
+  --shadow-glow-pink-lg: 0 0 40px rgba(236, 72, 153, 0.8);
+
+  --shadow-glow-blue: 0 0 20px rgba(59, 130, 246, 0.5);
+  --shadow-glow-blue-lg: 0 0 40px rgba(59, 130, 246, 0.8);
+
+  --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.5);
+  --shadow-glow-green-lg: 0 0 40px rgba(16, 185, 129, 0.8);
+
+  /* ========================================
+   * SEMANTIC SHADOWS
+   * ======================================== */
+  --shadow-card: var(--shadow-lg);
+  --shadow-card-hover: var(--shadow-xl);
+  --shadow-button: var(--shadow-sm);
+  --shadow-button-hover: var(--shadow-md);
+  --shadow-modal: var(--shadow-2xl);
+  --shadow-dropdown: var(--shadow-lg);
+  --shadow-tooltip: var(--shadow-md);
+
+  /* ========================================
+   * DROP SHADOWS (for images/icons)
+   * ======================================== */
+  --drop-shadow-sm: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.05));
+  --drop-shadow-base: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.06));
+  --drop-shadow-md: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.06));
+  --drop-shadow-lg: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
+  --drop-shadow-xl: drop-shadow(0 20px 13px rgba(0, 0, 0, 0.03)) drop-shadow(0 8px 5px rgba(0, 0, 0, 0.08));
+  --drop-shadow-2xl: drop-shadow(0 25px 25px rgba(0, 0, 0, 0.15));
+  --drop-shadow-none: drop-shadow(0 0 #0000);
+}

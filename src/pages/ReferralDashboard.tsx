@@ -7,7 +7,6 @@ import {
   Gift,
   Share2,
   Mail,
-  MessageCircle,
   Facebook,
   Twitter,
   Linkedin,
@@ -17,7 +16,6 @@ import {
   CheckCircle,
   Clock,
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
 
 interface ReferralCode {
   code: string;
@@ -49,7 +47,6 @@ interface Reward {
 }
 
 const ReferralDashboard: React.FC = () => {
-  const { token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -59,12 +56,20 @@ const ReferralDashboard: React.FC = () => {
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [rewards, setRewards] = useState<Reward[]>([]);
 
+  // Get token from localStorage
+  const getToken = () => localStorage.getItem('token');
+
   useEffect(() => {
     fetchReferralData();
-  }, [token]);
+  }, []);
 
   const fetchReferralData = async () => {
-    if (!token) return;
+    const token = getToken();
+    if (!token) {
+      setError('Please log in to view your referral dashboard');
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);

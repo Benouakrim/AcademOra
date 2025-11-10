@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Calculator, DollarSign, TrendingDown, GraduationCap, Award, AlertCircle, Sparkles } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { financialProfileAPI } from '../lib/api'
 
 interface University {
   id: string
@@ -54,6 +55,7 @@ interface FinancialAidPredictorProps {
 export default function FinancialAidPredictor({ university, userProfile, onRequestCompleteProfile }: FinancialAidPredictorProps) {
   const [prediction, setPrediction] = useState<FinancialAidPrediction | null>(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
@@ -64,9 +66,34 @@ export default function FinancialAidPredictor({ university, userProfile, onReque
 
   const calculatePrediction = async () => {
     setLoading(true)
+    setError(null)
     
-    // Simulate API call for financial aid prediction
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    try {
+      // Call the real API endpoint
+      const response = await financialProfileAPI.predictAid(
+        university.id || '',
+        university // Pass full university data as fallback
+      )
+      
+      if (response.success && response.prediction) {
+        setPrediction(response.prediction)
+      } else {
+        throw new Error('Invalid prediction response')
+      }
+    } catch (err: any) {
+      console.error('Failed to calculate financial aid prediction:', err)
+      setError(err.message || 'Failed to calculate prediction. Please try again.')
+      
+      // Fallback to client-side calculation if API fails
+      fallbackCalculation()
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fallback calculation method (simplified version for when API is unavailable)
+  const fallbackCalculation = () => {
+    console.warn('Using fallback calculation method')
     
     const tuition = userProfile?.international_student 
       ? university.tuition_international || university.tuition_out_of_state || 0
@@ -75,12 +102,10 @@ export default function FinancialAidPredictor({ university, userProfile, onReque
         : university.tuition_out_of_state || 0
 
     const baseAid = university.avg_financial_aid_package || 0
-    const aidPercentage = (university.percentage_receiving_aid || 50) / 100
     
     // Calculate merit-based aid based on academic profile
     let meritAid = 0
     if (userProfile?.gpa && userProfile.sat_score) {
-      // High GPA and SAT scores increase merit aid chances
       const gpaFactor = userProfile.gpa >= 3.8 ? 1.5 : userProfile.gpa >= 3.5 ? 1.2 : 1.0
       const satFactor = userProfile.sat_score >= 1400 ? 1.3 : userProfile.sat_score >= 1300 ? 1.1 : 1.0
       meritAid = baseAid * 0.6 * gpaFactor * satFactor
@@ -89,10 +114,8 @@ export default function FinancialAidPredictor({ university, userProfile, onReque
     // Calculate need-based aid based on family income
     let needAid = 0
     if (userProfile?.family_income && university.need_blind_admission) {
-      // Need-blind schools meet 100% of demonstrated need
-      needAid = Math.max(0, tuition - (userProfile.family_income * 0.3)) // Assume 30% of family income contribution
+      needAid = Math.max(0, tuition - (userProfile.family_income * 0.3))
     } else if (userProfile?.family_income) {
-      // Standard need-based calculation
       needAid = Math.max(0, tuition - (userProfile.family_income * 0.4)) * 0.8
     }
 
@@ -115,7 +138,7 @@ export default function FinancialAidPredictor({ university, userProfile, onReque
 
     // Calculate confidence score
     const confidenceScore = Math.min(95, 
-      60 + // Base confidence
+      60 + 
       (university.avg_financial_aid_package ? 10 : 0) +
       (university.percentage_receiving_aid ? 10 : 0) +
       (userProfile?.gpa ? 5 : 0) +
@@ -144,8 +167,6 @@ export default function FinancialAidPredictor({ university, userProfile, onReque
       confidence_score: confidenceScore,
       scenarios
     })
-    
-    setLoading(false)
   }
 
   if (!userProfile) {
@@ -198,6 +219,28 @@ export default function FinancialAidPredictor({ university, userProfile, onReque
             <span className="text-gray-300">Calculating your financial aid...</span>
           </motion.div>
         </div>
+      </motion.div>
+    )
+  }
+
+  if (error) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-red-900/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-6"
+      >
+        <div className="flex items-center gap-3 text-red-300 mb-3">
+          <AlertCircle className="h-5 w-5" />
+          <p className="text-sm font-medium">Failed to calculate financial aid prediction</p>
+        </div>
+        <p className="text-sm text-red-200/80 mb-4">{error}</p>
+        <button
+          onClick={calculatePrediction}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/80 hover:bg-red-500 text-white text-sm font-medium transition-colors"
+        >
+          Try again
+        </button>
       </motion.div>
     )
   }

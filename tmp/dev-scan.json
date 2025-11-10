@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-11-10T13:00:36.151Z",
+  "generatedAt": "2025-11-10T14:29:50.259Z",
   "projectRoot": "C:\\Users\\ayper\\Desktop\\Projects Ayoub\\Coding",
   "files": {
     "pages": [],
@@ -142,13 +142,6 @@
         "_content": "<p>Chlamanquonnach</p><ul><li><p>ece cce</p></li></ul><pre><code>cece</code></pre><p></p>"
       },
       {
-        "id": "f7880352-e2d8-4019-aea5-5a334fb1105b",
-        "slug": "top-10-engineering-fields-career-prospects",
-        "title": "Top 10 Engineering Fields with Best Career Prospects",
-        "published": true,
-        "_content": "<h2>Introduction</h2><p>Engineering is one of the most versatile and rewarding career paths. Here are the top 10 engineering fields with excellent career prospects.</p><h2>1. Software Engineering</h2><p>With digital transformation accelerating, software engineers are in high demand.</p><h2>2. Artificial Intelligence & Machine Learning</h2><p>AI engineers design and develop intelligent systems.</p><h2>Conclusion</h2><p>Each engineering field offers unique opportunities. Choose based on your interests and career goals.</p>"
-      },
-      {
         "id": "e4528411-c099-4d7f-b004-df18b010b178",
         "slug": "university-application-deadlines-timeline",
         "title": "University Application Deadlines: Complete Timeline Guide",
@@ -168,6 +161,13 @@
         "title": "Scholarships for International Students: Where to Find Funding",
         "published": true,
         "_content": "<h2>Introduction</h2><p>Finding scholarships can significantly reduce the financial burden of studying abroad. Here's where to look for funding opportunities.</p><h2>Types of Scholarships</h2><p>Merit-based, need-based, country-specific, and subject-specific scholarships are available.</p><h2>Where to Find</h2><p>Check university websites, government programs like Fulbright and Chevening, and private organizations.</p><h2>Application Tips</h2><p>Start searching early, apply to multiple scholarships, tailor each application, and write compelling essays.</p>"
+      },
+      {
+        "id": "f7880352-e2d8-4019-aea5-5a334fb1105b",
+        "slug": "top-10-engineering-fields-career-prospects",
+        "title": "Top 10 Engineering Fields with Best Career Prospects",
+        "published": true,
+        "_content": "<h2>Introduction</h2><p>Engineering is one of the most versatile and rewarding career paths. Here are the top 10 engineering fields with excellent career prospects.</p><h2>1. Software Engineering</h2><p>With digital transformation accelerating, software engineers are in high demand.</p><h2>2. Artificial Intelligence & Machine Learning</h2><p>AI engineers design and develop intelligent systems.</p><h2>Conclusion</h2><p>Each engineering field offers unique opportunities. Choose based on your interests and career goals.</p>"
       },
       {
         "id": "56827aea-267b-4453-a852-c7094936a698",
@@ -334,10 +334,10 @@
       "/blog/university-admissions-step-by-step",
       "/blog/understanding-academic-fields-guide",
       "/blog/how-to-bazoo",
-      "/blog/top-10-engineering-fields-career-prospects",
       "/blog/university-application-deadlines-timeline",
       "/blog/study-abroad-complete-guide",
       "/blog/scholarships-international-students-funding",
+      "/blog/top-10-engineering-fields-career-prospects",
       "/blog/10-tips-international-students"
     ],
     "universityPaths": [
@@ -392,12 +392,6 @@
         "hasContent": true
       },
       {
-        "slug": "top-10-engineering-fields-career-prospects",
-        "title": "Top 10 Engineering Fields with Best Career Prospects",
-        "published": true,
-        "hasContent": true
-      },
-      {
         "slug": "university-application-deadlines-timeline",
         "title": "University Application Deadlines: Complete Timeline Guide",
         "published": true,
@@ -412,6 +406,12 @@
       {
         "slug": "scholarships-international-students-funding",
         "title": "Scholarships for International Students: Where to Find Funding",
+        "published": true,
+        "hasContent": true
+      },
+      {
+        "slug": "top-10-engineering-fields-career-prospects",
+        "title": "Top 10 Engineering Fields with Best Career Prospects",
         "published": true,
         "hasContent": true
       },

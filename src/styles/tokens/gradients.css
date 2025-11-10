@@ -1,0 +1,179 @@
+/**
+ * Design Tokens - Gradients
+ * 
+ * This file contains all gradient definitions used throughout the application.
+ * Modify these gradients to change the visual style globally.
+ */
+
+:root {
+  /* ========================================
+   * PRIMARY GRADIENTS
+   * ======================================== */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-700) 100%);
+  --gradient-primary-to-accent: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-accent-500) 100%);
+  
+  /* ========================================
+   * BRAND GRADIENTS - Vibrant multi-color
+   * ======================================== */
+  --gradient-purple-pink: linear-gradient(135deg, var(--color-purple-500) 0%, var(--color-pink-500) 100%);
+  --gradient-purple-blue: linear-gradient(135deg, var(--color-purple-500) 0%, var(--color-blue-500) 100%);
+  --gradient-blue-purple: linear-gradient(135deg, var(--color-blue-600) 0%, var(--color-purple-600) 100%);
+  --gradient-pink-purple: linear-gradient(135deg, var(--color-pink-500) 0%, var(--color-purple-500) 100%);
+  
+  /* Three-color gradients */
+  --gradient-purple-pink-blue: linear-gradient(135deg, var(--color-purple-400) 0%, var(--color-pink-400) 50%, var(--color-blue-400) 100%);
+  --gradient-rainbow: linear-gradient(135deg, var(--color-purple-500) 0%, var(--color-blue-500) 33%, var(--color-green-500) 66%, var(--color-orange-500) 100%);
+  
+  /* ========================================
+   * SUCCESS/POSITIVE GRADIENTS
+   * ======================================== */
+  --gradient-green: linear-gradient(135deg, var(--color-green-400) 0%, var(--color-emerald-400) 100%);
+  --gradient-green-blue: linear-gradient(135deg, var(--color-green-500) 0%, var(--color-blue-500) 100%);
+  --gradient-success: linear-gradient(135deg, var(--color-success-500) 0%, var(--color-success-600) 100%);
+  
+  /* ========================================
+   * ERROR/WARNING GRADIENTS
+   * ======================================== */
+  --gradient-red: linear-gradient(135deg, var(--color-red-500) 0%, var(--color-red-600) 100%);
+  --gradient-orange: linear-gradient(135deg, var(--color-orange-400) 0%, var(--color-orange-500) 100%);
+  --gradient-warning: linear-gradient(135deg, var(--color-warning-400) 0%, var(--color-warning-500) 100%);
+  --gradient-error: linear-gradient(135deg, var(--color-error-500) 0%, var(--color-error-600) 100%);
+  
+  /* ========================================
+   * NEUTRAL/GRAY GRADIENTS
+   * ======================================== */
+  --gradient-gray: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-gray-200) 100%);
+  --gradient-gray-dark: linear-gradient(135deg, var(--color-gray-800) 0%, var(--color-gray-900) 100%);
+  --gradient-slate: linear-gradient(135deg, var(--color-slate-100) 0%, var(--color-slate-200) 100%);
+  
+  /* ========================================
+   * SUBTLE GRADIENTS (for backgrounds)
+   * ======================================== */
+  --gradient-subtle-primary: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
+  --gradient-subtle-purple: linear-gradient(135deg, var(--color-purple-50) 0%, var(--color-purple-100) 100%);
+  --gradient-subtle-blue: linear-gradient(135deg, var(--color-blue-50) 0%, var(--color-blue-100) 100%);
+  --gradient-subtle-green: linear-gradient(135deg, var(--color-green-50) 0%, var(--color-green-100) 100%);
+  
+  /* ========================================
+   * RADIAL GRADIENTS
+   * ======================================== */
+  --gradient-radial-purple: radial-gradient(circle, var(--color-purple-500) 0%, transparent 70%);
+  --gradient-radial-blue: radial-gradient(circle, var(--color-blue-500) 0%, transparent 70%);
+  --gradient-radial-pink: radial-gradient(circle, var(--color-pink-500) 0%, transparent 70%);
+  --gradient-radial-green: radial-gradient(circle, var(--color-green-500) 0%, transparent 70%);
+  --gradient-radial-orange: radial-gradient(circle, var(--color-orange-500) 0%, transparent 70%);
+  
+  /* ========================================
+   * BACKGROUND GRADIENTS (darker, for sections)
+   * ======================================== */
+  --gradient-bg-dark: linear-gradient(135deg, var(--color-gray-800) 0%, var(--color-gray-900) 100%);
+  --gradient-bg-dark-purple: linear-gradient(135deg, rgba(17, 24, 39, 0.5) 0%, rgba(31, 41, 55, 0.5) 100%);
+  
+  /* ========================================
+   * MESH/COMPLEX GRADIENTS
+   * ======================================== */
+  --gradient-mesh-1: linear-gradient(135deg, var(--color-purple-600) 0%, var(--color-pink-600) 50%, var(--color-blue-600) 100%);
+  --gradient-mesh-2: linear-gradient(to bottom right, var(--color-purple-400) 0%, var(--color-blue-500) 50%, var(--color-green-400) 100%);
+  
+  /* ========================================
+   * TEXT GRADIENTS (for gradient text)
+   * ======================================== */
+  --text-gradient-primary: var(--gradient-primary);
+  --text-gradient-purple-pink: var(--gradient-purple-pink);
+  --text-gradient-rainbow: linear-gradient(90deg, var(--color-white) 0%, var(--color-yellow-200) 50%, var(--color-orange-200) 100%);
+  --text-gradient-purple-blue: linear-gradient(90deg, var(--color-purple-400) 0%, var(--color-pink-400) 50%, var(--color-blue-400) 100%);
+  --text-gradient-green: var(--gradient-green);
+  
+  /* ========================================
+   * EDITOR GRADIENTS
+   * ======================================== */
+  --gradient-editor-code: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-gray-200) 100%);
+  --gradient-editor-heading: linear-gradient(135deg, var(--color-blue-600) 0%, var(--color-purple-700) 100%);
+  
+  /* ========================================
+   * OVERLAY GRADIENTS
+   * ======================================== */
+  --gradient-overlay-dark: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+  --gradient-overlay-light: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 100%);
+  
+  /* ========================================
+   * ANIMATED GRADIENTS (use with animation)
+   * ======================================== */
+  --gradient-animated: linear-gradient(270deg, var(--color-purple-500), var(--color-pink-500), var(--color-blue-500));
+  
+  /* ========================================
+   * GLASS/FROST GRADIENTS
+   * ======================================== */
+  --gradient-glass-white: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  --gradient-glass-dark: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+/* ========================================
+ * GRADIENT UTILITY CLASSES
+ * ======================================== */
+
+/* Background gradients */
+.bg-gradient-primary {
+  background: var(--gradient-primary);
+}
+
+.bg-gradient-purple-pink {
+  background: var(--gradient-purple-pink);
+}
+
+.bg-gradient-purple-blue {
+  background: var(--gradient-purple-blue);
+}
+
+.bg-gradient-green {
+  background: var(--gradient-green);
+}
+
+.bg-gradient-dark {
+  background: var(--gradient-bg-dark);
+}
+
+/* Text gradients */
+.text-gradient {
+  background: var(--text-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-purple-pink {
+  background: var(--text-gradient-purple-pink);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-rainbow {
+  background: var(--text-gradient-rainbow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-purple-blue {
+  background: var(--text-gradient-purple-blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-green {
+  background: var(--text-gradient-green);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Border gradients */
+.border-gradient-primary {
+  border-image: var(--gradient-primary) 1;
+}
+
+.border-gradient-purple-pink {
+  border-image: var(--gradient-purple-pink) 1;
+}

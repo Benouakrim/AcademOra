@@ -465,6 +465,75 @@ export const compareAPI = {
   async getUniversities() {
     return fetchAPI('/compare');
   },
+  async getDetailedComparison(universityIds: string[]) {
+    return fetchAPI('/compare/detailed', {
+      method: 'POST',
+      body: JSON.stringify({ university_ids: universityIds }),
+    });
+  },
+  async getComparisonWithPredictions(universityIds: string[]) {
+    return fetchAPI('/compare/with-predictions', {
+      method: 'POST',
+      body: JSON.stringify({ university_ids: universityIds }),
+    });
+  },
+  async analyzeUniversities(universityIds: string[]) {
+    return fetchAPI('/compare/analyze', {
+      method: 'POST',
+      body: JSON.stringify({ university_ids: universityIds }),
+    });
+  },
+  // Saved Comparisons
+  async saveComparison(name: string, universityIds: string[], description?: string) {
+    return fetchAPI('/compare/saved', {
+      method: 'POST',
+      body: JSON.stringify({ 
+        name, 
+        university_ids: universityIds, 
+        description 
+      }),
+    });
+  },
+  async getSavedComparisons(options?: {
+    limit?: number;
+    offset?: number;
+    sort_by?: string;
+    sort_order?: 'asc' | 'desc';
+    favorites_only?: boolean;
+  }) {
+    const params = new URLSearchParams();
+    if (options?.limit) params.append('limit', options.limit.toString());
+    if (options?.offset) params.append('offset', options.offset.toString());
+    if (options?.sort_by) params.append('sort_by', options.sort_by);
+    if (options?.sort_order) params.append('sort_order', options.sort_order);
+    if (options?.favorites_only) params.append('favorites_only', 'true');
+    
+    const query = params.toString();
+    return fetchAPI(`/compare/saved${query ? `?${query}` : ''}`);
+  },
+  async getSavedComparisonById(id: string) {
+    return fetchAPI(`/compare/saved/${id}`);
+  },
+  async updateSavedComparison(id: string, updates: {
+    name?: string;
+    description?: string;
+    university_ids?: string[];
+  }) {
+    return fetchAPI(`/compare/saved/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+  },
+  async deleteSavedComparison(id: string) {
+    return fetchAPI(`/compare/saved/${id}`, {
+      method: 'DELETE',
+    });
+  },
+  async toggleFavorite(id: string) {
+    return fetchAPI(`/compare/saved/${id}/favorite`, {
+      method: 'POST',
+    });
+  },
 };
 
 export const accessAPI = {
@@ -631,6 +700,23 @@ export const financialProfileAPI = {
     return fetchAPI('/profile/financial', {
       method: 'PUT',
       body: JSON.stringify(data),
+    });
+  },
+  async predictAid(universityId: string, universityData?: any) {
+    return fetchAPI('/profile/financial/predict', {
+      method: 'POST',
+      body: JSON.stringify({
+        university_id: universityId,
+        university_data: universityData,
+      }),
+    });
+  },
+  async predictAidBatch(universityIds: string[]) {
+    return fetchAPI('/profile/financial/predict-batch', {
+      method: 'POST',
+      body: JSON.stringify({
+        university_ids: universityIds,
+      }),
     });
   },
 };

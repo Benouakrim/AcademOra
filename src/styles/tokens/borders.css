@@ -1,0 +1,83 @@
+/**
+ * Design Tokens - Borders & Radius
+ * 
+ * This file contains all border-related variables including
+ * border widths, styles, and border radius values.
+ */
+
+:root {
+  /* ========================================
+   * BORDER WIDTHS
+   * ======================================== */
+  --border-width-0: 0;
+  --border-width-1: 1px;
+  --border-width-2: 2px;
+  --border-width-4: 4px;
+  --border-width-8: 8px;
+
+  /* Semantic border widths */
+  --border-width-thin: var(--border-width-1);
+  --border-width-medium: var(--border-width-2);
+  --border-width-thick: var(--border-width-4);
+  --border-width-default: var(--border-width-1);
+
+  /* ========================================
+   * BORDER RADIUS
+   * ======================================== */
+  --radius-none: 0;
+  --radius-sm: 0.125rem;      /* 2px */
+  --radius-base: 0.25rem;     /* 4px */
+  --radius-md: 0.375rem;      /* 6px */
+  --radius-lg: 0.5rem;        /* 8px */
+  --radius-xl: 0.75rem;       /* 12px */
+  --radius-2xl: 1rem;         /* 16px */
+  --radius-3xl: 1.5rem;       /* 24px */
+  --radius-full: 9999px;
+
+  /* Semantic radius */
+  --radius-button: var(--radius-lg);
+  --radius-card: var(--radius-xl);
+  --radius-modal: var(--radius-2xl);
+  --radius-input: var(--radius-lg);
+  --radius-badge: var(--radius-full);
+  --radius-avatar: var(--radius-full);
+
+  /* ========================================
+   * BORDER STYLES
+   * ======================================== */
+  --border-style-solid: solid;
+  --border-style-dashed: dashed;
+  --border-style-dotted: dotted;
+  --border-style-none: none;
+  
+  /* Default style */
+  --border-style-default: var(--border-style-solid);
+
+  /* ========================================
+   * OUTLINE WIDTHS
+   * ======================================== */
+  --outline-width-0: 0;
+  --outline-width-1: 1px;
+  --outline-width-2: 2px;
+  --outline-width-4: 4px;
+  --outline-width-8: 8px;
+
+  /* ========================================
+   * RING WIDTHS (for focus states)
+   * ======================================== */
+  --ring-width-0: 0;
+  --ring-width-1: 1px;
+  --ring-width-2: 2px;
+  --ring-width-4: 4px;
+  --ring-width-8: 8px;
+  
+  /* Default ring */
+  --ring-width-default: var(--ring-width-2);
+
+  /* Ring offset */
+  --ring-offset-width-0: 0;
+  --ring-offset-width-1: 1px;
+  --ring-offset-width-2: 2px;
+  --ring-offset-width-4: 4px;
+  --ring-offset-width-8: 8px;
+}

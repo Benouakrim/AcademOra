@@ -27,8 +27,11 @@
  * This initial scaffold focuses ONLY on runtime state & body class management.
  */
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react'
+import { CookieManager } from '../lib/cookies'
 
-export type ThemeName = 'default' | 'verdant'
+export type ThemeName = 'default' | 'verdant' | 'slate' | 'ocean' | 'forest' | 'lavender' | 'amber'
+const ALLOWED_THEMES: ThemeName[] = ['default', 'verdant', 'slate', 'ocean', 'forest', 'lavender', 'amber']
+const ALLOWED_MODES: ThemeMode[] = ['dark', 'light']
 export type ThemeMode = 'dark' | 'light'
 
 export interface ThemeState {
@@ -42,9 +45,10 @@ export interface ThemeState {
 const ThemeContext = createContext<ThemeState | undefined>(undefined)
 
 // Initial baseline: existing implementation is effectively default dark.
-const DEFAULT_THEME: ThemeName = 'default'
+const DEFAULT_THEME: ThemeName = 'slate'
 const DEFAULT_MODE: ThemeMode = 'dark'
 const LS_KEY = 'ao_theme_pref'
+const COOKIE_KEY = 'ao_theme_pref'
 
 function applyBodyClasses(theme: ThemeName, mode: ThemeMode) {
   if (typeof document === 'undefined') return
@@ -64,11 +68,22 @@ function readPersisted(): { theme: ThemeName; mode: ThemeMode } {
     const raw = localStorage.getItem(LS_KEY)
     if (!raw) return { theme: DEFAULT_THEME, mode: DEFAULT_MODE }
     const parsed = JSON.parse(raw)
-    if (parsed && (parsed.theme === 'default' || parsed.theme === 'verdant') && (parsed.mode === 'dark' || parsed.mode === 'light')) {
+    if (parsed && ALLOWED_THEMES.includes(parsed.theme) && ALLOWED_MODES.includes(parsed.mode)) {
       return parsed
     }
   } catch (_) {
     // ignore parse errors, fall back
+  }
+  try {
+    const cookieRaw = CookieManager.get(COOKIE_KEY)
+    if (cookieRaw) {
+      const parsed = JSON.parse(cookieRaw)
+      if (parsed && ALLOWED_THEMES.includes(parsed.theme) && ALLOWED_MODES.includes(parsed.mode)) {
+        return parsed
+      }
+    }
+  } catch (_) {
+    // ignore cookie errors
   }
   return { theme: DEFAULT_THEME, mode: DEFAULT_MODE }
 }
@@ -77,7 +92,12 @@ function persist(theme: ThemeName, mode: ThemeMode) {
   try {
     localStorage.setItem(LS_KEY, JSON.stringify({ theme, mode }))
   } catch (_) {
-    // Will add cookie fallback in a later task.
+    // ignore write failures (private browsing etc.)
+  }
+  try {
+    CookieManager.set(COOKIE_KEY, JSON.stringify({ theme, mode }), { days: 180 })
+  } catch (_) {
+    // ignore cookie failures
   }
 }
 

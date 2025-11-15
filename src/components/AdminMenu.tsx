@@ -128,7 +128,7 @@ export default function AdminMenu({ isOpen, onToggle }: AdminMenuProps) {
     {
       name: 'Appearance',
       icon: Palette,
-      path: '/admin/appearance',
+      path: '/admin/theme',
       description: 'Customize theme and layout'
     },
     {

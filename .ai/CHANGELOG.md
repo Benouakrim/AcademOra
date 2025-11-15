@@ -1,6 +1,6 @@
 # 📝 Changelog - AcademOra
 
-**Last Updated**: 2025-11-11  
+**Last Updated**: 2025-11-15  
 **Purpose**: Chronological record of all significant changes
 
 > **For AI Agents**: Check recent changes before implementing similar features
@@ -29,6 +29,44 @@
 ```
 
 ---
+
+## [2025-11-15] - Unified Article Editor, Theme Palettes, Media Studio
+
+### Added
+- Modular editor components shared by admin and users:
+  - `src/components/editor/EditorHeader.tsx`
+  - `src/components/editor/SidebarSettings.tsx`
+  - `src/components/editor/SEOSidebar.tsx`
+  - `src/components/editor/RichTextEditor.tsx`
+- `src/hooks/useArticleEditor.ts`: Single hook powering both admin and user editors (state, load/save, SEO fields, taxonomies, toolbar).
+- `public/theme-preload.js`: Pre-hydrates `theme-*` and `mode-*` classes before React mounts to avoid FOUC.
+- `src/components/UserMenu.tsx`: User dashboard menu with quick actions.
+- `src/pages/OurCompanyPage.tsx`: Consolidated “About / Careers / Contact / Policy / Docs” with tabs and animated background.
+
+### Changed
+- `src/pages/UserArticleEditor.tsx`: Refactored into a thin composition wrapper on top of shared editor components; moved auth redirect into `useEffect` and added a loading state.
+- `src/hooks/useArticleEditor.ts`:
+  - Uses user-accessible endpoints for categories and taxonomy terms in user mode to avoid 403s: `/categories?type=blog` and `/taxonomy-terms?taxonomy=...`.
+  - Adds submission-limit fetch with graceful handling when unauthenticated.
+  - Requires login before user save; validates required fields for submission.
+  - Deduplicates TipTap extensions by name to remove duplicate extension warnings.
+- `src/styles/themes.css`: Replaced legacy “default/verdant” base with 5 eye-friendly palettes (slate, ocean, forest, lavender, amber) in both light/dark modes; variables aligned to design tokens and readability goals.
+- `src/pages/admin/ThemeSettingsPage.tsx`: Modernized UI, palette selection, and mode toggle; persists to localStorage and applies via ThemeContext; improved copy and UX.
+- `src/pages/admin/AdminMediaPage.tsx`: Upgraded to “Media Studio” experience with hero-source preview, stats, live preview panel, improved card layout, and quality-of-life actions.
+- UI polish across layout/menu/footer/navbar to align with theme variables (see modified files in git status).
+
+### Fixed
+- TipTap warnings about duplicate extension names (e.g., `link`, `underline`) by deduping extensions before editor init.
+- User-mode 403s when loading categories and taxonomy terms by switching off admin-only routes in user flows.
+- Eliminated render-time navigation side-effects in `UserArticleEditor` by moving redirect into an effect.
+
+### Notes
+- User uploads already try user-friendly endpoints first in `uploadAPI`; provide exact backend paths if different.
+- Unified routes for Posts are planned; some routing/layout changes exist, but final admin/user unified route patterns will follow in a separate entry.
+
+### Files (high-level)
+- Added: `public/theme-preload.js`, `src/components/UserMenu.tsx`, `src/components/editor/*`, `src/hooks/useArticleEditor.ts`, `src/pages/OurCompanyPage.tsx`
+- Updated: `src/pages/UserArticleEditor.tsx`, `src/styles/themes.css`, `src/pages/admin/AdminMediaPage.tsx`, `src/pages/admin/ThemeSettingsPage.tsx`, `src/lib/api.ts`, and several layout/navigation files
 
 ## [2025-11-11] - Referral Dashboard JSON Error (Fixed)
 ## [2025-11-11] - Theme System Foundation (Added)

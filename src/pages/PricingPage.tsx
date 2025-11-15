@@ -225,25 +225,25 @@ export default function PricingPage() {
               }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              <Sparkles className="w-5 h-5 text-purple-300" />
-              <span className="text-sm font-semibold text-white">
+              <Sparkles className="w-5 h-5 text-[var(--color-accent-secondary)]" />
+              <span className="text-sm font-semibold text-[var(--color-text-primary)]">
                 Transparent Pricing • No Hidden Fees
               </span>
             </motion.div>
 
             {/* Main Heading */}
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-              <span className="block bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-[var(--color-text-primary)] via-[var(--color-text-secondary)] to-[var(--color-text-primary)] bg-clip-text text-transparent">
                 Choose Your Path
               </span>
-              <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-[var(--color-accent-secondary)] via-[var(--color-accent-primary)] to-[var(--heatmap-caution)] bg-clip-text text-transparent">
                 to Academic Success
               </span>
             </h1>
             
-            <p className="text-xl sm:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Start with our <span className="text-green-400 font-semibold">free plan forever</span>, 
-              or unlock powerful tools with <span className="text-purple-400 font-semibold">Plus</span> — 
+            <p className="text-xl sm:text-2xl text-[var(--color-text-secondary)] mb-12 max-w-3xl mx-auto leading-relaxed">
+              Start with our <span className="text-[var(--heatmap-best)] font-semibold">free plan forever</span>, 
+              or unlock powerful tools with <span className="text-[var(--color-accent-secondary)] font-semibold">Plus</span> — 
               now with a 7-day free trial!
             </p>
 
@@ -260,11 +260,11 @@ export default function PricingPage() {
                   whileHover={{ scale: 1.05 }}
                   className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10"
                 >
-                  <div className="flex justify-center mb-3 text-purple-400">
+                  <div className="flex justify-center mb-3 text-[var(--color-accent-secondary)]">
                     {stat.icon}
                   </div>
-                  <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
+                  <div className="text-3xl font-bold text-[var(--color-text-primary)] mb-1">{stat.value}</div>
+                  <div className="text-sm text-[var(--color-text-tertiary)]">{stat.label}</div>
                 </motion.div>
               ))}
             </motion.div>
@@ -380,17 +380,17 @@ export default function PricingPage() {
                             </div>
                             {isYearly && plan.yearlyPrice && (
                               <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-500">
+                                <span className="text-sm text-[var(--color-text-tertiary)]">
                                   ${totalYearlyPrice}/year
                                 </span>
-                                <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full font-semibold">
+                                <span className="text-xs bg-[var(--heatmap-best)]/20 text-[var(--heatmap-best)] px-2 py-1 rounded-full font-semibold">
                                   Save ${((plan.price * 12) - totalYearlyPrice).toFixed(0)}
                                 </span>
                               </div>
                             )}
                           </>
                         ) : (
-                          <div className="text-3xl font-bold text-amber-400">
+                          <div className="text-3xl font-bold text-[var(--heatmap-caution)]">
                             Launching Soon
                           </div>
                         )}
@@ -465,18 +465,18 @@ export default function PricingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-16 flex flex-wrap items-center justify-center gap-8 text-gray-400 text-sm"
+            className="mt-16 flex flex-wrap items-center justify-center gap-8 text-[var(--color-text-tertiary)] text-sm"
           >
             <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-green-400" />
+              <Shield className="w-5 h-5 text-[var(--heatmap-best)]" />
               <span>Secure Payment</span>
             </div>
             <div className="flex items-center gap-2">
-              <Target className="w-5 h-5 text-blue-400" />
+              <Target className="w-5 h-5 text-[var(--chart-color-3)]" />
               <span>30-Day Money Back</span>
             </div>
             <div className="flex items-center gap-2">
-              <Heart className="w-5 h-5 text-red-400" />
+              <Heart className="w-5 h-5 text-[var(--heatmap-risk)]" />
               <span>Cancel Anytime</span>
             </div>
           </motion.div>
@@ -517,13 +517,13 @@ export default function PricingPage() {
                   className="w-full px-8 py-6 text-left flex items-center justify-between group"
                   whileHover={{ backgroundColor: "rgba(139, 92, 246, 0.05)" }}
                 >
-                  <span className="font-semibold text-white text-lg pr-8 group-hover:text-purple-300 transition-colors">{faq.question}</span>
+                  <span className="font-semibold text-[var(--color-text-primary)] text-lg pr-8 group-hover:text-[var(--color-accent-secondary)] transition-colors">{faq.question}</span>
                   <motion.div
                     animate={{ rotate: activeFaq === index ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                     className="flex-shrink-0"
                   >
-                    <ChevronDown className="w-6 h-6 text-purple-400" />
+                    <ChevronDown className="w-6 h-6 text-[var(--color-accent-secondary)]" />
                   </motion.div>
                 </motion.button>
                 <AnimatePresence>
@@ -550,10 +550,10 @@ export default function PricingPage() {
       {/* Final CTA */}
       <section className="py-20 relative overflow-hidden">
         {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-black to-pink-900/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent-secondary)]/30 via-[var(--color-bg-primary)] to-[var(--color-accent-primary)]/30" />
         <div className="absolute inset-0">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
-          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[var(--color-accent-secondary)]/20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-[var(--color-accent-primary)]/20 rounded-full blur-3xl" />
         </div>
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -566,7 +566,7 @@ export default function PricingPage() {
           >
             {/* Badge */}
             <motion.div
-              className="inline-flex items-center gap-2 px-6 py-3 mb-8 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-full border border-green-500/30"
+              className="inline-flex items-center gap-2 px-6 py-3 mb-8 bg-gradient-to-r from-[var(--heatmap-best)]/20 to-[var(--heatmap-good)]/20 backdrop-blur-xl rounded-full border border-[var(--heatmap-best)]/30"
               animate={{ 
                 boxShadow: [
                   "0 0 20px rgba(16, 185, 129, 0.3)", 
@@ -576,8 +576,8 @@ export default function PricingPage() {
               }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              <Rocket className="w-5 h-5 text-green-300" />
-              <span className="text-sm font-semibold text-white">
+              <Rocket className="w-5 h-5 text-[var(--heatmap-best)]" />
+              <span className="text-sm font-semibold text-[var(--color-text-primary)]">
                 Ready to Start Your Journey?
               </span>
             </motion.div>
@@ -622,21 +622,21 @@ export default function PricingPage() {
             </div>
 
             {/* Trust Badges */}
-            <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-gray-400 text-sm">
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-[var(--color-text-tertiary)] text-sm">
               <div className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-green-400" />
+                <Shield className="w-5 h-5 text-[var(--heatmap-best)]" />
                 <span>100% Secure</span>
               </div>
               <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-yellow-400" />
+                <Star className="w-5 h-5 text-[var(--heatmap-good)]" />
                 <span>4.9/5 Rating</span>
               </div>
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-blue-400" />
+                <Users className="w-5 h-5 text-[var(--chart-color-3)]" />
                 <span>10,000+ Students</span>
               </div>
               <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-purple-400" />
+                <Zap className="w-5 h-5 text-[var(--color-accent-secondary)]" />
                 <span>Instant Access</span>
               </div>
             </div>

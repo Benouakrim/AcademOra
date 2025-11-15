@@ -2,247 +2,637 @@
   Theme & Mode CSS Variable Overrides
   - Scope: body.theme-<name>.mode-<mode>
   - Only colors & fonts. No spacing, layout, radii, shadows, animations.
-  - Baseline (:root) represents current default dark values from tokens.
+  - Eye-friendly palettes with optimal contrast ratios.
+  - Text colors remain neutral for proper contrast.
 */
 
-/* 1) Default Dark Mode (ORIGINAL STYLE)
-   Aim: Black background with purple/blue accents - the classic look
-*/
-body.theme-default.mode-dark {
-  /* Backgrounds & text - Original black theme */
-  --color-bg-primary: #000000;
-  --color-bg-secondary: #111827;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #d1d5db;
-  --color-text-tertiary: #9ca3af;
-  --color-border-primary: rgba(255, 255, 255, 0.1);
-  --color-border-secondary: rgba(255, 255, 255, 0.2);
-  --color-border-tertiary: rgba(255, 255, 255, 0.3);
+/* ==========================================
+   THEME: SLATE (Professional Gray-Blue)
+   ========================================== */
 
-  /* Interactive elements */
-  --color-interactive-bg: rgba(255, 255, 255, 0.05);
-  --color-interactive-bg-hover: rgba(255, 255, 255, 0.1);
-  --color-interactive-border: rgba(255, 255, 255, 0.1);
-  --color-link: #d1d5db;
-  --color-link-hover: #ffffff;
+body.theme-slate.mode-dark {
+  /* Backgrounds - Deep cool grays */
+  --color-bg-primary: #0f1419;
+  --color-bg-secondary: #1a1f29;
+  --color-bg-tertiary: #252b38;
 
-  /* Primary colors - Blue/Purple focus */
-  --color-accent-primary: #3b82f6;
-  --color-accent-secondary: #a855f7;
+  /* Text - Always neutral white/grays for contrast */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
 
-  /* Chart palette - Original vibrant colors */
-  --chart-color-1: #3b82f6;
-  --chart-color-2: #a855f7;
-  --chart-color-3: #ec4899;
-  --chart-color-4: #10b981;
-  --chart-color-5: #f59e0b;
-  --chart-color-6: #ef4444;
-  --chart-grid: rgba(255, 255, 255, 0.1);
-  --chart-axis: rgba(255, 255, 255, 0.2);
-  --chart-tick: rgba(255, 255, 255, 0.4);
+  /* Borders - Subtle dividers */
+  --color-border-primary: rgba(203, 213, 225, 0.15);
+  --color-border-secondary: rgba(203, 213, 225, 0.1);
+  --color-border-tertiary: rgba(203, 213, 225, 0.05);
+
+  /* Interactive - Gentle blue-gray */
+  --color-interactive-bg: rgba(59, 130, 246, 0.1);
+  --color-interactive-bg-hover: rgba(59, 130, 246, 0.15);
+  --color-interactive-border: rgba(59, 130, 246, 0.2);
+
+  /* Accents - Refined blue */
+  --color-accent-primary: #60a5fa;
+  --color-accent-secondary: #3b82f6;
+
+  /* Links */
+  --color-link: #93c5fd;
+  --color-link-hover: #bfdbfe;
+
+  /* Charts - Cool palette */
+  --chart-color-1: #60a5fa;
+  --chart-color-2: #34d399;
+  --chart-color-3: #a78bfa;
+  --chart-color-4: #fbbf24;
+  --chart-color-5: #f87171;
+  --chart-color-6: #38bdf8;
+  --chart-grid: rgba(148, 163, 184, 0.1);
+  --chart-axis: rgba(148, 163, 184, 0.3);
+  --chart-tick: #94a3b8;
 
   /* Sliders */
-  --slider-track: rgba(255, 255, 255, 0.1);
-  --slider-progress-academic: #a855f7;
-  --slider-progress-budget: #10b981;
+  --slider-track: rgba(148, 163, 184, 0.15);
+  --slider-progress-academic: #60a5fa;
+  --slider-progress-budget: #34d399;
 
-  /* Ambient decorative colors (orbs etc.) */
-  --ambient-color-1: #a855f7;
+  /* Ambient decorative colors */
+  --ambient-color-1: #60a5fa;
   --ambient-color-2: #3b82f6;
-  --ambient-color-3: #10b981;
-  --ambient-color-4: #f59e0b;
+  --ambient-color-3: #34d399;
+  --ambient-color-4: #fbbf24;
 
-  /* Heatmap & status */
+  /* Heatmap - Balanced scale */
   --heatmap-best: #10b981;
-  --heatmap-good: #3b82f6;
-  --heatmap-caution: #f59e0b;
-  --heatmap-risk: #ef4444;
+  --heatmap-good: #34d399;
+  --heatmap-caution: #fbbf24;
+  --heatmap-risk: #f87171;
 
   /* Badges */
   --badge-positive-bg: #10b981;
   --badge-negative-bg: #ef4444;
-  --badge-neutral-bg: #6b7280;
+  --badge-neutral-bg: #64748b;
 }
 
-/* 2) Default Light Mode
-   Aim: Bright, readable backgrounds with dark text
-*/
-body.theme-default.mode-light {
-  /* Backgrounds & text */
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f9fafb;
-  --color-text-primary: #111827;
-  --color-text-secondary: #4b5563;
-  --color-text-tertiary: #6b7280;
-  --color-border-primary: #e5e7eb;
-  --color-border-secondary: #d1d5db;
-  --color-border-tertiary: #9ca3af;
+body.theme-slate.mode-light {
+  /* Backgrounds - Soft neutrals */
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f1f5f9;
 
-  /* Interactive elements */
-  --color-interactive-bg: rgba(0, 0, 0, 0.05);
-  --color-interactive-bg-hover: rgba(0, 0, 0, 0.1);
-  --color-interactive-border: rgba(0, 0, 0, 0.1);
-  --color-link: #4b5563;
-  --color-link-hover: #111827;
+  /* Text - Always neutral black/grays for contrast */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748b;
 
-  /* Primary colors - Darker for contrast on light bg */
+  /* Borders */
+  --color-border-primary: #e2e8f0;
+  --color-border-secondary: #cbd5e1;
+  --color-border-tertiary: #94a3b8;
+
+  /* Interactive */
+  --color-interactive-bg: rgba(59, 130, 246, 0.08);
+  --color-interactive-bg-hover: rgba(59, 130, 246, 0.12);
+  --color-interactive-border: rgba(59, 130, 246, 0.2);
+
+  /* Accents */
   --color-accent-primary: #2563eb;
-  --color-accent-secondary: #9333ea;
+  --color-accent-secondary: #1d4ed8;
 
-  /* Chart palette */
+  /* Links */
+  --color-link: #3b82f6;
+  --color-link-hover: #2563eb;
+  --color-link-hover: #2563eb;
+
+  /* Charts */
   --chart-color-1: #3b82f6;
-  --chart-color-2: #a855f7;
-  --chart-color-3: #ec4899;
-  --chart-color-4: #10b981;
-  --chart-color-5: #f97316;
-  --chart-color-6: #ef4444;
-  --chart-grid: #e5e7eb;
-  --chart-axis: #9ca3af;
-  --chart-tick: #6b7280;
+  --chart-color-2: #10b981;
+  --chart-color-3: #8b5cf6;
+  --chart-color-4: #f59e0b;
+  --chart-color-5: #ef4444;
+  --chart-color-6: #06b6d4;
+  --chart-grid: #e2e8f0;
+  --chart-axis: #94a3b8;
+  --chart-tick: #64748b;
 
   /* Sliders */
-  --slider-track: #e5e7eb;
-  --slider-progress-academic: #9333ea;
-  --slider-progress-budget: #059669;
+  --slider-track: #e2e8f0;
+  --slider-progress-academic: #3b82f6;
+  --slider-progress-budget: #10b981;
 
-  /* Ambient decorative colors (softer for light mode) */
-  --ambient-color-1: rgba(168, 85, 247, 0.3);
-  --ambient-color-2: rgba(59, 130, 246, 0.3);
-  --ambient-color-3: rgba(16, 185, 129, 0.3);
-  --ambient-color-4: rgba(249, 115, 22, 0.3);
+  /* Ambient */
+  --ambient-color-1: rgba(59, 130, 246, 0.15);
+  --ambient-color-2: rgba(37, 99, 235, 0.12);
+  --ambient-color-3: rgba(16, 185, 129, 0.15);
+  --ambient-color-4: rgba(245, 158, 11, 0.15);
 
-  /* Heatmap & status */
+  /* Heatmap */
   --heatmap-best: #059669;
-  --heatmap-good: #2563eb;
-  --heatmap-caution: #ea580c;
+  --heatmap-good: #10b981;
+  --heatmap-caution: #d97706;
   --heatmap-risk: #dc2626;
 
   /* Badges */
   --badge-positive-bg: #10b981;
   --badge-negative-bg: #ef4444;
-  --badge-neutral-bg: #6b7280;
+  --badge-neutral-bg: #64748b;
 }
 
-/* 2) Verdant Dark Mode
-   Aim: Deep green-tinted dark surfaces, green primary. Keep semantics recognizable.
-*/
-body.theme-verdant.mode-dark {
-  /* Primary remapped to emerald scale */
-  --color-primary-50: var(--color-emerald-50);
-  --color-primary-100: var(--color-emerald-100);
-  --color-primary-200: var(--color-emerald-200);
-  --color-primary-300: var(--color-emerald-300);
-  --color-primary-400: var(--color-emerald-400);
-  --color-primary-500: var(--color-emerald-500);
-  --color-primary-600: var(--color-emerald-600);
-  --color-primary-700: var(--color-emerald-700);
-  --color-primary-800: var(--color-emerald-800);
-  --color-primary-900: var(--color-emerald-900);
+/* ==========================================
+   THEME: OCEAN (Calming Blues)
+   ========================================== */
 
-  /* Backgrounds: near-black with green nuance via text/accents */
-  --color-bg-primary: var(--color-gray-900);
-  --color-bg-secondary: var(--color-gray-800);
-  --color-text-primary: var(--color-white);
-  --color-text-secondary: var(--color-gray-300);
-  --color-text-tertiary: var(--color-gray-400);
+body.theme-ocean.mode-dark {
+  /* Backgrounds - Deep navy */
+  --color-bg-primary: #0a1628;
+  --color-bg-secondary: #112240;
+  --color-bg-tertiary: #1a2f4d;
 
-  /* Gradients: primary → emerald */
-  --gradient-primary: linear-gradient(135deg, var(--color-emerald-500), var(--color-green-600));
+  /* Text - Always neutral white/grays for contrast */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
 
-  /* Chart palette (green emphasis) */
-  --chart-color-1: var(--color-emerald-500);
-  --chart-color-2: var(--color-emerald-600);
-  --chart-color-3: var(--color-green-500);
-  --chart-color-4: var(--color-blue-500);
-  --chart-color-5: var(--color-orange-500);
-  --chart-color-6: var(--color-error-500);
-  --chart-grid: var(--color-gray-700);
-  --chart-axis: var(--color-gray-600);
-  --chart-tick: var(--color-gray-400);
+  /* Borders - Subtle dividers */
+  --color-border-primary: rgba(203, 213, 225, 0.15);
+  --color-border-secondary: rgba(203, 213, 225, 0.1);
+  --color-border-tertiary: rgba(203, 213, 225, 0.05);
+
+  /* Interactive - Cyan tint */
+  --color-interactive-bg: rgba(14, 165, 233, 0.1);
+  --color-interactive-bg-hover: rgba(14, 165, 233, 0.15);
+  --color-interactive-border: rgba(14, 165, 233, 0.2);
+
+  /* Accents - Bright cyan */
+  --color-accent-primary: #38bdf8;
+  --color-accent-secondary: #0ea5e9;
+
+  /* Links */
+  --color-link: #7dd3fc;
+  --color-link-hover: #bae6fd;
+
+  /* Charts - Blue palette */
+  --chart-color-1: #0ea5e9;
+  --chart-color-2: #06b6d4;
+  --chart-color-3: #3b82f6;
+  --chart-color-4: #6366f1;
+  --chart-color-5: #fbbf24;
+  --chart-color-6: #22d3ee;
+  --chart-grid: rgba(148, 163, 184, 0.1);
+  --chart-axis: rgba(148, 163, 184, 0.3);
+  --chart-tick: #94a3b8;
 
   /* Sliders */
-  --slider-track: var(--color-gray-700);
-  --slider-progress-academic: var(--color-emerald-500);
-  --slider-progress-budget: var(--color-emerald-600);
+  --slider-track: rgba(148, 163, 184, 0.15);
+  --slider-progress-academic: #38bdf8;
+  --slider-progress-budget: #06b6d4;
 
   /* Ambient decorative colors */
-  --ambient-color-1: var(--color-emerald-500);
-  --ambient-color-2: var(--color-emerald-600);
-  --ambient-color-3: var(--color-green-500);
-  --ambient-color-4: var(--color-blue-500);
+  --ambient-color-1: #38bdf8;
+  --ambient-color-2: #0ea5e9;
+  --ambient-color-3: #06b6d4;
+  --ambient-color-4: #3b82f6;
 
-  /* Heatmap & status */
-  --heatmap-best: var(--color-emerald-500);
-  --heatmap-good: var(--color-blue-500);
-  --heatmap-caution: var(--color-orange-500);
-  --heatmap-risk: var(--color-error-500);
+  /* Heatmap */
+  --heatmap-best: #06b6d4;
+  --heatmap-good: #22d3ee;
+  --heatmap-caution: #fbbf24;
+  --heatmap-risk: #f87171;
 
   /* Badges */
-  --badge-positive-bg: var(--color-emerald-500);
-  --badge-negative-bg: var(--color-error-500);
-  --badge-neutral-bg: var(--color-gray-600);
+  --badge-positive-bg: #06b6d4;
+  --badge-negative-bg: #ef4444;
+  --badge-neutral-bg: #64748b;
 }
 
-/* 3) Verdant Light Mode
-   Aim: Airy neutrals with green primary accents.
-*/
-body.theme-verdant.mode-light {
-  /* Primary remapped to emerald scale */
-  --color-primary-50: var(--color-emerald-50);
-  --color-primary-100: var(--color-emerald-100);
-  --color-primary-200: var(--color-emerald-200);
-  --color-primary-300: var(--color-emerald-300);
-  --color-primary-400: var(--color-emerald-400);
-  --color-primary-500: var(--color-emerald-500);
-  --color-primary-600: var(--color-emerald-600);
-  --color-primary-700: var(--color-emerald-700);
-  --color-primary-800: var(--color-emerald-800);
-  --color-primary-900: var(--color-emerald-900);
+body.theme-ocean.mode-light {
+  /* Backgrounds - Sky blue tinted */
+  --color-bg-primary: #f0f9ff;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #e0f2fe;
 
-  /* Light surfaces & dark text */
-  --color-bg-primary: var(--color-neutral-50);
-  --color-bg-secondary: var(--color-white);
-  --color-text-primary: var(--color-neutral-900);
-  --color-text-secondary: var(--color-neutral-700);
-  --color-text-tertiary: var(--color-neutral-500);
+  /* Text - Always neutral black/grays for contrast */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748b;
 
-  --gradient-primary: linear-gradient(135deg, var(--color-emerald-400), var(--color-green-600));
+  /* Borders */
+  --color-border-primary: #e0f2fe;
+  --color-border-secondary: #bae6fd;
+  --color-border-tertiary: #7dd3fc;
 
-  /* Chart palette (green emphasis) */
-  --chart-color-1: var(--color-emerald-500);
-  --chart-color-2: var(--color-emerald-600);
-  --chart-color-3: var(--color-green-500);
-  --chart-color-4: var(--color-blue-500);
-  --chart-color-5: var(--color-orange-500);
-  --chart-color-6: var(--color-error-500);
-  --chart-grid: var(--color-gray-200);
-  --chart-axis: var(--color-gray-400);
-  --chart-tick: var(--color-gray-600);
+  /* Interactive */
+  --color-interactive-bg: rgba(14, 165, 233, 0.08);
+  --color-interactive-bg-hover: rgba(14, 165, 233, 0.12);
+  --color-interactive-border: rgba(14, 165, 233, 0.2);
+
+  /* Accents */
+  --color-accent-primary: #0284c7;
+  --color-accent-secondary: #0369a1;
+
+  /* Links */
+  --color-link: #0891b2;
+  --color-link-hover: #0e7490;
+
+  --chart-color-1: #0891b2;
+  --chart-color-2: #06b6d4;
+  --chart-color-3: #3b82f6;
+  --chart-color-4: #6366f1;
+  --chart-color-5: #f59e0b;
+  --chart-color-6: #0ea5e9;
+  --chart-grid: #e0f2fe;
+  --chart-axis: #7dd3fc;
+  --chart-tick: #0891b2;
+
+  --slider-track: #e0f2fe;
+  --slider-progress-academic: #0891b2;
+  --slider-progress-budget: #06b6d4;
+
+  --ambient-color-1: rgba(14, 165, 233, 0.15);
+  --ambient-color-2: rgba(6, 182, 212, 0.12);
+  --ambient-color-3: rgba(59, 130, 246, 0.15);
+  --ambient-color-4: rgba(99, 102, 241, 0.12);
+
+  --heatmap-best: #0891b2;
+  --heatmap-good: #06b6d4;
+  --heatmap-caution: #d97706;
+  --heatmap-risk: #dc2626;
+
+  --badge-positive-bg: #06b6d4;
+  --badge-negative-bg: #ef4444;
+  --badge-neutral-bg: #64748b;
+}
+
+/* ==========================================
+   THEME: FOREST (Natural Greens)
+   ========================================== */
+
+body.theme-forest.mode-dark {
+  /* Backgrounds - Deep forest */
+  --color-bg-primary: #0a1f0f;
+  --color-bg-secondary: #0f2817;
+  --color-bg-tertiary: #1a3a24;
+
+  /* Text - Always neutral white/grays for contrast */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
+
+  /* Borders - Subtle dividers */
+  --color-border-primary: rgba(203, 213, 225, 0.15);
+  --color-border-secondary: rgba(203, 213, 225, 0.1);
+  --color-border-tertiary: rgba(203, 213, 225, 0.05);
+
+  /* Interactive - Green tint */
+  --color-interactive-bg: rgba(16, 185, 129, 0.1);
+  --color-interactive-bg-hover: rgba(16, 185, 129, 0.15);
+  --color-interactive-border: rgba(16, 185, 129, 0.2);
+
+  /* Accents - Emerald greens */
+  --color-accent-primary: #34d399;
+  --color-accent-secondary: #10b981;
+
+  /* Links */
+  --color-link: #6ee7b7;
+  --color-link-hover: #a7f3d0;
+
+  /* Charts - Green palette */
+  --chart-color-1: #10b981;
+  --chart-color-2: #059669;
+  --chart-color-3: #047857;
+  --chart-color-4: #65a30d;
+  --chart-color-5: #fbbf24;
+  --chart-color-6: #34d399;
+  --chart-grid: rgba(148, 163, 184, 0.1);
+  --chart-axis: rgba(148, 163, 184, 0.3);
+  --chart-tick: #94a3b8;
 
   /* Sliders */
-  --slider-track: var(--color-neutral-200);
-  --slider-progress-academic: var(--color-emerald-500);
-  --slider-progress-budget: var(--color-emerald-600);
+  --slider-track: rgba(148, 163, 184, 0.15);
+  --slider-progress-academic: #34d399;
+  --slider-progress-budget: #10b981;
 
   /* Ambient decorative colors */
-  --ambient-color-1: var(--color-emerald-500);
-  --ambient-color-2: var(--color-emerald-600);
-  --ambient-color-3: var(--color-green-500);
-  --ambient-color-4: var(--color-blue-500);
+  --ambient-color-1: #34d399;
+  --ambient-color-2: #10b981;
+  --ambient-color-3: #059669;
+  --ambient-color-4: #65a30d;
 
-  /* Heatmap & status */
-  --heatmap-best: var(--color-emerald-500);
-  --heatmap-good: var(--color-blue-500);
-  --heatmap-caution: var(--color-orange-500);
-  --heatmap-risk: var(--color-error-500);
+  /* Heatmap */
+  --heatmap-best: #10b981;
+  --heatmap-good: #34d399;
+  --heatmap-caution: #fbbf24;
+  --heatmap-risk: #f87171;
 
   /* Badges */
-  --badge-positive-bg: var(--color-emerald-500);
-  --badge-negative-bg: var(--color-error-500);
-  --badge-neutral-bg: var(--color-gray-500);
+  --badge-positive-bg: #10b981;
+  --badge-negative-bg: #ef4444;
+  --badge-neutral-bg: #64748b;
 }
 
-/* Optional: theme-specific font family tweak (kept same for now to avoid external font loads) */
-/* body.theme-verdant.mode-dark, body.theme-verdant.mode-light { */
-/*   --font-primary: var(--font-family-sans); */
-/* } */
+body.theme-forest.mode-light {
+  /* Backgrounds - Mint tinted */
+  --color-bg-primary: #f0fdf4;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #dcfce7;
+
+  /* Text - Always neutral black/grays for contrast */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748b;
+
+  /* Borders */
+  --color-border-primary: #dcfce7;
+  --color-border-secondary: #bbf7d0;
+  --color-border-tertiary: #86efac;
+
+  /* Interactive */
+  --color-interactive-bg: rgba(16, 185, 129, 0.08);
+  --color-interactive-bg-hover: rgba(16, 185, 129, 0.12);
+  --color-interactive-border: rgba(16, 185, 129, 0.2);
+
+  /* Accents */
+  --color-accent-primary: #059669;
+  --color-accent-secondary: #047857;
+
+  /* Links */
+  --color-link: #10b981;
+  --color-link-hover: #059669;
+
+  --chart-color-1: #059669;
+  --chart-color-2: #10b981;
+  --chart-color-3: #047857;
+  --chart-color-4: #65a30d;
+  --chart-color-5: #f59e0b;
+  --chart-color-6: #34d399;
+  --chart-grid: #dcfce7;
+  --chart-axis: #86efac;
+  --chart-tick: #15803d;
+
+  --slider-track: #dcfce7;
+  --slider-progress-academic: #10b981;
+  --slider-progress-budget: #059669;
+
+  --ambient-color-1: rgba(16, 185, 129, 0.15);
+  --ambient-color-2: rgba(5, 150, 105, 0.12);
+  --ambient-color-3: rgba(4, 120, 87, 0.15);
+  --ambient-color-4: rgba(101, 163, 13, 0.12);
+
+  --heatmap-best: #059669;
+  --heatmap-good: #10b981;
+  --heatmap-caution: #d97706;
+  --heatmap-risk: #dc2626;
+
+  --badge-positive-bg: #10b981;
+  --badge-negative-bg: #ef4444;
+  --badge-neutral-bg: #64748b;
+}
+
+/* ==========================================
+   THEME: LAVENDER (Soft Purples)
+   ========================================== */
+
+body.theme-lavender.mode-dark {
+  /* Backgrounds - Deep purple */
+  --color-bg-primary: #1a0f2e;
+  --color-bg-secondary: #2a1a40;
+  --color-bg-tertiary: #3a2555;
+
+  /* Text - Always neutral white/grays for contrast */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
+
+  /* Borders - Subtle dividers */
+  --color-border-primary: rgba(203, 213, 225, 0.15);
+  --color-border-secondary: rgba(203, 213, 225, 0.1);
+  --color-border-tertiary: rgba(203, 213, 225, 0.05);
+
+  /* Interactive - Purple tint */
+  --color-interactive-bg: rgba(139, 92, 246, 0.1);
+  --color-interactive-bg-hover: rgba(139, 92, 246, 0.15);
+  --color-interactive-border: rgba(139, 92, 246, 0.2);
+
+  /* Accents - Soft lavender */
+  --color-accent-primary: #a78bfa;
+  --color-accent-secondary: #8b5cf6;
+
+  /* Links */
+  --color-link: #c4b5fd;
+  --color-link-hover: #ddd6fe;
+
+  /* Charts - Purple palette */
+  --chart-color-1: #8b5cf6;
+  --chart-color-2: #7c3aed;
+  --chart-color-3: #a78bfa;
+  --chart-color-4: #c084fc;
+  --chart-color-5: #fbbf24;
+  --chart-color-6: #6366f1;
+  --chart-grid: rgba(148, 163, 184, 0.1);
+  --chart-axis: rgba(148, 163, 184, 0.3);
+  --chart-tick: #94a3b8;
+
+  /* Sliders */
+  --slider-track: rgba(148, 163, 184, 0.15);
+  --slider-progress-academic: #a78bfa;
+  --slider-progress-budget: #34d399;
+
+  /* Ambient decorative colors */
+  --ambient-color-1: #a78bfa;
+  --ambient-color-2: #8b5cf6;
+  --ambient-color-3: #7c3aed;
+  --ambient-color-4: #c084fc;
+
+  /* Heatmap */
+  --heatmap-best: #34d399;
+  --heatmap-good: #6ee7b7;
+  --heatmap-caution: #fbbf24;
+  --heatmap-risk: #f87171;
+
+  /* Badges */
+  --badge-positive-bg: #34d399;
+  --badge-negative-bg: #ef4444;
+  --badge-neutral-bg: #64748b;
+}
+
+body.theme-lavender.mode-light {
+  /* Backgrounds - Lilac tinted */
+  --color-bg-primary: #faf5ff;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f3e8ff;
+
+  /* Text - Always neutral black/grays for contrast */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748b;
+
+  /* Borders */
+  --color-border-primary: #f3e8ff;
+  --color-border-secondary: #e9d5ff;
+  --color-border-tertiary: #d8b4fe;
+
+  /* Interactive */
+  --color-interactive-bg: rgba(139, 92, 246, 0.08);
+  --color-interactive-bg-hover: rgba(139, 92, 246, 0.12);
+  --color-interactive-border: rgba(139, 92, 246, 0.2);
+
+  /* Accents */
+  --color-accent-primary: #7c3aed;
+  --color-accent-secondary: #6b21a8;
+
+  /* Links */
+  --color-link: #8b5cf6;
+  --color-link-hover: #7c3aed;
+
+  --chart-color-1: #7c3aed;
+  --chart-color-2: #8b5cf6;
+  --chart-color-3: #a78bfa;
+  --chart-color-4: #c084fc;
+  --chart-color-5: #f59e0b;
+  --chart-color-6: #6366f1;
+  --chart-grid: #f3e8ff;
+  --chart-axis: #d8b4fe;
+  --chart-tick: #7e22ce;
+
+  --slider-track: #f3e8ff;
+  --slider-progress-academic: #8b5cf6;
+  --slider-progress-budget: #10b981;
+
+  --ambient-color-1: rgba(139, 92, 246, 0.15);
+  --ambient-color-2: rgba(124, 58, 237, 0.12);
+  --ambient-color-3: rgba(107, 33, 168, 0.15);
+  --ambient-color-4: rgba(192, 132, 252, 0.12);
+
+  --heatmap-best: #059669;
+  --heatmap-good: #10b981;
+  --heatmap-caution: #d97706;
+  --heatmap-risk: #dc2626;
+
+  --badge-positive-bg: #10b981;
+  --badge-negative-bg: #ef4444;
+  --badge-neutral-bg: #64748b;
+}
+
+/* ==========================================
+   THEME: AMBER (Warm Golds)
+   ========================================== */
+
+body.theme-amber.mode-dark {
+  /* Backgrounds - Deep warm browns */
+  --color-bg-primary: #1a1410;
+  --color-bg-secondary: #2a1f18;
+  --color-bg-tertiary: #3a2a20;
+
+  /* Text - Always neutral white/grays for contrast */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
+
+  /* Borders - Subtle dividers */
+  --color-border-primary: rgba(203, 213, 225, 0.15);
+  --color-border-secondary: rgba(203, 213, 225, 0.1);
+  --color-border-tertiary: rgba(203, 213, 225, 0.05);
+
+  /* Interactive - Amber tint */
+  --color-interactive-bg: rgba(245, 158, 11, 0.1);
+  --color-interactive-bg-hover: rgba(245, 158, 11, 0.15);
+  --color-interactive-border: rgba(245, 158, 11, 0.2);
+
+  /* Accents - Warm golds */
+  --color-accent-primary: #fbbf24;
+  --color-accent-secondary: #f59e0b;
+
+  /* Links */
+  --color-link: #fcd34d;
+  --color-link-hover: #fde047;
+
+  /* Charts - Warm palette */
+  --chart-color-1: #f59e0b;
+  --chart-color-2: #d97706;
+  --chart-color-3: #b45309;
+  --chart-color-4: #92400e;
+  --chart-color-5: #34d399;
+  --chart-color-6: #fbbf24;
+  --chart-grid: rgba(148, 163, 184, 0.1);
+  --chart-axis: rgba(148, 163, 184, 0.3);
+  --chart-tick: #94a3b8;
+
+  /* Sliders */
+  --slider-track: rgba(148, 163, 184, 0.15);
+  --slider-progress-academic: #fbbf24;
+  --slider-progress-budget: #34d399;
+
+  /* Ambient decorative colors */
+  --ambient-color-1: #fbbf24;
+  --ambient-color-2: #f59e0b;
+  --ambient-color-3: #d97706;
+  --ambient-color-4: #b45309;
+
+  /* Heatmap */
+  --heatmap-best: #34d399;
+  --heatmap-good: #6ee7b7;
+  --heatmap-caution: #fbbf24;
+  --heatmap-risk: #f87171;
+
+  /* Badges */
+  --badge-positive-bg: #34d399;
+  --badge-negative-bg: #ef4444;
+  --badge-neutral-bg: #78350f;
+}
+
+body.theme-amber.mode-light {
+  /* Backgrounds - Cream tinted */
+  --color-bg-primary: #fffbeb;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #fef3c7;
+
+  /* Text - Always neutral black/grays for contrast */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748b;
+
+  /* Borders */
+  --color-border-primary: #fef3c7;
+  --color-border-secondary: #fde68a;
+  --color-border-tertiary: #fcd34d;
+
+  /* Interactive */
+  --color-interactive-bg: rgba(245, 158, 11, 0.08);
+  --color-interactive-bg-hover: rgba(245, 158, 11, 0.12);
+  --color-interactive-border: rgba(245, 158, 11, 0.2);
+
+  /* Accents */
+  --color-accent-primary: #d97706;
+  --color-accent-secondary: #b45309;
+
+  /* Links */
+  --color-link: #f59e0b;
+  --color-link-hover: #d97706;
+
+  --chart-color-1: #d97706;
+  --chart-color-2: #f59e0b;
+  --chart-color-3: #b45309;
+  --chart-color-4: #92400e;
+  --chart-color-5: #10b981;
+  --chart-color-6: #fbbf24;
+  --chart-grid: #fef3c7;
+  --chart-axis: #fcd34d;
+  --chart-tick: #b45309;
+
+  --slider-track: #fef3c7;
+  --slider-progress-academic: #f59e0b;
+  --slider-progress-budget: #10b981;
+
+  --ambient-color-1: rgba(245, 158, 11, 0.15);
+  --ambient-color-2: rgba(217, 119, 6, 0.12);
+  --ambient-color-3: rgba(180, 83, 9, 0.15);
+  --ambient-color-4: rgba(146, 64, 14, 0.12);
+
+  --heatmap-best: #059669;
+  --heatmap-good: #10b981;
+  --heatmap-caution: #d97706;
+  --heatmap-risk: #dc2626;
+
+  --badge-positive-bg: #10b981;
+  --badge-negative-bg: #ef4444;
+  --badge-neutral-bg: #78350f;
+}

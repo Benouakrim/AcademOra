@@ -1,17 +1,21 @@
 import { motion } from 'framer-motion'
 import SEO from '../components/SEO'
 import { Shield, Lock, Eye, Cookie, User, Database, Mail, Settings } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
-export default function PolicyPage() {
-  const [activeSection, setActiveSection] = useState('privacy')
+interface PolicyContentProps {
+  initialSection?: 'privacy' | 'cookies' | 'terms' | 'data'
+}
 
-  const sections = [
+export function PolicyContent({ initialSection = 'privacy' }: PolicyContentProps) {
+  const [activeSection, setActiveSection] = useState(initialSection)
+
+  const sections = useMemo(() => ([
     { id: 'privacy', title: 'Privacy Policy', icon: Shield },
     { id: 'cookies', title: 'Cookie Policy', icon: Cookie },
     { id: 'terms', title: 'Terms of Service', icon: Lock },
     { id: 'data', title: 'Data Protection', icon: Database }
-  ]
+  ]), [])
 
   const renderContent = () => {
     switch(activeSection) {
@@ -29,75 +33,80 @@ export default function PolicyPage() {
   }
 
   return (
+    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="text-center mb-16"
+      >
+        <div className="mb-8">
+          <motion.div
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20"
+          >
+            <Shield className="w-4 h-4 text-yellow-300" />
+            <span className="text-sm font-medium text-yellow-200">Our Policies</span>
+          </motion.div>
+        </div>
+
+        <h1 className="text-5xl md:text-7xl font-black mb-6">
+          <span className="bg-gradient-to-r from-white via-yellow-200 to-orange-200 bg-clip-text text-transparent">
+            Privacy & Policy
+          </span>
+        </h1>
+        
+        <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+          Your privacy and security are our top priorities. Learn how we protect your data.
+        </p>
+      </motion.div>
+
+      {/* Navigation Tabs */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="mb-8"
+      >
+        <div className="flex flex-wrap justify-center gap-2 bg-gray-900/50 backdrop-blur-sm rounded-2xl p-2 border border-gray-800/50">
+          {sections.map((section) => {
+            const Icon = section.icon
+            return (
+              <button
+                key={section.id}
+                onClick={() => setActiveSection(section.id as PolicyContentProps['initialSection'])}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                  activeSection === section.id
+                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-black shadow-lg'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {section.title}
+              </button>
+            )
+          })}
+        </div>
+      </motion.div>
+
+      {/* Content Area */}
+      <motion.div
+        key={activeSection}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-3xl border border-gray-700/50 p-8 md:p-12"
+      >
+        {renderContent()}
+      </motion.div>
+    </div>
+  )
+}
+
+export default function PolicyPage() {
+  return (
     <div className="relative bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] min-h-screen py-20 overflow-hidden">
       <SEO title="Privacy & Policy - AcademOra" description="Comprehensive privacy policy, cookie policy, terms of service and data protection information for AcademOra" />
-      
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <div className="mb-8">
-            <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20"
-            >
-              <Shield className="w-4 h-4 text-yellow-300" />
-              <span className="text-sm font-medium text-yellow-200">Our Policies</span>
-            </motion.div>
-          </div>
-
-          <h1 className="text-5xl md:text-7xl font-black mb-6">
-            <span className="bg-gradient-to-r from-white via-yellow-200 to-orange-200 bg-clip-text text-transparent">
-              Privacy & Policy
-            </span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
-            Your privacy and security are our top priorities. Learn how we protect your data.
-          </p>
-        </motion.div>
-
-        {/* Navigation Tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8"
-        >
-          <div className="flex flex-wrap justify-center gap-2 bg-gray-900/50 backdrop-blur-sm rounded-2xl p-2 border border-gray-800/50">
-            {sections.map((section) => {
-              const Icon = section.icon
-              return (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
-                    activeSection === section.id
-                      ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-black shadow-lg'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {section.title}
-                </button>
-              )
-            })}
-          </div>
-        </motion.div>
-
-        {/* Content Area */}
-        <motion.div
-          key={activeSection}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-3xl border border-gray-700/50 p-8 md:p-12"
-        >
-          {renderContent()}
-        </motion.div>
-      </div>
+      <PolicyContent />
     </div>
   )
 }

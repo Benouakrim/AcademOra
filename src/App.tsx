@@ -19,6 +19,7 @@ import DashboardPage from './pages/DashboardPage'
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
 const AdminClaimsPage = lazy(() => import('./pages/admin/AdminClaimsPage'))
 const ArticleEditor = lazy(() => import('./pages/ArticleEditor'))
+const UserArticleEditor = lazy(() => import('./pages/UserArticleEditor'))
 const ArticlesList = lazy(() => import('./pages/admin/ArticlesList'))
 const ArticleAnalyticsPage = lazy(() => import('./pages/admin/ArticleAnalyticsPage'))
 const TaxonomiesPage = lazy(() => import('./pages/admin/TaxonomiesPage'))
@@ -44,18 +45,13 @@ import UniversityComparePage from './pages/UniversityComparePage'
 import PublicUserProfilePage from './pages/PublicUserProfilePage'
 const DevDashboard = lazy(() => import('./pages/DevDashboard'))
 import DocumentationPage from './pages/DocumentationPage'
-import DocsPage from './pages/DocsPage'
-import AboutPage from './pages/AboutPage'
-import ContactPage from './pages/ContactPage'
-import PolicyPage from './pages/PolicyPage'
-import CareersPage from './pages/CareersPage'
+import OurCompanyPage from './pages/OurCompanyPage'
 import ExplorePage from './pages/ExplorePage'
 import { AccessControlProvider } from './context/AccessControlContext'
 import { ThemeProvider } from './context/ThemeContext'
 const FeatureUsagePage = lazy(() => import('./pages/admin/FeatureUsagePage'))
 const AdminMediaPage = lazy(() => import('./pages/admin/AdminMediaPage'))
 const MyArticles = lazy(() => import('./pages/MyArticles'))
-const UserArticleEditor = lazy(() => import('./pages/UserArticleEditor'))
 const AdminReviewPortal = lazy(() => import('./pages/AdminReviewPortal'))
 const ReferralDashboard = lazy(() => import('./pages/ReferralDashboard'))
 const AdminReferrals = lazy(() => import('./pages/admin/AdminReferrals'))
@@ -91,12 +87,18 @@ function App() {
           <Route path={track("/admin/articles")} element={<ArticlesList />} />
           <Route path={track("/admin/articles/new")} element={<ArticleEditor />} />
           <Route path={track("/admin/articles/edit/:id")} element={<ArticleEditor />} />
+          {/* Unified editor routes */}
+          <Route path={track("/admin/:name/Posts/add")} element={<ArticleEditor />} />
+          <Route path={track("/admin/:name/Posts/edit/:id")} element={<ArticleEditor />} />
           <Route path={track("/admin/articles/analytics")} element={<ArticleAnalyticsPage />} />
           <Route path={track("/admin/review")} element={<AdminReviewPortal />} />
           <Route path={track("/admin/referrals")} element={<AdminReferrals />} />
           <Route path={track("/my-articles")} element={<MyArticles />} />
           <Route path={track("/write-article")} element={<UserArticleEditor />} />
           <Route path={track("/write-article/:id")} element={<UserArticleEditor />} />
+          {/* Unified user routes */}
+          <Route path={track("/user/:name/Posts/add")} element={<UserArticleEditor />} />
+          <Route path={track("/user/:name/Posts/edit/:id")} element={<UserArticleEditor />} />
           <Route path={track("/referrals")} element={<ReferralDashboard />} />
           <Route path={track("/admin/pages")} element={<PagesManagementPage />} />
           <Route path={track("/admin/pages/new")} element={<UnifiedPageEditor />} />
@@ -111,11 +113,12 @@ function App() {
           <Route path={track("/admin/analytics")} element={<AdvancedAnalyticsPage />} />
           <Route path={track("/admin/media")} element={<AdminMediaPage />} />
           <Route path={track("/admin/theme")} element={<ThemeSettingsPage />} />
-          <Route path={track("/about")} element={<AboutPage />} />
-          <Route path={track("/contact")} element={<ContactPage />} />
+          <Route path={track("/our-company")} element={<OurCompanyPage />} />
+          <Route path={track("/about")} element={<OurCompanyPage initialTab="about" />} />
+          <Route path={track("/contact")} element={<OurCompanyPage initialTab="contact" />} />
           <Route path={track("/explore")} element={<ExplorePage />} />
-          <Route path={track("/policy")} element={<PolicyPage />} />
-          <Route path={track("/careers")} element={<CareersPage />} />
+          <Route path={track("/policy")} element={<OurCompanyPage initialTab="policy" />} />
+          <Route path={track("/careers")} element={<OurCompanyPage initialTab="join" />} />
           <Route path={track("/pricing")} element={<PricingPage />} />
           <Route path={track("/blog")} element={<BlogPage />} />
           <Route path={track("/blog/category/:categoryName")} element={<CategoryPage />} />
@@ -127,7 +130,7 @@ function App() {
           <Route path={track("/university-groups/:slug")} element={<UniversityGroupDetailPage />} />
           <Route path={track("/compare")} element={<UniversityComparePage />} />
           <Route path={track("/docs/:slug")} element={<DocumentationPage />} />
-          <Route path={track("/docs")} element={<DocsPage />} />
+          <Route path={track("/docs")} element={<OurCompanyPage initialTab="docs" />} />
           <Route path={track("/u/:username")} element={<PublicUserProfilePage />} />
           {import.meta.env.DEV && (
             <Route path={track("/__dev")} element={<DevDashboard />} />

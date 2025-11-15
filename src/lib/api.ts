@@ -16,13 +16,13 @@ export function setAuthToken(token: string | null): void {
 }
 
 // Helper function to get current user from localStorage
-export function getCurrentUser(): any | null {
+export function getCurrentUser(): unknown {
   const userStr = localStorage.getItem('user');
   return userStr ? JSON.parse(userStr) : null;
 }
 
 // Helper function to set current user in localStorage
-export function setCurrentUser(user: any | null): void {
+export function setCurrentUser(user: unknown): void {
   if (user) {
     localStorage.setItem('user', JSON.stringify(user));
   } else {
@@ -64,9 +64,9 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     }
 
     return response.json();
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Handle network errors (server not running, CORS, etc.)
-    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+    if (error instanceof Error && error.name === 'TypeError' && error.message.includes('fetch')) {
       throw new Error(`Cannot connect to API at ${API_URL}. Make sure the backend server is running on port 3001.`);
     }
     throw error;
@@ -75,8 +75,8 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 
 // Auth API
 export const authAPI = {
-  async signup(identifier: string, password: string, extra?: Record<string, any>) {
-    const payload: Record<string, any> = {
+  async signup(identifier: string, password: string, extra?: Record<string, unknown>) {
+    const payload: Record<string, unknown> = {
       password,
       ...(extra || {}),
     };
@@ -137,7 +137,7 @@ export const authAPI = {
 };
 
 export const onboardingAPI = {
-  async submit(payload: { accountType: string; answers: Record<string, string>; metadata?: Record<string, any> }) {
+  async submit(payload: { accountType: string; answers: Record<string, string>; metadata?: Record<string, unknown> }) {
     try {
       return await fetchAPI('/onboarding', {
         method: 'POST',
@@ -216,14 +216,14 @@ export const adminAPI = {
     return fetchAPI(`/admin/articles/${id}`);
   },
 
-  async createArticle(articleData: any) {
-    return fetchAPI('/admin/articles', {
+  async createArticle(articleData: Record<string, unknown>) {
+    return fetchAPI('/articles', {
       method: 'POST',
       body: JSON.stringify(articleData),
     });
   },
 
-  async updateArticle(id: string, articleData: any) {
+  async updateArticle(id: string, articleData: Record<string, unknown>) {
     return fetchAPI(`/admin/articles/${id}`, {
       method: 'PUT',
       body: JSON.stringify(articleData),
@@ -329,27 +329,40 @@ export const uploadAPI = {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    try {
-      const response = await fetch(`${API_URL}/upload/image`, {
-        method: 'POST',
-        headers,
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const error = await response.json().catch(() => ({ 
-          error: `HTTP error! status: ${response.status}` 
-        }));
-        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+    // Try user-friendly endpoints first, then fall back
+    const endpoints = [
+      '/user-uploads/image',
+      '/user/upload/image',
+      '/upload/image',
+    ];
+    let lastError: unknown = null;
+    for (const ep of endpoints) {
+      try {
+        const response = await fetch(`${API_URL}${ep}`, {
+          method: 'POST',
+          headers,
+          body: formData,
+        });
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: `HTTP error! status: ${response.status}`, status: response.status }));
+          // If 403/401, try next endpoint
+          if (response.status === 401 || response.status === 403 || response.status === 404) {
+            lastError = new Error(error.error || `HTTP error! status: ${response.status}`);
+            continue;
+          }
+          throw new Error(error.error || `HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      } catch (err) {
+        lastError = err;
+        continue;
       }
-
-      return response.json();
-    } catch (error: any) {
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        throw new Error(`Cannot connect to API at ${API_URL}. Make sure the backend server is running on port 3001.`);
-      }
-      throw error;
     }
+    // If all endpoints failed
+    if (lastError instanceof Error && lastError.name === 'TypeError' && lastError.message.includes('fetch')) {
+      throw new Error(`Cannot connect to API at ${API_URL}. Make sure the backend server is running on port 3001.`);
+    }
+    throw lastError || new Error('Failed to upload image');
   },
 
   async deleteImage(filename: string) {
@@ -384,8 +397,8 @@ export const uploadAPI = {
       }
 
       return response.json();
-    } catch (error: any) {
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'TypeError' && error.message.includes('fetch')) {
         throw new Error(`Cannot connect to API at ${API_URL}. Make sure the backend server is running on port 3001.`);
       }
       throw error;
@@ -452,8 +465,8 @@ export const orientationAPI = {
 
 // Matching API
 export const matchingAPI = {
-  async getMatches(criteria: any) {
-    return fetchAPI('/matching', {
+  async getMatches(criteria: Record<string, unknown>) {
+    return fetchAPI('/matching/matches', {
       method: 'POST',
       body: JSON.stringify(criteria),
     });
@@ -642,13 +655,13 @@ export const adminUniversityGroupsAPI = {
   async getGroupById(id: string) {
     return fetchAPI(`/admin/university-groups/${id}`);
   },
-  async createGroup(data: any) {
+  async createGroup(data: Record<string, unknown>) {
     return fetchAPI('/admin/university-groups', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
-  async updateGroup(id: string, data: any) {
+  async updateGroup(id: string, data: Record<string, unknown>) {
     return fetchAPI(`/admin/university-groups/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -669,13 +682,13 @@ export const adminUniversityAPI = {
   async getUniversityById(id: string) {
     return fetchAPI(`/admin/universities/${id}`);
   },
-  async createUniversity(data: any) {
+  async createUniversity(data: Record<string, unknown>) {
     return fetchAPI('/admin/universities', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
-  async updateUniversity(id: string, data: any) {
+  async updateUniversity(id: string, data: Record<string, unknown>) {
     return fetchAPI(`/admin/universities/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -693,8 +706,8 @@ export const profileAPI = {
   async getProfile() {
     return fetchAPI('/profile');
   },
-  async updateProfile(data: any) {
-    return fetchAPI('/profile', {
+  async updateProfile(data: Record<string, unknown>) {
+    return fetchAPI('/users/profile', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
@@ -712,13 +725,13 @@ export const financialProfileAPI = {
   async getProfile() {
     return fetchAPI('/profile/financial');
   },
-  async updateProfile(data: any) {
+  async updateProfile(data: Record<string, unknown>) {
     return fetchAPI('/profile/financial', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
   },
-  async predictAid(universityId: string, universityData?: any) {
+  async predictAid(universityId: string, universityData?: Record<string, unknown>) {
     return fetchAPI('/profile/financial/predict', {
       method: 'POST',
       body: JSON.stringify({
@@ -749,8 +762,8 @@ export const savedItemsAPI = {
   async checkIfSaved(type: string, id: string) {
     return fetchAPI(`/saved-items/check/${type}/${id}`);
   },
-  async saveItem(type: string, id: string, data?: any) {
-    return fetchAPI('/saved-items', {
+  async saveItem(type: string, id: string, data?: Record<string, unknown>) {
+    return fetchAPI('/saved', {
       method: 'POST',
       body: JSON.stringify({ item_type: type, item_id: id, item_data: data }),
     });
@@ -764,8 +777,8 @@ export const savedItemsAPI = {
 
 // University Claims API
 export const universityClaimsAPI = {
-  async createClaimRequest(data: any) {
-    return fetchAPI('/university-claims/request', {
+    async createClaimRequest(data: Record<string, unknown>) {
+    return fetchAPI('/claims', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -826,10 +839,10 @@ export const profileSectionsAPI = {
   async list(kind: 'experiences'|'education'|'projects'|'certifications') {
     return fetchAPI(`/profile-sections/${kind}`);
   },
-  async create(kind: 'experiences'|'education'|'projects'|'certifications', payload: any) {
+  async create(kind: 'experiences'|'education'|'projects'|'certifications', payload: Record<string, unknown>) {
     return fetchAPI(`/profile-sections/${kind}`, { method: 'POST', body: JSON.stringify(payload) });
   },
-  async update(kind: 'experiences'|'education'|'projects'|'certifications', id: string, payload: any) {
+  async update(kind: 'experiences'|'education'|'projects'|'certifications', id: string, payload: Record<string, unknown>) {
     return fetchAPI(`/profile-sections/${kind}/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
   },
   async remove(kind: 'experiences'|'education'|'projects'|'certifications', id: string) {
@@ -902,14 +915,14 @@ export const microContentAPI = {
     return fetchAPI(`/micro-content/${id}`);
   },
 
-  async createMicroContent(data: any) {
+  async createMicroContent(data: Record<string, unknown>) {
     return fetchAPI('/micro-content', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
-  async updateMicroContent(id: string, data: any) {
+  async updateMicroContent(id: string, data: Record<string, unknown>) {
     return fetchAPI(`/micro-content/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -946,14 +959,14 @@ export const localizedContentAPI = {
     return fetchAPI(`/localized-content/${id}`);
   },
 
-  async createLocalizedContent(data: any) {
+  async createLocalizedContent(data: Record<string, unknown>) {
     return fetchAPI('/localized-content', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
-  async updateLocalizedContent(id: string, data: any) {
+  async updateLocalizedContent(id: string, data: Record<string, unknown>) {
     return fetchAPI(`/localized-content/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -996,7 +1009,7 @@ export const localizedContentAPI = {
 
 // Advanced Analytics API
 export const advancedAnalyticsAPI = {
-  async overview(filters?: any) {
+  async overview(filters?: Record<string, unknown>) {
     const params = new URLSearchParams();
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -1006,7 +1019,7 @@ export const advancedAnalyticsAPI = {
     return fetchAPI(`/admin/analytics/advanced/overview?${params.toString()}`);
   },
 
-  async getUserAnalytics(filters?: any) {
+  async getUserAnalytics(filters?: Record<string, unknown>) {
     const params = new URLSearchParams();
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -1016,7 +1029,7 @@ export const advancedAnalyticsAPI = {
     return fetchAPI(`/admin/analytics/advanced/users?${params.toString()}`);
   },
 
-  async getUniversityAnalytics(filters?: any) {
+  async getUniversityAnalytics(filters?: Record<string, unknown>) {
     const params = new URLSearchParams();
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -1026,7 +1039,7 @@ export const advancedAnalyticsAPI = {
     return fetchAPI(`/admin/analytics/advanced/universities?${params.toString()}`);
   },
 
-  async getEngagementAnalytics(filters?: any) {
+  async getEngagementAnalytics(filters?: Record<string, unknown>) {
     const params = new URLSearchParams();
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -1036,7 +1049,7 @@ export const advancedAnalyticsAPI = {
     return fetchAPI(`/admin/analytics/advanced/engagement?${params.toString()}`);
   },
 
-  async getConversionAnalytics(filters?: any) {
+  async getConversionAnalytics(filters?: Record<string, unknown>) {
     const params = new URLSearchParams();
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -1046,7 +1059,7 @@ export const advancedAnalyticsAPI = {
     return fetchAPI(`/admin/analytics/advanced/conversions?${params.toString()}`);
   },
 
-  async getContentAnalytics(filters?: any) {
+  async getContentAnalytics(filters?: Record<string, unknown>) {
     const params = new URLSearchParams();
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -1056,7 +1069,7 @@ export const advancedAnalyticsAPI = {
     return fetchAPI(`/admin/analytics/advanced/content?${params.toString()}`);
   },
 
-  async getTimeSeriesData(metric: string, filters?: any) {
+  async getTimeSeriesData(metric: string, filters?: Record<string, unknown>) {
     const params = new URLSearchParams({ metric });
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -1066,7 +1079,7 @@ export const advancedAnalyticsAPI = {
     return fetchAPI(`/admin/analytics/advanced/timeseries?${params.toString()}`);
   },
 
-  async exportData(type: string, format: string, filters?: any) {
+  async exportData(type: string, format: string, filters?: Record<string, unknown>) {
     const params = new URLSearchParams({ type, format });
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -1085,13 +1098,13 @@ export const api = {
   get(endpoint: string) {
     return fetchAPI(endpoint);
   },
-  post(endpoint: string, body: any) {
+  post(endpoint: string, body: unknown) {
     return fetchAPI(endpoint, {
       method: 'POST',
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
   },
-  put(endpoint: string, body: any) {
+  put(endpoint: string, body: unknown) {
     return fetchAPI(endpoint, {
       method: 'PUT',
       body: body !== undefined ? JSON.stringify(body) : undefined,

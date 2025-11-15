@@ -72,15 +72,19 @@ export class CookieManager {
   }
 
   // Set a cookie with options
-  static setCookie(name: string, value: string, options: {
-    days?: number;
-    hours?: number;
-    minutes?: number;
-    path?: string;
-    domain?: string;
-    secure?: boolean;
-    sameSite?: 'strict' | 'lax' | 'none';
-  } = {}): void {
+static setCookie(
+  name: string,
+  value: string,
+  options: {
+    days?: number
+    hours?: number
+    minutes?: number
+    path?: string
+    domain?: string
+    secure?: boolean
+    sameSite?: 'strict' | 'lax' | 'none'
+  } = {}
+): void {
     if (typeof document === 'undefined') return;
 
     const { days, hours, minutes, path = '/', domain, secure = true, sameSite = 'lax' } = options;

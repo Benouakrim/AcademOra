@@ -159,35 +159,35 @@ export default function HomePage() {
       title: "Explore",
       subtitle: "Discover insights & guidance",
       icon: <BookOpen className="w-8 h-8" />,
-      color: "from-purple-500 to-pink-500",
+      color: "from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)]",
       description: "Browse our Read section for expert articles on any academic or career topic."
     },
     {
       title: " Orient", 
       subtitle: "Find your perfect direction",
       icon: <Compass className="w-8 h-8" />,
-      color: "from-blue-500 to-cyan-500",
+      color: "from-[var(--chart-color-1)] to-[var(--color-accent-primary)]",
       description: "Navigate fields, schools, study abroad options, and application procedures."
     },
     {
       title: "Match",
       subtitle: "Discover your ideal universities",
       icon: <Target className="w-8 h-8" />,
-      color: "from-green-500 to-emerald-500", 
+      color: "from-[var(--heatmap-best)] to-[var(--ambient-color-3)]", 
       description: "Smart algorithm-based matching connects you with perfect-fit universities."
     },
     {
       title: "Compare",
       subtitle: "Make informed decisions",
       icon: <Scale className="w-8 h-8" />,
-      color: "from-orange-500 to-red-500",
+      color: "from-[var(--heatmap-caution)] to-[var(--heatmap-risk)]",
       description: "Side-by-side comparisons of tuition, rankings, and career outcomes."
     },
     {
       title: "Connect",
       subtitle: "Learn from those who succeeded",
       icon: <Users className="w-8 h-8" />,
-      color: "from-indigo-500 to-purple-500",
+      color: "from-[var(--chart-color-2)] to-[var(--color-accent-secondary)]",
       description: "Get mentorship from alumni and students at your target universities."
     }
   ]
@@ -198,7 +198,7 @@ export default function HomePage() {
       title: "Comprehensive Read",
       description: "Expert articles on academics, careers, and study opportunities worldwide",
       stat: "Expert Content",
-      color: "text-purple-600",
+      color: "text-[var(--color-accent-secondary)]",
       category: "content",
       featured: true,
       detailedDescription: "Our Read section serves as your primary resource for educational content, featuring expert-written articles on everything from university applications to career planning. Access comprehensive guides, industry insights, and practical advice from education professionals.",
@@ -215,7 +215,7 @@ export default function HomePage() {
       title: "Explore Hub", 
       description: "Navigate fields, schools, study abroad, and application procedures",
       stat: "5 Guidance Areas",
-      color: "text-blue-600",
+      color: "text-[var(--color-accent-primary)]",
       category: "guidance",
       featured: true,
       detailedDescription: "The Explore Hub provides structured pathways through every aspect of your academic journey. Discover different fields, compare schools globally, understand study abroad options, and master application procedures.",
@@ -232,7 +232,7 @@ export default function HomePage() {
       title: "Smart Algorithm Matching",
       description: "Our advanced algorithm analyzes your profile against thousands of universities",
       stat: "Data-Driven Matches",
-      color: "text-green-600",
+      color: "text-[var(--heatmap-best)]",
       category: "matching",
       featured: true,
       detailedDescription: "Our intelligent matching system evaluates your academic profile, preferences, and goals to recommend universities where you have the highest chances of admission and success. Process thousands of data points for personalized results.",
@@ -249,7 +249,7 @@ export default function HomePage() {
       title: "University Comparison",
       description: "Compare tuition, rankings, visas, and career outcomes side-by-side",
       stat: "Compare 3+ Schools",
-      color: "text-orange-600",
+      color: "text-[var(--heatmap-caution)]",
       category: "tools",
       featured: false,
       detailedDescription: "Compare multiple universities simultaneously with comprehensive analysis covering academics, finances, and career outcomes. Make data-driven decisions with detailed comparisons of programs, costs, and prospects.",
@@ -266,7 +266,7 @@ export default function HomePage() {
       title: "Financial Aid Predictor", 
       description: "See your actual costs after scholarships, grants, and aid",
       stat: "Cost Transparency",
-      color: "text-emerald-600",
+      color: "text-[var(--heatmap-best)]",
       category: "tools",
       featured: false,
       detailedDescription: "Estimate your actual college costs with our sophisticated calculator that considers scholarships, grants, loans, and work-study opportunities. Plan your finances with accurate net cost calculations.",
@@ -283,7 +283,7 @@ export default function HomePage() {
       title: "Career Trajectory Maps",
       description: "Visualize salary potential vs visa flexibility globally",
       stat: "Career Insights",
-      color: "text-cyan-600",
+      color: "text-[var(--chart-color-1)]",
       category: "insights",
       featured: false,
       detailedDescription: "Explore career outcomes and international opportunities with interactive visualizations mapping salary potential against visa flexibility. Make informed decisions about your global career prospects.",
@@ -300,7 +300,7 @@ export default function HomePage() {
       title: "Mentorship Network",
       description: "Connect with alumni and students from your dream schools",
       stat: "Real Connections",
-      color: "text-indigo-600",
+      color: "text-[var(--color-accent-secondary)]",
       category: "community",
       featured: false,
       detailedDescription: "Access our network of mentors who have successfully navigated the admissions process. Get personalized guidance, insider insights, and support from alumni and current students at top universities.",
@@ -317,7 +317,7 @@ export default function HomePage() {
       title: "Collaborative Lists",
       description: "Save and share university research with friends and family",
       stat: "Team Planning",
-      color: "text-pink-600",
+      color: "text-[var(--chart-color-3)]",
       category: "tools",
       featured: false,
       detailedDescription: "Create and share curated lists of universities and resources with collaborators. Work together on research, gather feedback, and make group decisions with family, friends, or counselors.",
@@ -332,12 +332,12 @@ export default function HomePage() {
   ]
 
   const categories = {
-    content: { name: 'Content & Learning', icon: BookOpen, color: 'from-purple-500 to-pink-500' },
-    guidance: { name: 'Guidance & Explore', icon: Compass, color: 'from-blue-500 to-cyan-500' },
-    matching: { name: 'Smart Matching', icon: Brain, color: 'from-green-500 to-emerald-500' },
-    tools: { name: 'Tools & Calculators', icon: Scale, color: 'from-orange-500 to-red-500' },
-    insights: { name: 'Career Insights', icon: BarChart3, color: 'from-cyan-500 to-blue-500' },
-    community: { name: 'Community & Mentorship', icon: Users, color: 'from-indigo-500 to-purple-500' }
+    content: { name: 'Content & Learning', icon: BookOpen, color: 'from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)]' },
+    guidance: { name: 'Guidance & Explore', icon: Compass, color: 'from-[var(--chart-color-1)] to-[var(--color-accent-primary)]' },
+    matching: { name: 'Smart Matching', icon: Brain, color: 'from-[var(--heatmap-best)] to-[var(--ambient-color-3)]' },
+    tools: { name: 'Tools & Calculators', icon: Scale, color: 'from-[var(--heatmap-caution)] to-[var(--heatmap-risk)]' },
+    insights: { name: 'Career Insights', icon: BarChart3, color: 'from-[var(--chart-color-1)] to-[var(--chart-color-2)]' },
+    community: { name: 'Community & Mentorship', icon: Users, color: 'from-[var(--chart-color-2)] to-[var(--color-accent-secondary)]' }
   }
 
   const featuredFeatures = features.filter(f => f.featured)
@@ -428,6 +428,13 @@ export default function HomePage() {
 
   const currentEmbed = useMemo(() => getVideoEmbed(currentVideo), [currentVideo])
 
+  const heroImageUrl = useMemo(() => {
+    if (currentVideo?.thumbnail_url) {
+      return resolveMediaUrl(currentVideo.thumbnail_url)
+    }
+    return 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1280&q=80'
+  }, [currentVideo])
+
   const handleNextVideo = () => {
     if (totalVideos === 0) return
     setActiveVideoIndex((prev) => (prev + 1) % totalVideos)
@@ -454,91 +461,167 @@ export default function HomePage() {
         </div>
 
         {/* Main Content */}
-        <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
-          {/* The Hook - Big Bold Statement */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
-            <div className="mb-8">
-              <motion.div
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20"
-                animate={{ 
-                  boxShadow: ["0 0 20px rgba(139, 92, 246, 0.5)", "0 0 40px rgba(139, 92, 246, 0.8)", "0 0 20px rgba(139, 92, 246, 0.5)"]
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Sparkles className="w-4 h-4 text-purple-300" />
-                <span className="text-sm font-medium text-purple-200">Smart University Discovery</span>
-              </motion.div>
-            </div>
-
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-black mb-6 leading-none">
-              <span className="bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
-                Your Dream
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-                University
-              </span>
-              <br />
-              <motion.span 
-                className="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent"
-                animate={{ 
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-                style={{ backgroundSize: "200% 200%" }}
-              >
-                Awaits
-              </motion.span>
-            </h1>
-
-            <motion.p 
-              className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.5 }}
+        <div className="relative z-10 px-4 max-w-7xl mx-auto w-full">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Text Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="text-center lg:text-left"
             >
-              Stop guessing. Start knowing. Our comprehensive platform guides you through every step - from exploring career insights and academic guidance to finding perfect universities, comparing options, and connecting with mentors who've been there.
-            </motion.p>
-
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.8 }}
-            >
-              <Link
-                to="/register"
-                className="group relative px-8 py-4 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full font-semibold text-lg text-white hover:shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  Start Guided Registration
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </span>
+              <div className="mb-8">
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-700"
-                  initial={{ x: "100%" }}
-                  whileHover={{ x: "0%" }}
-                  transition={{ duration: 0.3 }}
-                />
-              </Link>
-              
-              <button
-                onClick={() => howItWorksRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-                className="px-8 py-4 border border-white/30 rounded-full font-semibold text-lg hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-interactive-bg)] backdrop-blur-md rounded-full border border-[var(--color-border-primary)]"
+                  animate={{ 
+                    boxShadow: ["0 0 20px var(--color-accent-secondary)/50", "0 0 40px var(--color-accent-secondary)/80", "0 0 20px var(--color-accent-secondary)/50"]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Sparkles className="w-4 h-4 text-[var(--color-accent-secondary)]" />
+                  <span className="text-sm font-medium text-[var(--color-accent-secondary)]">Smart University Discovery</span>
+                </motion.div>
+              </div>
+
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-none">
+                <span className="bg-gradient-to-r from-[var(--color-text-primary)] via-[var(--color-accent-secondary)] to-[var(--heatmap-good)] bg-clip-text text-transparent">
+                  Your Dream
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-[var(--color-accent-secondary)] via-[var(--color-accent-primary)] to-[var(--heatmap-good)] bg-clip-text text-transparent">
+                  University
+                </span>
+                <br />
+                <motion.span 
+                  className="bg-gradient-to-r from-[var(--heatmap-best)] to-[var(--ambient-color-3)] bg-clip-text text-transparent"
+                  animate={{ 
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  style={{ backgroundSize: "200% 200%" }}
+                >
+                  Awaits
+                </motion.span>
+              </h1>
+
+              <motion.p 
+                className="text-lg md:text-xl text-[var(--color-text-secondary)] mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.5 }}
               >
-                <Play className="w-5 h-5 inline mr-2" />
-                See How It Works
-              </button>
+                Stop guessing. Start knowing. Our comprehensive platform guides you through every step - from exploring career insights and academic guidance to finding perfect universities, comparing options, and connecting with mentors who've been there.
+              </motion.p>
+
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.8 }}
+              >
+                <Link
+                  to="/register"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] rounded-full font-semibold text-lg text-[var(--color-text-primary)] hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    Start Guided Registration
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-[var(--color-accent-primary)] to-[var(--heatmap-good)]"
+                    initial={{ x: "100%" }}
+                    whileHover={{ x: "0%" }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </Link>
+                
+                <button
+                  onClick={() => howItWorksRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                  className="px-8 py-4 border border-[var(--color-border-secondary)] rounded-full font-semibold text-lg hover:bg-[var(--color-interactive-bg)] transition-all duration-300 backdrop-blur-sm"
+                >
+                  <Play className="w-5 h-5 inline mr-2" />
+                  See How It Works
+                </button>
+              </motion.div>
             </motion.div>
-          </motion.div>
+
+            {/* Right Column - Hero Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+              className="relative"
+            >
+              <div className="relative">
+                {/* Decorative glow effect behind image */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] rounded-3xl blur-3xl opacity-30 animate-pulse" />
+                
+                {/* Image container with border and shadow */}
+                <div className="relative rounded-3xl overflow-hidden border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] shadow-2xl">
+                  <img
+                    src={heroImageUrl}
+                    alt={currentVideo?.title ? `${currentVideo.title} thumbnail` : 'Students collaborating while planning their university applications'}
+                    className="w-full h-auto object-cover aspect-[4/3]"
+                  />
+                  
+                  {/* Overlay gradient for better text readability if needed */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-primary)]/60 via-transparent to-transparent" />
+                  
+                  {/* Floating stat cards */}
+                  <motion.div
+                    className="absolute top-6 right-6 bg-[var(--color-bg-secondary)]/90 backdrop-blur-md border border-[var(--color-border-primary)] rounded-2xl p-4 shadow-xl"
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-gradient-to-br from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] rounded-lg">
+                        <Award className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-[var(--color-text-primary)]">1000+</div>
+                        <div className="text-xs text-[var(--color-text-tertiary)]">Universities</div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    className="absolute bottom-6 left-6 bg-[var(--color-bg-secondary)]/90 backdrop-blur-md border border-[var(--color-border-primary)] rounded-2xl p-4 shadow-xl"
+                    animate={{ y: [0, 10, 0] }}
+                    transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-gradient-to-br from-[var(--heatmap-best)] to-[var(--heatmap-good)] rounded-lg">
+                        <Users className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-[var(--color-text-primary)]">50K+</div>
+                        <div className="text-xs text-[var(--color-text-tertiary)]">Students Matched</div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    className="absolute -bottom-8 -left-10 bg-[var(--color-bg-secondary)]/90 backdrop-blur-md border border-[var(--color-border-primary)] rounded-full p-2 shadow-xl"
+                    whileInView={{ opacity: [0, 1], scale: [0.85, 1] }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                  >
+                    <div className="h-28 w-28 rounded-full overflow-hidden border border-[var(--color-border-primary)]">
+                      <img
+                        src={heroImageUrl}
+                        alt={currentVideo?.title ? `${currentVideo.title} focus detail` : 'Mentor guiding a student'}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
 
           {/* Social Proof - Immediate Credibility */}
           <motion.div 
-            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8"
+            className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.2 }}
@@ -552,11 +635,11 @@ export default function HomePage() {
               >
                 <div className="flex items-center justify-center gap-2 mb-2">
                   {stat.icon}
-                  <span className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  <span className="text-3xl font-bold bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] bg-clip-text text-transparent">
                     {stat.number}
                   </span>
                 </div>
-                <span className="text-sm text-gray-400">{stat.label}</span>
+                <span className="text-sm text-[var(--color-text-tertiary)]">{stat.label}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -568,12 +651,12 @@ export default function HomePage() {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <ChevronRight className="w-6 h-6 text-gray-400 rotate-90" />
+          <ChevronRight className="w-6 h-6 text-[var(--color-text-tertiary)] rotate-90" />
         </motion.div>
       </section>
 
       {/* 5-Minute Explanation: Interactive Journey */}
-      <section id="journey" className="relative py-20 bg-gradient-to-b from-black via-purple-950/20 to-black">
+      <section id="journey" className="relative py-20 bg-gradient-to-b from-[var(--color-bg-primary)] via-[var(--color-accent-secondary)]/20 to-[var(--color-bg-primary)]">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -586,7 +669,7 @@ export default function HomePage() {
                 Your 5-Minute Journey to Clarity
               </span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-[var(--color-text-secondary)] max-w-3xl mx-auto">
               Watch how AcademOra transforms your university search from confusing to crystal clear
             </p>
           </motion.div>
@@ -594,17 +677,17 @@ export default function HomePage() {
           {/* Interactive Journey Steps */}
           <div className="relative" style={{ height: "400px", contain: "layout" }}>
             {/* Progress Bar Container */}
-            <div className="absolute top-8 left-0 right-0 h-2 bg-gray-800/50 rounded-full overflow-hidden z-0 backdrop-blur-sm border border-gray-700/30" style={{ contain: "layout" }}>
+            <div className="absolute top-8 left-0 right-0 h-2 bg-[var(--color-bg-tertiary)]/50 rounded-full overflow-hidden z-0 backdrop-blur-sm border border-[var(--color-border-secondary)]/30" style={{ contain: "layout" }}>
               {/* Glow effect behind the progress */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 blur-sm"
+                className="absolute inset-0 bg-gradient-to-r from-[var(--color-accent-secondary)]/20 to-[var(--color-accent-primary)]/20 blur-sm"
                 initial={{ width: "0%" }}
                 animate={{ width: `${((currentStep + 1) / journeySteps.length) * 100}%` }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
               />
               {/* Main progress bar */}
               <motion.div
-                className="relative h-full bg-gradient-to-r from-purple-500 via-purple-400 to-pink-500 rounded-full shadow-lg"
+                className="relative h-full bg-gradient-to-r from-[var(--color-accent-secondary)] via-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] rounded-full shadow-lg"
                 initial={{ width: "0%" }}
                 animate={{ width: `${((currentStep + 1) / journeySteps.length) * 100}%` }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -622,9 +705,9 @@ export default function HomePage() {
                   style={{ willChange: "transform" }}
                 />
                 {/* Inner glow */}
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-300/30 to-pink-300/30 rounded-full" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-accent-secondary)]/30 to-[var(--color-accent-primary)]/30 rounded-full" />
                 {/* Top highlight */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-300/50 to-pink-300/50 rounded-t-full" />
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--color-accent-secondary)]/50 to-[var(--color-accent-primary)]/50 rounded-t-full" />
               </motion.div>
             </div>
 
@@ -652,8 +735,8 @@ export default function HomePage() {
                     {step.icon}
                   </motion.div>
                   
-                  <h3 className="text-xl font-bold mb-2 text-white">{step.title}</h3>
-                  <p className="text-sm text-purple-200 mb-2">{step.subtitle}</p>
+                  <h3 className="text-xl font-bold mb-2 text-[var(--color-text-primary)]">{step.title}</h3>
+                  <p className="text-sm text-[var(--color-text-secondary)] mb-2">{step.subtitle}</p>
                   
                   <AnimatePresence mode="wait">
                     {index === currentStep && (
@@ -661,9 +744,9 @@ export default function HomePage() {
                         initial={{ opacity: 0, height: 0, y: -10 }}
                         animate={{ opacity: 1, height: "auto", y: 0 }}
                         exit={{ opacity: 0, height: 0, y: -10 }}
-                        className="mt-4 p-4 bg-gradient-to-br from-purple-900/30 to-pink-900/20 backdrop-blur-sm rounded-xl border border-purple-500/20 shadow-lg shadow-purple-500/10"
+                        className="mt-4 p-4 bg-gradient-to-br from-[var(--color-accent-secondary)]/30 to-[var(--color-accent-primary)]/20 backdrop-blur-sm rounded-xl border border-[var(--color-accent-secondary)]/20 shadow-lg shadow-[var(--color-accent-secondary)]/10"
                       >
-                        <p className="text-sm text-gray-200 leading-relaxed">
+                        <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
                           {step.description}
                         </p>
                       </motion.div>
@@ -677,7 +760,7 @@ export default function HomePage() {
             <div className="absolute bottom-0 left-0 right-0 flex justify-center">
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300 flex items-center gap-2"
+                className="px-6 py-3 bg-[var(--color-interactive-bg)] backdrop-blur-md rounded-full border border-[var(--color-border-primary)] hover:bg-[var(--color-interactive-bg-hover)] transition-all duration-300 flex items-center gap-2"
               >
                 {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                 {isPlaying ? 'Pause Journey' : 'Play Journey'}
@@ -691,7 +774,7 @@ export default function HomePage() {
       <section
         ref={howItWorksRef}
         id="how-it-works"
-        className="relative overflow-hidden bg-gradient-to-br from-purple-950/60 via-black to-blue-950/40 py-20"
+        className="relative overflow-hidden bg-gradient-to-br from-[var(--color-accent-secondary)]/60 via-[var(--color-bg-primary)] to-[var(--heatmap-good)]/40 py-20"
       >
         <div className="absolute inset-0">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(147,197,253,0.15),_transparent_55%)]" />
@@ -699,17 +782,17 @@ export default function HomePage() {
         </div>
         <div className="relative mx-auto max-w-7xl px-4">
           <div className="mb-12 flex flex-col gap-4 text-center md:text-left">
-            <span className="inline-flex items-center gap-2 self-center rounded-full border border-white/10 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-purple-200 md:self-start">
+            <span className="inline-flex items-center gap-2 self-center rounded-full border border-[var(--color-border-primary)] bg-[var(--color-interactive-bg)] px-4 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--color-accent-secondary)] md:self-start">
               <Play className="h-3.5 w-3.5" />
               See how it works
             </span>
             <div className="grid gap-6 md:grid-cols-2 md:items-end">
               <div>
-                <h2 className="text-4xl font-bold text-white md:text-5xl">
+                <h2 className="text-4xl font-bold text-[var(--color-text-primary)] md:text-5xl">
                   A guided journey through the AcademOra platform
                 </h2>
               </div>
-              <p className="text-lg text-gray-300 md:text-right">
+              <p className="text-lg text-[var(--color-text-secondary)] md:text-right">
                 Watch the experience come alive. Cycle through quick demos that highlight how AcademOra
                 explores, compares, and matches you with universities made for your goals.
               </p>
@@ -721,14 +804,14 @@ export default function HomePage() {
               <div className="relative overflow-hidden rounded-3xl border border-[var(--color-border-primary)]/10 bg-[var(--color-bg-secondary)] shadow-2xl shadow-[var(--color-accent-secondary)]/40">
                 <div className="relative aspect-video">
                   {isVideoLoading ? (
-                    <div className="flex h-full items-center justify-center text-gray-400">
+                    <div className="flex h-full items-center justify-center text-[var(--color-text-tertiary)]">
                       <div className="flex items-center gap-3 text-sm">
                         <Play className="h-4 w-4 animate-pulse" />
                         Loading showcase…
                       </div>
                     </div>
                   ) : !currentVideo ? (
-                    <div className="flex h-full items-center justify-center text-gray-400">
+                    <div className="flex h-full items-center justify-center text-[var(--color-text-tertiary)]">
                       Videos unavailable right now.
                     </div>
                   ) : currentEmbed.type === 'embed' ? (
@@ -762,7 +845,7 @@ export default function HomePage() {
                       Your browser does not support embedded videos.
                     </video>
                   ) : (
-                    <div className="flex h-full items-center justify-center text-gray-500">
+                    <div className="flex h-full items-center justify-center text-[var(--color-text-tertiary)]">
                       Video unavailable.
                     </div>
                   )}
@@ -772,14 +855,14 @@ export default function HomePage() {
                   <div className="absolute inset-x-0 bottom-4 flex items-center justify-between px-6">
                     <button
                       onClick={handlePrevVideo}
-                      className="inline-flex items-center justify-center rounded-full bg-white/15 p-2 text-white transition hover:bg-white/25"
+                      className="inline-flex items-center justify-center rounded-full bg-[var(--color-interactive-bg)] p-2 text-[var(--color-text-primary)] transition hover:bg-[var(--color-interactive-bg-hover)]"
                       aria-label="Previous video"
                     >
                       <ChevronLeft className="h-5 w-5" />
                     </button>
                     <button
                       onClick={handleNextVideo}
-                      className="inline-flex items-center justify-center rounded-full bg-white/15 p-2 text-white transition hover:bg-white/25"
+                      className="inline-flex items-center justify-center rounded-full bg-[var(--color-interactive-bg)] p-2 text-[var(--color-text-primary)] transition hover:bg-[var(--color-interactive-bg-hover)]"
                       aria-label="Next video"
                     >
                       <ChevronRight className="h-5 w-5" />
@@ -795,7 +878,7 @@ export default function HomePage() {
                       key={video.id ?? index}
                       onClick={() => handleSelectVideo(index)}
                       className={`h-2.5 rounded-full transition ${
-                        isActive ? 'w-10 bg-purple-400' : 'w-2.5 bg-white/20 hover:bg-white/40'
+                        isActive ? 'w-10 bg-[var(--color-accent-secondary)]' : 'w-2.5 bg-[var(--color-interactive-bg)] hover:bg-[var(--color-interactive-bg-hover)]'
                       }`}
                       aria-label={`Show video ${index + 1}`}
                     />
@@ -804,14 +887,14 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
+            <div className="flex flex-col justify-between rounded-3xl border border-[var(--color-border-primary)] bg-[var(--color-interactive-bg)] p-8 backdrop-blur-xl">
               <div className="space-y-5">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-purple-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-purple-200">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent-secondary)]/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--color-accent-secondary)]">
                     Step {totalVideos === 0 ? 0 : activeVideoIndex + 1} of {totalVideos}
                   </span>
                   {isAdmin && currentVideo && !currentVideo.is_active && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-yellow-200 border border-yellow-500/30">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--heatmap-caution)]/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[var(--heatmap-caution)] border border-[var(--heatmap-caution)]/30">
                       <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -820,10 +903,10 @@ export default function HomePage() {
                     </span>
                   )}
                 </div>
-                <h3 className="text-3xl font-bold text-white">
+                <h3 className="text-3xl font-bold text-[var(--color-text-primary)]">
                   {currentVideo?.title ?? 'Experience AcademOra'}
                 </h3>
-                <p className="text-base text-gray-300 leading-relaxed">
+                <p className="text-base text-[var(--color-text-secondary)] leading-relaxed">
                   {currentVideo?.description ??
                     'Explore how AcademOra transforms discovery, comparison, and decision-making into a guided path built for ambitious students.'}
                 </p>
@@ -831,12 +914,12 @@ export default function HomePage() {
 
               <div className="mt-8 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-purple-500/30 to-pink-500/30 flex items-center justify-center border border-white/10">
-                    <Sparkles className="h-5 w-5 text-purple-200" />
+                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[var(--color-accent-secondary)]/30 to-[var(--color-accent-primary)]/30 flex items-center justify-center border border-[var(--color-border-primary)]">
+                    <Sparkles className="h-5 w-5 text-[var(--color-accent-secondary)]" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white">Tips while watching</p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-sm font-semibold text-[var(--color-text-primary)]">Tips while watching</p>
+                    <p className="text-xs text-[var(--color-text-tertiary)]">
                       Use the arrows or dots to switch videos instantly and dive into the flow that
                       matters most to you.
                     </p>
@@ -847,7 +930,7 @@ export default function HomePage() {
                   <button
                     onClick={handlePrevVideo}
                     disabled={totalVideos <= 1}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-border-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-interactive-bg)] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <ChevronLeft className="h-4 w-4" />
                     Previous
@@ -855,18 +938,18 @@ export default function HomePage() {
                   <button
                     onClick={handleNextVideo}
                     disabled={totalVideos <= 1}
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[var(--color-accent-secondary)] via-[var(--color-accent-primary)] to-[var(--heatmap-good)] px-5 py-2 text-sm font-semibold text-[var(--color-text-primary)] shadow-lg transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     Next video
                     <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-gray-200">
+                <div className="rounded-2xl border border-[var(--color-border-primary)] bg-[var(--color-interactive-bg)] p-4 text-sm text-[var(--color-text-primary)]">
                   Ready for a deeper dive?{' '}
                   <Link
                     to="/register"
-                    className="font-semibold text-purple-200 underline-offset-4 hover:underline"
+                    className="font-semibold text-[var(--color-accent-secondary)] underline-offset-4 hover:underline"
                   >
                     Start guided registration
                   </Link>{' '}
@@ -879,7 +962,7 @@ export default function HomePage() {
       </section>
 
       {/* Interactive Platform Explorer */}
-      <section className="py-20 bg-gradient-to-b from-black to-gray-900">
+      <section className="py-20 bg-gradient-to-b from-[var(--color-bg-primary)] to-[var(--color-bg-secondary)]">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -888,18 +971,18 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[var(--heatmap-good)] to-[var(--heatmap-best)] bg-clip-text text-transparent">
                 The AcademOra Universe
               </span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-[var(--color-text-secondary)] max-w-3xl mx-auto mb-8">
               Start with our core features, then explore everything else when you're ready
             </p>
             
             {/* Explorer Toggle */}
             <motion.button
               onClick={() => setShowExplorer(!showExplorer)}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 flex items-center gap-2 mx-auto"
+              className="px-6 py-3 bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] rounded-full font-semibold text-lg hover:shadow-2xl transition-all duration-300 flex items-center gap-2 mx-auto"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -928,10 +1011,10 @@ export default function HomePage() {
                   setIsModalOpen(true)
                 }}
               >
-                <div className="relative h-full p-8 bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl transition-all duration-300 overflow-hidden">
+                <div className="relative h-full p-8 bg-[var(--color-interactive-bg)] backdrop-blur-sm rounded-2xl transition-all duration-300 overflow-hidden">
                   {/* Hover gradient overlay */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-2xl"
+                    className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent-secondary)]/20 to-[var(--color-accent-primary)]/20 rounded-2xl"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: hoveredFeature === index ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
@@ -941,11 +1024,11 @@ export default function HomePage() {
                     {feature.icon}
                   </div>
                   
-                  <h3 className="relative z-10 text-xl font-bold mb-3 text-white">{feature.title}</h3>
-                  <p className="relative z-10 text-gray-400 mb-6">{feature.description}</p>
+                  <h3 className="relative z-10 text-xl font-bold mb-3 text-[var(--color-text-primary)]">{feature.title}</h3>
+                  <p className="relative z-10 text-[var(--color-text-tertiary)] mb-6">{feature.description}</p>
                   
                   <motion.div
-                    className="relative z-10 text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+                    className="relative z-10 text-2xl font-bold bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] bg-clip-text text-transparent"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ 
                       opacity: hoveredFeature === index ? 1 : 0.7,
@@ -958,7 +1041,7 @@ export default function HomePage() {
 
                   {/* Clickable Indicator */}
                   <motion.div
-                    className="absolute bottom-4 right-4 flex items-center gap-1 text-xs text-purple-400 z-10"
+                    className="absolute bottom-4 right-4 flex items-center gap-1 text-xs text-[var(--color-accent-secondary)] z-10"
                     initial={{ opacity: 0 }}
                     animate={{ 
                       opacity: hoveredFeature === index ? 1 : 0.6,
@@ -990,8 +1073,8 @@ export default function HomePage() {
                     onClick={() => setSelectedCategory(null)}
                     className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${
                       selectedCategory === null 
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
-                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        ? 'bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] text-[var(--color-text-primary)]' 
+                        : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)] hover:bg-[var(--color-interactive-bg-hover)]'
                     }`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -1006,8 +1089,8 @@ export default function HomePage() {
                         onClick={() => setSelectedCategory(selectedCategory === key ? null : key)}
                         className={`px-4 py-2 rounded-full font-medium transition-all duration-300 flex items-center gap-2 ${
                           selectedCategory === key 
-                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
-                            : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                            ? 'bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] text-[var(--color-text-primary)]' 
+                            : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)] hover:bg-[var(--color-interactive-bg-hover)]'
                         }`}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -1036,14 +1119,14 @@ export default function HomePage() {
                         setIsModalOpen(true)
                       }}
                     >
-                      <div className={`relative h-full p-6 bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl transition-all duration-300 overflow-hidden ${
+                      <div className={`relative h-full p-6 bg-[var(--color-interactive-bg)] backdrop-blur-sm rounded-2xl transition-all duration-300 overflow-hidden ${
                         feature.featured 
-                          ? 'ring-2 ring-purple-500/50' 
+                          ? 'ring-2 ring-[var(--color-accent-secondary)]/50' 
                           : ''
                       }`}>
                         {/* Hover gradient overlay */}
                         <motion.div
-                          className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-2xl"
+                          className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent-secondary)]/20 to-[var(--color-accent-primary)]/20 rounded-2xl"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: hoveredFeature === index + 100 ? 1 : 0 }}
                           transition={{ duration: 0.3 }}
@@ -1054,10 +1137,10 @@ export default function HomePage() {
                         </div>
                         
                         <div className="relative z-10 flex items-start justify-between mb-3">
-                          <h3 className="text-lg font-bold text-white">{feature.title}</h3>
+                          <h3 className="text-lg font-bold text-[var(--color-text-primary)]">{feature.title}</h3>
                           {feature.featured && (
                             <motion.div
-                              className="px-2 py-1 bg-purple-600/20 rounded-full text-xs text-purple-300 font-medium"
+                              className="px-2 py-1 bg-[var(--color-accent-secondary)]/20 rounded-full text-xs text-[var(--color-accent-secondary)] font-medium"
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ duration: 0.3, delay: 0.2 }}
@@ -1067,10 +1150,10 @@ export default function HomePage() {
                           )}
                         </div>
                         
-                        <p className="relative z-10 text-gray-400 text-sm mb-4">{feature.description}</p>
+                        <p className="relative z-10 text-[var(--color-text-tertiary)] text-sm mb-4">{feature.description}</p>
                         
                         <motion.div
-                          className="relative z-10 text-lg font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+                          className="relative z-10 text-lg font-bold bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] bg-clip-text text-transparent"
                           initial={{ opacity: 0 }}
                           animate={{ 
                             opacity: hoveredFeature === index + 100 ? 1 : 0.6,
@@ -1082,7 +1165,7 @@ export default function HomePage() {
 
                         {/* Clickable Indicator */}
                         <motion.div
-                          className="absolute bottom-3 right-3 flex items-center gap-1 text-xs text-purple-400 z-10"
+                          className="absolute bottom-3 right-3 flex items-center gap-1 text-xs text-[var(--color-accent-secondary)] z-10"
                           initial={{ opacity: 0 }}
                           animate={{ 
                             opacity: hoveredFeature === index + 100 ? 1 : 0.6,
@@ -1105,11 +1188,11 @@ export default function HomePage() {
                   transition={{ duration: 0.5, delay: 0.3 }}
                   className="mt-12 text-center"
                 >
-                  <p className="text-gray-400 text-lg">
-                    <span className="font-bold text-white">{filteredFeatures.length}</span> powerful features 
+                  <p className="text-[var(--color-text-tertiary)] text-lg">
+                    <span className="font-bold text-[var(--color-text-primary)]">{filteredFeatures.length}</span> powerful features 
                     {selectedCategory && ` in ${categories[selectedCategory as keyof typeof categories].name.toLowerCase()}`}
                   </p>
-                  <p className="text-gray-500 text-sm mt-2">
+                  <p className="text-[var(--color-text-tertiary)] text-sm mt-2">
                     Start with our core features, explore more as you need them
                   </p>
                 </motion.div>
@@ -1120,7 +1203,7 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA - The Decision Point */}
-      <section className="py-20 bg-gradient-to-br from-purple-900/50 via-black to-pink-900/50">
+      <section className="py-20 bg-gradient-to-br from-[var(--color-accent-secondary)]/50 via-[var(--color-bg-primary)] to-[var(--color-accent-primary)]/50">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -1129,49 +1212,49 @@ export default function HomePage() {
             className="bg-white/5 backdrop-blur-md rounded-3xl p-12"
           >
             <div className="mb-8">
-              <Award className="w-16 h-16 mx-auto text-yellow-400 mb-4" />
+              <Award className="w-16 h-16 mx-auto text-[var(--heatmap-good)] mb-4" />
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[var(--heatmap-good)] to-[var(--heatmap-caution)] bg-clip-text text-transparent">
                   The Choice is Yours
                 </span>
               </h2>
-              <p className="text-xl text-gray-300 mb-8">
+              <p className="text-xl text-[var(--color-text-secondary)] mb-8">
                 Keep guessing your way through applications, or let our comprehensive platform guide you to success?
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-              <div className="p-6 bg-red-900/20 rounded-2xl">
-                <h3 className="text-xl font-bold mb-4 text-red-400">The Old Way</h3>
-                <ul className="text-left space-y-2 text-gray-400">
+              <div className="p-6 bg-[var(--heatmap-risk)]/20 rounded-2xl">
+                <h3 className="text-xl font-bold mb-4 text-[var(--heatmap-risk)]">The Old Way</h3>
+                <ul className="text-left space-y-2 text-[var(--color-text-tertiary)]">
                   <li className="flex items-center gap-2">
-                    <X className="w-4 h-4 text-red-500" />
+                    <X className="w-4 h-4 text-[var(--heatmap-risk)]" />
                     Endless spreadsheets and confusion
                   </li>
                   <li className="flex items-center gap-2">
-                    <X className="w-4 h-4 text-red-500" />
+                    <X className="w-4 h-4 text-[var(--heatmap-risk)]" />
                     Sticker price shock and hidden costs
                   </li>
                   <li className="flex items-center gap-2">
-                    <X className="w-4 h-4 text-red-500" />
+                    <X className="w-4 h-4 text-[var(--heatmap-risk)]" />
                     Generic advice from strangers
                   </li>
                 </ul>
               </div>
 
-              <div className="p-6 bg-green-900/20 rounded-2xl">
-                <h3 className="text-xl font-bold mb-4 text-green-400">The AcademOra Way</h3>
-                <ul className="text-left space-y-2 text-gray-400">
+              <div className="p-6 bg-[var(--heatmap-best)]/20 rounded-2xl">
+                <h3 className="text-xl font-bold mb-4 text-[var(--heatmap-best)]">The AcademOra Way</h3>
+                <ul className="text-left space-y-2 text-[var(--color-text-tertiary)]">
                   <li className="flex items-center gap-2">
-                    <Star className="w-4 h-4 text-green-500" />
+                    <Star className="w-4 h-4 text-[var(--heatmap-best)]" />
                     Comprehensive guidance from blog to mentorship
                   </li>
                   <li className="flex items-center gap-2">
-                    <Star className="w-4 h-4 text-green-500" />
+                    <Star className="w-4 h-4 text-[var(--heatmap-best)]" />
                     Smart algorithm-based matching and comparisons
                   </li>
                   <li className="flex items-center gap-2">
-                    <Star className="w-4 h-4 text-green-500" />
+                    <Star className="w-4 h-4 text-[var(--heatmap-best)]" />
                     Real costs, career insights, and mentor connections
                   </li>
                 </ul>
@@ -1185,7 +1268,7 @@ export default function HomePage() {
             >
               <Link
                 to="/orientation"
-                className="group px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-green-500/25 transition-all duration-300 flex items-center justify-center gap-2"
+                className="group px-8 py-4 bg-gradient-to-r from-[var(--heatmap-best)] to-[var(--heatmap-good)] rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-[var(--heatmap-best)]/25 transition-all duration-300 flex items-center justify-center gap-2"
               >
                 <Lightbulb className="w-5 h-5" />
                 Start Your Success Story
@@ -1194,7 +1277,7 @@ export default function HomePage() {
               
               <Link
                 to="/pricing"
-                className="px-8 py-4 rounded-full font-semibold text-lg bg-white/5 hover:bg-white/10 transition-all duration-300"
+                className="px-8 py-4 rounded-full font-semibold text-lg bg-[var(--color-interactive-bg)] hover:bg-[var(--color-interactive-bg-hover)] transition-all duration-300"
               >
                 See Pricing Plans
               </Link>
@@ -1206,22 +1289,22 @@ export default function HomePage() {
       {/* Quick Start Banner */}
       <section className="py-12 bg-[var(--color-bg-primary)]">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-gray-400 mb-4">
+          <p className="text-[var(--color-text-tertiary)] mb-4">
             Join students finding their perfect educational path
           </p>
           <div className="flex items-center justify-center gap-6">
             <div className="flex items-center gap-2">
-              <Heart className="w-5 h-5 text-red-500" />
-              <span className="text-sm text-gray-500">
+              <Heart className="w-5 h-5 text-[var(--heatmap-risk)]" />
+              <span className="text-sm text-[var(--color-text-tertiary)]">
                 Made with love for students worldwide
               </span>
-              <Globe className="w-5 h-5 text-blue-500" />
+              <Globe className="w-5 h-5 text-[var(--chart-color-3)]" />
             </div>
             <div className="flex items-center gap-2 text-sm">
-              <BookOpen className="w-4 h-4 text-purple-400" />
+              <BookOpen className="w-4 h-4 text-[var(--color-accent-secondary)]" />
               <Link
-                to="/docs"
-                className="text-purple-400 hover:text-purple-300 transition-colors"
+                to="/our-company?tab=docs"
+                className="text-[var(--color-accent-secondary)] hover:text-[var(--color-accent-primary)] transition-colors"
               >
                 Platform Documentation
               </Link>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { Calendar, User, ArrowRight, Edit, Trash2, Eye, BookOpen, FileText, Search, Filter, Tag as TagIcon } from 'lucide-react'
+import { Calendar, User, ArrowRight, Edit, Trash2, Eye, BookOpen, Search, Filter, Tag as TagIcon } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { adminAPI } from '../lib/api'
 import { BlogService } from '../lib/services/blogService'
@@ -19,21 +19,9 @@ interface Article {
   author_id: string
 }
 
-interface Doc {
-  id: string
-  title: string
-  slug: string
-  description: string
-  category: string
-  created_at: string
-  updated_at: string
-}
-
 export default function BlogPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [articles, setArticles] = useState<Article[]>([])
-  const [docs, setDocs] = useState<Doc[]>([])
-  const [viewMode, setViewMode] = useState<'articles' | 'docs'>('articles')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -42,30 +30,12 @@ export default function BlogPage() {
   const [selectedTag, setSelectedTag] = useState(() => searchParams.get('tag') || 'all')
   const navigate = useNavigate()
 
-  // Initialize view mode from URL parameter
-  useEffect(() => {
-    const view = searchParams.get('view') as 'articles' | 'docs'
-    if (view === 'docs') {
-      setViewMode('docs')
-      setSelectedTag('all')
-    } else {
-      setViewMode('articles')
-    }
-  }, [searchParams])
-
-  const syncParams = useCallback((nextState: Partial<{ viewMode: 'articles' | 'docs'; searchTerm: string; selectedCategory: string; selectedTag: string }>) => {
+  const syncParams = useCallback((nextState: Partial<{ searchTerm: string; selectedCategory: string; selectedTag: string }>) => {
     setSearchParams(prev => {
       const params = new URLSearchParams(prev)
-      const computedView = nextState.viewMode ?? viewMode
       const computedSearch = nextState.searchTerm ?? searchTerm
       const computedCategory = nextState.selectedCategory ?? selectedCategory
-      const computedTag = computedView === 'articles' ? (nextState.selectedTag ?? selectedTag) : 'all'
-
-      if (computedView === 'docs') {
-        params.set('view', 'docs')
-      } else {
-        params.delete('view')
-      }
+      const computedTag = nextState.selectedTag ?? selectedTag
 
       if (computedSearch && computedSearch.trim().length > 0) {
         params.set('q', computedSearch)
@@ -79,7 +49,7 @@ export default function BlogPage() {
         params.delete('category')
       }
 
-      if (computedView === 'articles' && computedTag && computedTag !== 'all') {
+      if (computedTag && computedTag !== 'all') {
         params.set('tag', computedTag)
       } else {
         params.delete('tag')
@@ -87,16 +57,7 @@ export default function BlogPage() {
 
       return params
     })
-  }, [searchTerm, selectedCategory, selectedTag, setSearchParams, viewMode])
-
-  // Update URL when view mode changes
-  const handleViewModeChange = (mode: 'articles' | 'docs') => {
-    setViewMode(mode)
-    if (mode === 'docs') {
-      setSelectedTag('all')
-    }
-    syncParams({ viewMode: mode, selectedTag: mode === 'articles' ? selectedTag : 'all' })
-  }
+  }, [searchTerm, selectedCategory, selectedTag, setSearchParams])
 
   // Check if current user is admin
   const currentUser = getCurrentUser()
@@ -108,39 +69,6 @@ export default function BlogPage() {
         // Fetch articles
         const articlesData = await (BlogService as any).list ? await (BlogService as any).list() : await (BlogService as any).getArticles()
         setArticles(articlesData || [])
-        
-        // Fetch docs - this would be from a docs service
-        // For now, I'll create some mock docs data
-        const mockDocs: Doc[] = [
-          {
-            id: '1',
-            title: 'Getting Started Guide',
-            slug: 'getting-started',
-            description: 'Complete guide to getting started with AcademOra platform',
-            category: 'User Guide',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          },
-          {
-            id: '2',
-            title: 'API Documentation',
-            slug: 'api-docs',
-            description: 'Technical documentation for AcademOra API endpoints',
-            category: 'Technical',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          },
-          {
-            id: '3',
-            title: 'Feature Overview',
-            slug: 'feature-overview',
-            description: 'Comprehensive overview of all AcademOra features',
-            category: 'Features',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          }
-        ]
-        setDocs(mockDocs)
         
         setError(null)
       } catch (error: any) {
@@ -210,16 +138,6 @@ export default function BlogPage() {
     return Array.from(tagMap.entries()).map(([value, label]) => ({ value, label })).sort((a, b) => a.label.localeCompare(b.label))
   }, [articles])
 
-  const docCategories = useMemo(() => {
-    const categorySet = new Set<string>()
-    docs.forEach(doc => {
-      if (doc.category) {
-        categorySet.add(doc.category)
-      }
-    })
-    return Array.from(categorySet).sort()
-  }, [docs])
-
   const normalizedSearch = searchTerm.trim().toLowerCase()
 
   const filteredArticles = useMemo(() => {
@@ -257,26 +175,12 @@ export default function BlogPage() {
     })
   }, [articleTags, articles, normalizedSearch, selectedCategory, selectedTag])
 
-  const filteredDocs = useMemo(() => {
-    return docs.filter(doc => {
-      const matchesSearch = normalizedSearch
-        ? [doc.title, doc.description, doc.category]
-            .filter(Boolean)
-            .some(field => (field as string).toLowerCase().includes(normalizedSearch))
-        : true
-
-      const matchesCategory = selectedCategory === 'all' || !selectedCategory
-        ? true
-        : (doc.category || '').toLowerCase() === selectedCategory.toLowerCase()
-
-      return matchesSearch && matchesCategory
-    })
-  }, [docs, normalizedSearch, selectedCategory])
+  const activeArticles = filteredArticles
 
   const hasActiveFilters = Boolean(
     normalizedSearch.length > 0 ||
     (selectedCategory && selectedCategory !== 'all') ||
-    (viewMode === 'articles' && selectedTag !== 'all')
+    selectedTag !== 'all'
   )
 
   const handleSearchInputChange = (value: string) => {
@@ -301,26 +205,17 @@ export default function BlogPage() {
     syncParams({ searchTerm: '', selectedCategory: 'all', selectedTag: 'all' })
   }
 
-  const activeArticles = filteredArticles
-  const activeDocs = filteredDocs
   const categoryOptions = useMemo(() => {
-    const base = viewMode === 'articles' ? articleCategories : docCategories
+    const base = articleCategories
     if (selectedCategory !== 'all' && selectedCategory && !base.includes(selectedCategory)) {
       return [...base, selectedCategory].sort()
     }
     return base
-  }, [articleCategories, docCategories, selectedCategory, viewMode])
-
-  useEffect(() => {
-    if (viewMode === 'docs' && selectedCategory !== 'all' && selectedCategory && !docCategories.includes(selectedCategory)) {
-      setSelectedCategory('all')
-      syncParams({ selectedCategory: 'all' })
-    }
-  }, [docCategories, selectedCategory, syncParams, viewMode])
+  }, [articleCategories, selectedCategory])
 
   return (
     <div className="relative bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] min-h-screen py-20 overflow-hidden">
-      <SEO title="AcademOra Read" description="Insights, guides, and articles for your academic journey" />
+      <SEO title="AcademOra Blog" description="Fresh insights, stories, and guidance to power your academic journey" />
       
       {/* Animated background elements */}
       <AnimatedBackground 
@@ -345,22 +240,22 @@ export default function BlogPage() {
               }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <BookOpen className="w-4 h-4 text-purple-300" />
-              <span className="text-sm font-medium text-purple-200">AcademOra Read</span>
+              <BookOpen className="w-4 h-4 text-[var(--color-accent-secondary)]" />
+              <span className="text-sm font-medium text-[var(--color-text-secondary)]">AcademOra Blog</span>
             </motion.div>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-black mb-6">
-            <span className="bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[var(--color-text-primary)] via-[var(--color-accent-secondary)] to-[var(--chart-color-3)] bg-clip-text text-transparent">
               Insights & Stories
             </span>
             <br />
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[var(--color-accent-secondary)] via-[var(--color-accent-primary)] to-[var(--chart-color-3)] bg-clip-text text-transparent">
               for Your Journey
             </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
+          <p className="text-xl md:text-2xl text-[var(--color-text-secondary)] max-w-3xl mx-auto mb-8">
             Navigate your academic path with expert guides, inspiring stories, and valuable insights
           </p>
           
@@ -387,104 +282,73 @@ export default function BlogPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-col gap-6 mb-12"
+          className="bg-gray-900/50 backdrop-blur-md rounded-2xl p-6 mb-12"
         >
-          <div className="flex justify-center">
-            <div className="inline-flex items-center bg-gray-800/50 backdrop-blur-sm rounded-full p-1 border border-gray-700/50">
-              <button
-                onClick={() => handleViewModeChange('articles')}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
-                  viewMode === 'articles'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                <BookOpen className="h-4 w-4" />
-                Articles
-              </button>
-              <button
-                onClick={() => handleViewModeChange('docs')}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
-                  viewMode === 'docs'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                <FileText className="h-4 w-4" />
-                Docs
-              </button>
-            </div>
-          </div>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={event => handleSearchInputChange(event.target.value)}
+                  placeholder="Search articles by title, excerpt, category, or tag"
+                  className="w-full bg-black/60 rounded-xl py-3 pl-12 pr-4 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition"
+                />
+              </div>
 
-          <div className="bg-gray-900/50 backdrop-blur-md rounded-2xl p-6">
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-3 md:flex-row md:items-center">
-                <div className="relative flex-1">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={event => handleSearchInputChange(event.target.value)}
-                    placeholder={viewMode === 'articles' ? 'Search articles by title, excerpt, category, or tag' : 'Search docs by title or description'}
-                    className="w-full bg-black/60 rounded-xl py-3 pl-12 pr-4 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition"
-                  />
+              <div className="flex flex-wrap gap-3 md:w-auto">
+                <div className="relative">
+                  <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                  <select
+                    value={selectedCategory}
+                    onChange={event => handleCategoryChange(event.target.value)}
+                    className="appearance-none bg-black/60 rounded-xl py-3 pl-10 pr-8 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition min-w-[160px]"
+                  >
+                    <option value="all">All Categories</option>
+                    {categoryOptions.map(category => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">▾</span>
                 </div>
 
-                <div className="flex flex-wrap gap-3 md:w-auto">
+                {articleTags.length > 0 && (
                   <div className="relative">
-                    <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                    <TagIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                     <select
-                      value={selectedCategory}
-                      onChange={event => handleCategoryChange(event.target.value)}
+                      value={selectedTag}
+                      onChange={event => handleTagChange(event.target.value)}
                       className="appearance-none bg-black/60 rounded-xl py-3 pl-10 pr-8 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition min-w-[160px]"
                     >
-                      <option value="all">All Categories</option>
-                      {categoryOptions.map(category => (
-                        <option key={category} value={category}>
-                          {category}
+                      <option value="all">All Tags</option>
+                      {articleTags.map(tag => (
+                        <option key={tag.value} value={tag.value}>
+                          {tag.label}
                         </option>
                       ))}
                     </select>
                     <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">▾</span>
                   </div>
-
-                  {viewMode === 'articles' && articleTags.length > 0 && (
-                    <div className="relative">
-                      <TagIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                      <select
-                        value={selectedTag}
-                        onChange={event => handleTagChange(event.target.value)}
-                        className="appearance-none bg-black/60 rounded-xl py-3 pl-10 pr-8 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-500/30 transition min-w-[160px]"
-                      >
-                        <option value="all">All Tags</option>
-                        {articleTags.map(tag => (
-                          <option key={tag.value} value={tag.value}>
-                            {tag.label}
-                          </option>
-                        ))}
-                      </select>
-                      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">▾</span>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
-
-              {hasActiveFilters && (
-                <div className="flex justify-between flex-col gap-3 text-sm text-gray-400 md:flex-row md:items-center">
-                  <span>
-                    Showing {viewMode === 'articles' ? activeArticles.length : activeDocs.length}{' '}
-                    {viewMode === 'articles' ? 'article' : 'doc'}
-                    {(viewMode === 'articles' ? activeArticles : activeDocs).length === 1 ? '' : 's'}
-                  </span>
-                  <button
-                    onClick={handleClearFilters}
-                    className="inline-flex items-center gap-2 text-purple-300 hover:text-purple-200 transition-colors"
-                  >
-                    <span>Clear filters</span>
-                  </button>
-                </div>
-              )}
             </div>
+
+            {hasActiveFilters && (
+              <div className="flex justify-between flex-col gap-3 text-sm text-gray-400 md:flex-row md:items-center">
+                <span>
+                  Showing {activeArticles.length} article{activeArticles.length === 1 ? '' : 's'}
+                </span>
+                <button
+                  onClick={handleClearFilters}
+                  className="inline-flex items-center gap-2 text-[var(--color-accent-secondary)] hover:text-[var(--color-accent-primary)] transition-colors"
+                >
+                  <span>Clear filters</span>
+                </button>
+              </div>
+            )}
           </div>
         </motion.div>
 
@@ -518,7 +382,7 @@ export default function BlogPage() {
               </p>
             </div>
           </motion.div>
-        ) : viewMode === 'articles' && activeArticles.length === 0 ? (
+        ) : activeArticles.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -534,26 +398,9 @@ export default function BlogPage() {
               </p>
             </div>
           </motion.div>
-        ) : viewMode === 'docs' && activeDocs.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20"
-          >
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-12">
-              <FileText className="w-16 h-16 text-gray-400 mx-auto mb-6" />
-              <p className="text-xl text-gray-300 mb-4">
-                {docs.length === 0 ? 'No docs found.' : 'No docs match your search or filters.'}
-              </p>
-              <p className="text-gray-500">
-                {docs.length === 0 ? 'Documentation will be available soon!' : 'Reset your filters or try another search.'}
-              </p>
-            </div>
-          </motion.div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {viewMode === 'articles' 
-              ? activeArticles.map((article, index) => (
+            {activeArticles.map((article, index) => (
                   <motion.article
                     key={article.id}
                     initial={{ opacity: 0, y: 50 }}
@@ -573,7 +420,7 @@ export default function BlogPage() {
                       >
                         <motion.button
                           onClick={() => handleEditArticle(article.id)}
-                          className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-500 transition-colors shadow-lg backdrop-blur-sm"
+                          className="bg-[var(--chart-color-3)] text-[var(--color-text-primary)] p-2 rounded-full hover:bg-[var(--chart-color-2)] transition-colors shadow-lg backdrop-blur-sm"
                           title="Edit article"
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
@@ -583,7 +430,7 @@ export default function BlogPage() {
                         <motion.button
                           onClick={() => handleDeleteArticle(article.id, article.title)}
                           disabled={deletingId === article.id}
-                          className="bg-red-600 text-white p-2 rounded-full hover:bg-red-500 transition-colors shadow-lg backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="bg-[var(--heatmap-risk)] text-[var(--color-text-primary)] p-2 rounded-full hover:bg-[var(--heatmap-caution)] transition-colors shadow-lg backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
                           title="Delete article"
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
@@ -625,7 +472,7 @@ export default function BlogPage() {
                         (article as any).terms.slice(0, 6).map((t: any) => (
                           <motion.span 
                             key={t.id} 
-                            className="inline-block bg-purple-500/20 backdrop-blur-sm text-purple-300 text-xs font-semibold px-3 py-1 rounded-full"
+                            className="inline-block bg-[var(--color-accent-secondary)]/20 backdrop-blur-sm text-[var(--color-accent-secondary)] text-xs font-semibold px-3 py-1 rounded-full"
                             whileHover={{ scale: 1.05 }}
                             transition={{ duration: 0.2 }}
                           >
@@ -634,7 +481,7 @@ export default function BlogPage() {
                         ))
                       ) : (
                         <motion.span 
-                          className="inline-block bg-purple-500/20 backdrop-blur-sm text-purple-300 text-xs font-semibold px-3 py-1 rounded-full"
+                          className="inline-block bg-[var(--color-accent-secondary)]/20 backdrop-blur-sm text-[var(--color-accent-secondary)] text-xs font-semibold px-3 py-1 rounded-full"
                           whileHover={{ scale: 1.05 }}
                           transition={{ duration: 0.2 }}
                         >
@@ -644,23 +491,23 @@ export default function BlogPage() {
                     </div>
                     
                     <div className="px-6">
-                      <h2 className="text-2xl font-bold mb-4 text-white group-hover:text-purple-300 transition-colors line-clamp-2">
+                      <h2 className="text-2xl font-bold mb-4 text-[var(--color-text-primary)] group-hover:text-[var(--color-accent-secondary)] transition-colors line-clamp-2">
                         <Link to={`/blog/${article.slug}`}>{article.title}</Link>
                       </h2>
-                      <p className="text-gray-400 mb-6 line-clamp-3 leading-relaxed">{article.excerpt}</p>
-                      <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                      <p className="text-[var(--color-text-tertiary)] mb-6 line-clamp-3 leading-relaxed">{article.excerpt}</p>
+                      <div className="flex items-center justify-between text-sm text-[var(--color-text-tertiary)] mb-6">
                         <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-purple-400" />
-                          <span className="text-gray-300">{formatDate(article.created_at)}</span>
+                          <Calendar className="h-4 w-4 text-[var(--color-accent-secondary)]" />
+                          <span className="text-[var(--color-text-secondary)]">{formatDate(article.created_at)}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-purple-400" />
-                          <span className="text-gray-300">Author</span>
+                          <User className="h-4 w-4 text-[var(--color-accent-secondary)]" />
+                          <span className="text-[var(--color-text-secondary)]">Author</span>
                         </div>
                       </div>
                       <Link
                         to={`/blog/${article.slug}`}
-                        className="inline-flex items-center text-purple-400 hover:text-purple-300 font-semibold group/ln transition-all duration-300"
+                        className="inline-flex items-center text-[var(--color-accent-secondary)] hover:text-[var(--color-accent-primary)] font-semibold group/ln transition-all duration-300"
                       >
                         Read More 
                         <motion.div
@@ -673,51 +520,7 @@ export default function BlogPage() {
                       </Link>
                     </div>
                   </motion.article>
-                ))
-              : activeDocs.map((doc, index) => (
-                  <motion.div
-                    key={doc.id}
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{ y: -10, transition: { duration: 0.2 } }}
-                    className="group bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm rounded-2xl hover:shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 overflow-hidden relative"
-                  >
-                    {/* Doc Content */}
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <FileText className="h-8 w-8 text-blue-400" />
-                        <span className="text-xs font-medium text-blue-400 bg-blue-500/20 px-3 py-1 rounded-full">
-                          {doc.category}
-                        </span>
-                      </div>
-
-                      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors">
-                        {doc.title}
-                      </h3>
-
-                      <p className="text-gray-400 mb-6 leading-relaxed">
-                        {doc.description}
-                      </p>
-
-                      <div className="flex items-center justify-between">
-                        <Link
-                          to={`/docs/${doc.slug}`}
-                          className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium transition-colors group"
-                        >
-                          Read Doc
-                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                        
-                        <div className="text-xs text-gray-500">
-                          Updated {formatDate(doc.updated_at)}
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))
-            }            
+                ))}
           </div>
         )}
       </div>

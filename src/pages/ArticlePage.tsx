@@ -241,16 +241,16 @@ export default function ArticlePage() {
           articles: similarArticles,
           title: 'Similar Topics',
           icon: TrendingUp,
-          colorClass: 'from-purple-600 to-purple-700',
-          hoverColor: 'text-purple-600'
+          colorClass: 'from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)]',
+          hoverColor: 'text-[var(--color-accent-secondary)]'
         }
       case 'recommended':
         return {
           articles: recommendedArticles,
           title: 'Recommended Articles',
           icon: Star,
-          colorClass: 'from-green-600 to-green-700',
-          hoverColor: 'text-green-600'
+          colorClass: 'from-[var(--heatmap-best)] to-[var(--heatmap-good)]',
+          hoverColor: 'text-[var(--heatmap-best)]'
         }
       case 'hot':
         return {
@@ -265,16 +265,16 @@ export default function ArticlePage() {
           articles: latestArticles,
           title: 'Latest Articles',
           icon: Clock,
-          colorClass: 'from-blue-600 to-blue-700',
-          hoverColor: 'text-blue-600'
+          colorClass: 'from-[var(--chart-color-3)] to-[var(--chart-color-2)]',
+          hoverColor: 'text-[var(--chart-color-3)]'
         }
       default:
         return {
           articles: similarArticles,
           title: 'Similar Topics',
           icon: TrendingUp,
-          colorClass: 'from-purple-600 to-purple-700',
-          hoverColor: 'text-purple-600'
+          colorClass: 'from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)]',
+          hoverColor: 'text-[var(--color-accent-secondary)]'
         }
     }
   }
@@ -405,14 +405,14 @@ export default function ArticlePage() {
           {/* Admin Actions Bar */}
           {isAdmin && (
             <div className="flex items-center justify-between mb-6 pb-6 border-b border-gray-200">
-              <div className="flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <div className="flex items-center gap-2 bg-[var(--heatmap-best)]/20 text-[var(--heatmap-best)] px-3 py-1 rounded-full text-sm font-medium">
+                  <div className="w-2 h-2 bg-[var(--heatmap-best)] rounded-full animate-pulse"></div>
                 Admin Mode
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleEditArticle}
-                  className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+                  className="flex items-center gap-2 bg-[var(--chart-color-3)] text-[var(--color-text-primary)] px-4 py-2 rounded-md hover:bg-[var(--chart-color-2)] transition-colors"
                 >
                   <Edit className="h-4 w-4" />
                   Edit Article
@@ -547,8 +547,8 @@ export default function ArticlePage() {
                     onClick={() => setActiveTab('similar')}
                     className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       activeTab === 'similar' 
-                        ? 'bg-purple-100 text-purple-700' 
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                          ? 'bg-[var(--color-accent-secondary)]/20 text-[var(--color-accent-secondary)]' 
+                          : 'text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-bg)]'
                     }`}
                   >
                     <TrendingUp className="h-4 w-4" />
@@ -558,8 +558,8 @@ export default function ArticlePage() {
                     onClick={() => setActiveTab('recommended')}
                     className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       activeTab === 'recommended' 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                          ? 'bg-[var(--heatmap-best)]/20 text-[var(--heatmap-best)]' 
+                          : 'text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-bg)]'
                     }`}
                   >
                     <Star className="h-4 w-4" />
@@ -569,8 +569,8 @@ export default function ArticlePage() {
                     onClick={() => setActiveTab('hot')}
                     className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       activeTab === 'hot' 
-                        ? 'bg-orange-100 text-orange-700' 
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                          ? 'bg-[var(--heatmap-caution)]/20 text-[var(--heatmap-caution)]' 
+                          : 'text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-bg)]'
                     }`}
                   >
                     <Flame className="h-4 w-4" />
@@ -580,8 +580,8 @@ export default function ArticlePage() {
                     onClick={() => setActiveTab('latest')}
                     className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       activeTab === 'latest' 
-                        ? 'bg-blue-100 text-blue-700' 
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                          ? 'bg-[var(--chart-color-3)]/20 text-[var(--chart-color-3)]' 
+                          : 'text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-bg)]'
                     }`}
                   >
                     <Clock className="h-4 w-4" />

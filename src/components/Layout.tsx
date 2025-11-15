@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import AdminMenu from './AdminMenu'
+import UserMenu from './UserMenu'
 import CookieConsent from './CookieConsent'
 import { getCurrentUser } from '../lib/api'
 import { CookieManager } from '../lib/cookies'
@@ -15,7 +16,9 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [showAdminMenu, setShowAdminMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [hasUserSession, setHasUserSession] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -26,18 +29,28 @@ export default function Layout({ children }: LayoutProps) {
     if (import.meta.env.DEV) {
       registerVisitedPath(location.pathname)
       // Trigger backend scanner (non-blocking)
-      fetch((import.meta as any).env?.VITE_API_URL?.replace(/\/$/, '') + '/dev/scan').catch(()=>{})
+      const apiUrl = import.meta.env.VITE_API_URL as string | undefined;
+      if (apiUrl) {
+        fetch(apiUrl.replace(/\/$/, '') + '/dev/scan').catch(()=>{})
+      }
     }
     // Check if user is admin
-    const user = getCurrentUser();
+    const user = getCurrentUser() as { role?: string } | null;
     const adminRoutes = ['/admin', '/admin/', '/admin/articles', '/admin/users'];
     const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith(route));
     
+    setHasUserSession(Boolean(user));
+
     if (user && (user.role === 'admin' || isAdminRoute)) {
+      setShowUserMenu(false);
       setIsAdmin(true);
     } else {
       setIsAdmin(false);
       setShowAdminMenu(false);
+    }
+
+    if (!user) {
+      setShowUserMenu(false);
     }
   }, [location.pathname]);
 
@@ -46,14 +59,17 @@ export default function Layout({ children }: LayoutProps) {
     const pathname = location.pathname;
     
     // Editor routes that should hide footer
-    const editorPatterns = [
-      /^\/admin\/articles\/(new|edit\/)/,  // /admin/articles/new or /admin/articles/edit/:id
-      /^\/admin\/pages\/(new|.*\/edit)$/,   // /admin/pages/new or /admin/pages/:slug/edit
-      /^\/admin\/universities\/(new|edit\/)/, // /admin/universities/new or /admin/universities/edit/:id
-      /^\/admin\/university-groups\/(new|edit\/)/, // /admin/university-groups/new or /admin/university-groups/edit/:id
-      /^\/write-article(\/\d+)?$/,  // /write-article or /write-article/:id
-      /^\/admin\/review$/,  // /admin/review
-    ];
+        const editorPatterns = [
+          /^\/admin\/articles\/(new|edit\/)?/,  // keep backward compatibility
+          /^\/admin\/articles\/(new|edit\/)\d?.*/,  // relaxed match
+          /^\/admin\/pages\/(new|.*\/edit)$/,
+          /^\/admin\/universities\/(new|edit\/)\d?.*/,
+          /^\/admin\/university-groups\/(new|edit\/)\d?.*/,
+          /^\/write-article(\/\d+)?$/,
+          /^\/admin\/[\w-]+\/Posts\/(add|edit\/.*)$/,
+          /^\/user\/[\w-]+\/Posts\/(add|edit\/.*)$/,
+          /^\/admin\/review$/,
+        ];
     
     return editorPatterns.some(pattern => pattern.test(pathname));
   };
@@ -65,6 +81,8 @@ export default function Layout({ children }: LayoutProps) {
       <Navbar 
         onAdminMenuToggle={() => setShowAdminMenu(!showAdminMenu)}
         showAdminMenu={showAdminMenu}
+        onUserMenuToggle={() => setShowUserMenu(!showUserMenu)}
+        showUserMenu={showUserMenu}
         isAdmin={isAdmin}
       />
       <main className="flex-grow">
@@ -75,6 +93,12 @@ export default function Layout({ children }: LayoutProps) {
         <AdminMenu 
           isOpen={showAdminMenu} 
           onToggle={() => setShowAdminMenu(!showAdminMenu)} 
+        />
+      )}
+      {!isAdmin && hasUserSession && (
+        <UserMenu
+          isOpen={showUserMenu}
+          onToggle={() => setShowUserMenu(!showUserMenu)}
         />
       )}
       <CookieConsent />

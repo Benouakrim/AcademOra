@@ -9,7 +9,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-black to-purple-900/20 text-white mt-auto">
+    <footer className="bg-gradient-to-br from-[var(--color-bg-secondary)] via-[var(--color-bg-primary)] to-[var(--color-accent-secondary)]/20 text-[var(--color-text-primary)] mt-auto">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
@@ -24,17 +24,17 @@ export default function Footer() {
               <motion.div
                 animate={{ 
                   rotate: [0, 5, -5, 0],
-                  boxShadow: ["0 0 20px rgba(139, 92, 246, 0.5)", "0 0 40px rgba(139, 92, 246, 0.8)", "0 0 20px rgba(139, 92, 246, 0.5)"]
+                  boxShadow: ["0 0 20px var(--color-accent-secondary)/50", "0 0 40px var(--color-accent-secondary)/80", "0 0 20px var(--color-accent-secondary)/50"]
                 }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
-                <GraduationCap className="h-10 w-10 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                <GraduationCap className="h-10 w-10 text-[var(--color-accent-secondary)] group-hover:text-[var(--color-accent-primary)] transition-colors" />
               </motion.div>
-              <span className="text-3xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+              <span className="text-3xl font-black bg-gradient-to-r from-[var(--color-accent-secondary)] via-[var(--color-accent-primary)] to-[var(--heatmap-good)] bg-clip-text text-transparent">
                 AcademOra
               </span>
             </Link>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-[var(--color-text-tertiary)] text-sm leading-relaxed">
               Your gateway to finding the perfect university match. Connect with institutions worldwide and discover your academic future.
             </p>
             <div className="flex space-x-4">
@@ -48,7 +48,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-purple-400 transition-colors p-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 hover:bg-purple-900/20 hover:border-purple-500/30"
+                  className="text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-secondary)] transition-colors p-2 bg-[var(--color-interactive-bg)] backdrop-blur-sm rounded-lg border border-[var(--color-border-primary)] hover:bg-[var(--color-accent-secondary)]/20 hover:border-[var(--color-accent-secondary)]/30"
                   aria-label={social.label}
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
@@ -66,7 +66,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h3 className="text-lg font-semibold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h3 className="text-lg font-semibold mb-6 bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] bg-clip-text text-transparent">
               Quick Links
             </h3>
             <ul className="space-y-3">
@@ -87,7 +87,7 @@ export default function Footer() {
                 >
                   <Link
                     to={link.to}
-                    className="text-gray-400 hover:text-purple-400 transition-all duration-300 text-sm flex items-center gap-2 group"
+                    className="text-[var(--color-text-tertiary)] hover:text-[var(--color-accent-secondary)] transition-all duration-300 text-sm flex items-center gap-2 group"
                   >
                     <Sparkles className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.label}
@@ -104,14 +104,14 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h3 className="text-lg font-semibold mb-6 bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
+            <h3 className="text-lg font-semibold mb-6 bg-gradient-to-r from-[var(--heatmap-good)] to-[var(--heatmap-best)] bg-clip-text text-transparent">
               Resources
             </h3>
             <ul className="space-y-3">
               {[
                 { to: "/contact", label: "Contact Us" },
                 { to: "/policy", label: "Privacy Policy" },
-                { to: "/docs", label: "Documentation" },
+                { to: "/our-company?tab=docs", label: "Documentation" },
                 { to: "/compare", label: "Compare Universities" }
               ].map((link, index) => (
                 <motion.li
@@ -123,7 +123,7 @@ export default function Footer() {
                 >
                   <Link
                     to={link.to}
-                    className="text-gray-400 hover:text-blue-400 transition-all duration-300 text-sm flex items-center gap-2 group"
+                    className="text-[var(--color-text-tertiary)] hover:text-[var(--heatmap-good)] transition-all duration-300 text-sm flex items-center gap-2 group"
                   >
                     <Sparkles className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {link.label}
@@ -140,7 +140,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h3 className="text-lg font-semibold mb-6 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+            <h3 className="text-lg font-semibold mb-6 bg-gradient-to-r from-[var(--heatmap-best)] to-[var(--ambient-color-3)] bg-clip-text text-transparent">
               Get in Touch
             </h3>
             <ul className="space-y-4">
@@ -153,15 +153,15 @@ export default function Footer() {
               >
                 <motion.div
                   animate={{ 
-                    boxShadow: ["0 0 20px rgba(16, 185, 129, 0.5)", "0 0 40px rgba(16, 185, 129, 0.8)", "0 0 20px rgba(16, 185, 129, 0.5)"]
+                    boxShadow: ["0 0 20px var(--heatmap-best)/50", "0 0 40px var(--heatmap-best)/80", "0 0 20px var(--heatmap-best)/50"]
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <Mail className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
+                  <Mail className="h-5 w-5 text-[var(--heatmap-best)] mt-0.5 flex-shrink-0" />
                 </motion.div>
                 <a
                   href="mailto:contact@academora.com"
-                  className="text-gray-400 hover:text-green-400 transition-colors text-sm"
+                  className="text-[var(--color-text-tertiary)] hover:text-[var(--heatmap-best)] transition-colors text-sm"
                 >
                   contact@academora.com
                 </a>
@@ -172,18 +172,18 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <motion.div 
-          className="border-t border-gray-700/50 mt-12 pt-8"
+          className="border-t border-[var(--color-border-secondary)] mt-12 pt-8"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-400 text-sm flex items-center gap-2">
+            <p className="text-[var(--color-text-tertiary)] text-sm flex items-center gap-2">
               © {currentYear} AcademOra. All rights reserved.
             </p>
             <motion.div 
-              className="text-gray-500 text-xs flex items-center gap-2"
+              className="text-[var(--color-text-tertiary)] text-xs flex items-center gap-2"
               animate={{ opacity: [0.7, 1, 0.7] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
@@ -192,7 +192,7 @@ export default function Footer() {
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               >
-                <Heart className="w-4 h-4 text-red-400 fill-current" />
+                <Heart className="w-4 h-4 text-[var(--heatmap-risk)] fill-current" />
               </motion.div>
               for students worldwide
             </motion.div>

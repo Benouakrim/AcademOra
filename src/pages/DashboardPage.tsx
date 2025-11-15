@@ -27,6 +27,8 @@ import {
   Download,
   Trash2,
   ShieldAlert,
+  FileText,
+  PenSquare,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import {
@@ -654,6 +656,8 @@ export default function DashboardPage() {
             <div className="mt-5 grid gap-4 md:grid-cols-2">
               <QuickAction icon={Compass} title="University Matcher" description="Refresh your matches" to="/matching-engine" />
               <QuickAction icon={BookOpen} title="Read Articles" description="New guidance weekly" to="/blog" />
+              <QuickAction icon={FileText} title="My Articles" description="Review your published work" to="/my-articles" />
+              <QuickAction icon={PenSquare} title="Write Article" description="Share your insights with the community" to="/write-article" />
               <QuickAction icon={GraduationCap} title="Orientation Hub" description="Explore curated tracks" to="/orientation" />
               <QuickAction icon={Mail} title="Stay in touch" description="Update your notifications" to="/contact" />
             </div>
@@ -1450,7 +1454,7 @@ export default function DashboardPage() {
           icon={BookOpen}
           title="Docs & guides"
           description="Learn how to use AcademOra with step-by-step tutorials."
-          action={{ label: 'View guides', href: '/docs' }}
+          action={{ label: 'View guides', href: '/our-company?tab=docs' }}
         />
         <SupportCard
           icon={Compass}
@@ -1462,7 +1466,7 @@ export default function DashboardPage() {
           icon={Crown}
           title="Feature roadmap"
           description="See what’s coming next and vote on new features."
-          action={{ label: 'Roadmap', href: '/blog?view=docs' }}
+          action={{ label: 'Roadmap', href: '/blog' }}
         />
       </div>
       <button

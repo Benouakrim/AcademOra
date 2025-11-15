@@ -256,7 +256,7 @@ export default function UniversityComparePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-[var(--color-bg-primary)]">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <motion.div
@@ -266,23 +266,23 @@ export default function UniversityComparePage() {
         >
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl">
-                <BarChart3 className="w-8 h-8 text-white" />
+              <div className="p-3 bg-gradient-to-br from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] rounded-xl">
+                <BarChart3 className="w-8 h-8 text-[var(--color-text-primary)]" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Compare Universities</h1>
-                <p className="text-gray-600">Side-by-side analysis of up to 5 universities</p>
+                <h1 className="text-3xl font-bold text-[var(--color-text-primary)]">Compare Universities</h1>
+                <p className="text-[var(--color-text-secondary)]">Side-by-side analysis of up to 5 universities</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="text-sm text-gray-600 bg-white px-4 py-2 rounded-lg border">
+              <div className="text-sm text-[var(--color-text-secondary)] bg-[var(--color-bg-primary)] px-4 py-2 rounded-lg border border-[var(--color-border-secondary)]">
                 <span className="font-medium">{selected.length}/5</span> selected
               </div>
               {selected.length >= 2 && (
                 <div className="flex gap-2">
                   <button
                     onClick={() => setShowSaveModal(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] text-[var(--color-text-primary)] rounded-lg text-sm font-medium hover:from-[var(--color-accent-primary)] hover:to-[var(--color-accent-secondary)] transition-colors"
                   >
                     <Save className="w-4 h-4" />
                     Save
@@ -291,8 +291,8 @@ export default function UniversityComparePage() {
                     onClick={() => setViewMode('table')}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       viewMode === 'table' 
-                        ? 'bg-blue-500 text-white' 
-                        : 'bg-white text-gray-700 border hover:bg-gray-50'
+                        ? 'bg-[var(--color-interactive-bg)] text-[var(--color-text-primary)]' 
+                        : 'bg-[var(--color-bg-primary)] text-[var(--color-text-secondary)] border border-[var(--color-border-secondary)] hover:bg-[var(--color-interactive-bg)]'
                     }`}
                   >
                     Table
@@ -301,8 +301,8 @@ export default function UniversityComparePage() {
                     onClick={() => setViewMode('cards')}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       viewMode === 'cards' 
-                        ? 'bg-blue-500 text-white' 
-                        : 'bg-white text-gray-700 border hover:bg-gray-50'
+                        ? 'bg-[var(--color-interactive-bg)] text-[var(--color-text-primary)]' 
+                        : 'bg-[var(--color-bg-primary)] text-[var(--color-text-secondary)] border border-[var(--color-border-secondary)] hover:bg-[var(--color-interactive-bg)]'
                     }`}
                   >
                     Cards
@@ -311,8 +311,8 @@ export default function UniversityComparePage() {
                     onClick={() => setViewMode('charts')}
                     className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       viewMode === 'charts' 
-                        ? 'bg-blue-500 text-white' 
-                        : 'bg-white text-gray-700 border hover:bg-gray-50'
+                        ? 'bg-[var(--color-interactive-bg)] text-[var(--color-text-primary)]' 
+                        : 'bg-[var(--color-bg-primary)] text-[var(--color-text-secondary)] border border-[var(--color-border-secondary)] hover:bg-[var(--color-interactive-bg)]'
                     }`}
                   >
                     Charts
@@ -327,10 +327,10 @@ export default function UniversityComparePage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 rounded-xl border border-amber-300 bg-amber-50 px-5 py-4 flex items-center gap-3"
+            className="mb-6 rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] px-5 py-4 flex items-center gap-3"
           >
-            <AlertCircle className="w-5 h-5 text-amber-600" />
-            <span className="text-sm text-amber-800">{errorMessage}</span>
+            <AlertCircle className="w-5 h-5 text-[var(--heatmap-caution)]" />
+            <span className="text-sm text-[var(--color-text-primary)]">{errorMessage}</span>
           </motion.div>
         )}
 
@@ -342,19 +342,19 @@ export default function UniversityComparePage() {
             className="space-y-4"
           >
             {/* Search */}
-            <div className="bg-white rounded-xl border shadow-sm p-5">
+            <div className="bg-[var(--color-bg-primary)] rounded-xl border border-[var(--color-border-secondary)] shadow-sm p-5">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[var(--color-text-tertiary)]" />
                 <input
-                  className="w-full border rounded-lg pl-10 pr-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full border border-[var(--color-border-secondary)] rounded-lg pl-10 pr-4 py-3 text-sm focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]"
                   placeholder="Search universities..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
               </div>
-              <div className="text-xs text-gray-500 mt-3 flex items-center justify-between">
+              <div className="text-xs text-[var(--color-text-tertiary)] mt-3 flex items-center justify-between">
                 <span>{loading ? 'Loading…' : `${filtered.length} universities`}</span>
-                {!canAdd && <span className="text-amber-600 font-medium">Max 5 reached</span>}
+                {!canAdd && <span className="text-[var(--heatmap-caution)] font-medium">Max 5 reached</span>}
               </div>
               
               <div className="max-h-96 overflow-auto divide-y mt-4 -mx-5">
@@ -365,22 +365,22 @@ export default function UniversityComparePage() {
                       key={u.id}
                       onClick={() => isSelected ? remove(u.id) : add(u)}
                       disabled={!canAdd && !isSelected}
-                      className={`w-full text-left px-5 py-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
-                        isSelected ? 'bg-blue-50 hover:bg-blue-100' : ''
+                      className={`w-full text-left px-5 py-3 hover:bg-[var(--color-interactive-bg)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
+                        isSelected ? 'bg-[var(--color-interactive-bg)] hover:bg-[var(--color-interactive-bg-hover)]' : ''
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm text-gray-900 truncate flex items-center gap-2">
-                            {isSelected && <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />}
+                          <div className="font-medium text-sm text-[var(--color-text-primary)] truncate flex items-center gap-2">
+                            {isSelected && <Check className="w-4 h-4 text-[var(--chart-color-3)] flex-shrink-0" />}
                             {u.name}
                           </div>
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className="text-xs text-[var(--color-text-tertiary)] mt-1">
                             {u.country}{u.city ? ` • ${u.city}` : ''}
                           </div>
                         </div>
                         {!isSelected && canAdd && (
-                          <Plus className="w-5 h-5 text-gray-400 flex-shrink-0 ml-2" />
+                          <Plus className="w-5 h-5 text-[var(--color-text-tertiary)] flex-shrink-0 ml-2" />
                         )}
                       </div>
                     </button>
@@ -394,13 +394,13 @@ export default function UniversityComparePage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-xl border shadow-sm p-5"
+                className="bg-[var(--color-bg-primary)] rounded-xl border border-[var(--color-border-secondary)] shadow-sm p-5"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-semibold text-gray-900">Selected for Comparison</h3>
+                  <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">Selected for Comparison</h3>
                   <button
                     onClick={() => setSelected([])}
-                    className="text-xs text-red-600 hover:text-red-700 font-medium"
+                    className="text-xs text-[var(--heatmap-risk)] hover:opacity-80 font-medium"
                   >
                     Clear all
                   </button>
@@ -412,17 +412,17 @@ export default function UniversityComparePage() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-100"
+                      className="flex items-center gap-3 p-3 bg-[var(--color-interactive-bg)] rounded-lg border border-[var(--color-border-secondary)]"
                     >
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-gray-900 truncate">{s.name}</div>
-                        <div className="text-xs text-gray-600">{s.country}</div>
+                        <div className="text-sm font-medium text-[var(--color-text-primary)] truncate">{s.name}</div>
+                        <div className="text-xs text-[var(--color-text-secondary)]">{s.country}</div>
                       </div>
                       <button
                         onClick={() => remove(s.id)}
-                        className="p-1 hover:bg-red-100 rounded-full transition-colors"
+                        className="p-1 hover:bg-[var(--color-interactive-bg)] rounded-full transition-colors"
                       >
-                        <X className="w-4 h-4 text-red-600" />
+                        <X className="w-4 h-4 text-[var(--heatmap-risk)]" />
                       </button>
                     </motion.div>
                   ))}
@@ -437,17 +437,17 @@ export default function UniversityComparePage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-xl border shadow-sm p-12 text-center"
+                className="bg-[var(--color-bg-primary)] rounded-xl border border-[var(--color-border-secondary)] shadow-sm p-12 text-center"
               >
                 <div className="max-w-md mx-auto">
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Target className="w-10 h-10 text-blue-600" />
+                  <div className="w-20 h-20 bg-[var(--color-interactive-bg)] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Target className="w-10 h-10 text-[var(--chart-color-3)]" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Ready to Compare?</h3>
-                  <p className="text-gray-600 mb-6">
+                  <h3 className="text-xl font-bold text-[var(--color-text-primary)] mb-2">Ready to Compare?</h3>
+                  <p className="text-[var(--color-text-secondary)] mb-6">
                     Select 2 or more universities from the list to see a detailed side-by-side comparison with insights and recommendations.
                   </p>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-[var(--color-text-tertiary)]">
                     💡 Tip: You can compare up to 5 universities at once
                   </div>
                 </div>
@@ -456,14 +456,14 @@ export default function UniversityComparePage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-xl border shadow-sm p-12 text-center"
+                className="bg-[var(--color-bg-primary)] rounded-xl border border-[var(--color-border-secondary)] shadow-sm p-12 text-center"
               >
                 <div className="max-w-md mx-auto">
-                  <div className="w-20 h-20 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Plus className="w-10 h-10 text-amber-600" />
+                  <div className="w-20 h-20 bg-[var(--color-interactive-bg)] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Plus className="w-10 h-10 text-[var(--heatmap-caution)]" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Add One More</h3>
-                  <p className="text-gray-600 mb-6">
+                  <h3 className="text-xl font-bold text-[var(--color-text-primary)] mb-2">Add One More</h3>
+                  <p className="text-[var(--color-text-secondary)] mb-6">
                     You've selected <strong>{selected[0].name}</strong>. Add at least one more university to start comparing.
                   </p>
                 </div>
@@ -475,29 +475,29 @@ export default function UniversityComparePage() {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200 p-5"
+                    className="bg-[var(--color-bg-secondary)] rounded-xl border border-[var(--color-border-primary)] p-5"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="p-2 bg-purple-100 rounded-lg">
-                        <Sparkles className="w-5 h-5 text-purple-600" />
+                      <div className="p-2 bg-[var(--color-interactive-bg)] rounded-lg">
+                        <Sparkles className="w-5 h-5 text-[var(--color-accent-secondary)]" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900 mb-1">Get Personalized Cost Estimates</h4>
-                        <p className="text-sm text-gray-700 mb-3">
+                        <h4 className="font-semibold text-[var(--color-text-primary)] mb-1">Get Personalized Cost Estimates</h4>
+                        <p className="text-sm text-[var(--color-text-secondary)] mb-3">
                           Complete your financial profile to see predicted costs and financial aid for each university in your comparison.
                         </p>
                         <button 
                           onClick={() => window.location.href = '/profile'}
-                          className="text-sm px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
+                          className="text-sm px-4 py-2 bg-[var(--color-accent-primary)] hover:bg-[var(--color-accent-secondary)] text-[var(--color-text-primary)] rounded-lg font-medium transition-colors"
                         >
                           Complete Profile
                         </button>
                       </div>
                       <button
                         onClick={() => setShowProfilePrompt(false)}
-                        className="p-1 hover:bg-purple-100 rounded-full transition-colors"
+                        className="p-1 hover:bg-[var(--color-interactive-bg)] rounded-full transition-colors"
                       >
-                        <X className="w-5 h-5 text-gray-500" />
+                        <X className="w-5 h-5 text-[var(--color-text-tertiary)]" />
                       </button>
                     </div>
                   </motion.div>
@@ -508,11 +508,11 @@ export default function UniversityComparePage() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 p-6"
+                    className="bg-[var(--color-bg-secondary)] rounded-xl border border-[var(--color-border-primary)] p-6"
                   >
                     <div className="flex items-center gap-2 mb-4">
-                      <Award className="w-5 h-5 text-green-600" />
-                      <h3 className="font-bold text-gray-900">Smart Recommendations</h3>
+                      <Award className="w-5 h-5 text-[var(--heatmap-best)]" />
+                      <h3 className="font-bold text-[var(--color-text-primary)]">Smart Recommendations</h3>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
                       {analysis.recommendations.map((rec, index) => (
@@ -521,13 +521,13 @@ export default function UniversityComparePage() {
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="bg-white rounded-lg p-4 border border-green-100"
+                          className="bg-[var(--color-bg-primary)] rounded-lg p-4 border border-[var(--color-border-secondary)]"
                         >
-                          <div className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">
+                          <div className="text-xs font-semibold text-[var(--heatmap-best)] uppercase tracking-wide mb-1">
                             {rec.type.replace(/_/g, ' ')}
                           </div>
-                          <div className="font-medium text-gray-900 mb-1">{rec.university_name}</div>
-                          <div className="text-xs text-gray-600">{rec.reason}</div>
+                          <div className="font-medium text-[var(--color-text-primary)] mb-1">{rec.university_name}</div>
+                          <div className="text-xs text-[var(--color-text-secondary)]">{rec.reason}</div>
                         </motion.div>
                       ))}
                     </div>
@@ -536,10 +536,10 @@ export default function UniversityComparePage() {
 
                 {/* Comparison Table/Cards/Charts */}
                 {loadingComparison ? (
-                  <div className="bg-white rounded-xl border shadow-sm p-12">
+                  <div className="bg-[var(--color-bg-primary)] rounded-xl border border-[var(--color-border-secondary)] shadow-sm p-12">
                     <div className="flex flex-col items-center justify-center">
-                      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                      <div className="text-gray-600">Loading comparison data...</div>
+                      <div className="w-12 h-12 border-4 border-[var(--chart-color-3)] border-t-transparent rounded-full animate-spin mb-4"></div>
+                      <div className="text-[var(--color-text-secondary)]">Loading comparison data...</div>
                     </div>
                   </div>
                 ) : viewMode === 'table' ? (
@@ -549,22 +549,22 @@ export default function UniversityComparePage() {
                         key={section.section}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-white rounded-xl border shadow-sm overflow-hidden"
+                        className="bg-[var(--color-bg-primary)] rounded-xl border border-[var(--color-border-secondary)] shadow-sm overflow-hidden"
                       >
                         <button
                           onClick={() => toggleSection(section.section)}
-                          className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
+                          className="w-full flex items-center justify-between p-5 hover:bg-[var(--color-interactive-bg)] transition-colors"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+                            <div className="p-2 bg-[var(--color-interactive-bg)] rounded-lg text-[var(--color-accent-primary)]">
                               {section.icon}
                             </div>
-                            <h3 className="font-bold text-gray-900">{section.title}</h3>
+                            <h3 className="font-bold text-[var(--color-text-primary)]">{section.title}</h3>
                           </div>
                           {expandedSections.has(section.section) ? (
-                            <ChevronUp className="w-5 h-5 text-gray-400" />
+                            <ChevronUp className="w-5 h-5 text-[var(--color-text-tertiary)]" />
                           ) : (
-                            <ChevronDown className="w-5 h-5 text-gray-400" />
+                            <ChevronDown className="w-5 h-5 text-[var(--color-text-tertiary)]" />
                           )}
                         </button>
                         
@@ -580,12 +580,12 @@ export default function UniversityComparePage() {
                               <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                   <thead>
-                                    <tr className="border-t border-b bg-gray-50">
-                                      <th className="text-left p-4 font-semibold text-gray-700 sticky left-0 bg-gray-50 z-10">Metric</th>
+                                    <tr className="border-t border-b bg-[var(--color-bg-secondary)]">
+                                      <th className="text-left p-4 font-semibold text-[var(--color-text-secondary)] sticky left-0 bg-[var(--color-bg-secondary)] z-10">Metric</th>
                                       {selected.map((u) => (
                                         <th key={u.id} className="text-left p-4 min-w-48">
-                                          <div className="font-semibold text-gray-900">{u.name}</div>
-                                          <div className="text-xs text-gray-500 font-normal mt-1">
+                                          <div className="font-semibold text-[var(--color-text-primary)]">{u.name}</div>
+                                          <div className="text-xs text-[var(--color-text-tertiary)] font-normal mt-1">
                                             {u.city}, {u.country}
                                           </div>
                                         </th>
@@ -594,10 +594,10 @@ export default function UniversityComparePage() {
                                   </thead>
                                   <tbody>
                                     {section.metrics.map((metric, idx) => (
-                                      <tr key={metric.key} className={`border-b last:border-0 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                                        <td className="p-4 font-medium text-gray-700 sticky left-0 bg-inherit">{metric.label}</td>
+                                      <tr key={metric.key} className={`border-b last:border-0 ${idx % 2 === 0 ? 'bg-[var(--color-bg-primary)]' : 'bg-[var(--color-bg-secondary)]'}`}>
+                                        <td className="p-4 font-medium text-[var(--color-text-secondary)] sticky left-0 bg-inherit">{metric.label}</td>
                                         {selected.map((u) => (
-                                          <td key={u.id} className="p-4 text-gray-900">
+                                          <td key={u.id} className="p-4 text-[var(--color-text-primary)]">
                                             {metric.format((u as any)[metric.key])}
                                           </td>
                                         ))}
@@ -617,22 +617,22 @@ export default function UniversityComparePage() {
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 overflow-hidden"
+                        className="bg-[var(--color-bg-secondary)] rounded-xl border border-[var(--color-border-primary)] overflow-hidden"
                       >
                         <button
                           onClick={() => toggleSection('predictions')}
-                          className="w-full flex items-center justify-between p-5 hover:bg-purple-100/50 transition-colors"
+                          className="w-full flex items-center justify-between p-5 hover:bg-[var(--color-interactive-bg)] transition-colors"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
+                            <div className="p-2 bg-[var(--color-interactive-bg)] rounded-lg text-[var(--color-accent-secondary)]">
                               <Sparkles className="w-5 h-5" />
                             </div>
-                            <h3 className="font-bold text-gray-900">Your Predicted Costs</h3>
+                            <h3 className="font-bold text-[var(--color-text-primary)]">Your Predicted Costs</h3>
                           </div>
                           {expandedSections.has('predictions') ? (
-                            <ChevronUp className="w-5 h-5 text-gray-400" />
+                            <ChevronUp className="w-5 h-5 text-[var(--color-text-tertiary)]" />
                           ) : (
-                            <ChevronDown className="w-5 h-5 text-gray-400" />
+                            <ChevronDown className="w-5 h-5 text-[var(--color-text-tertiary)]" />
                           )}
                         </button>
                         
@@ -645,14 +645,14 @@ export default function UniversityComparePage() {
                               transition={{ duration: 0.2 }}
                               className="overflow-hidden"
                             >
-                              <div className="overflow-x-auto bg-white">
+                              <div className="overflow-x-auto bg-[var(--color-bg-primary)]">
                                 <table className="w-full text-sm">
                                   <thead>
-                                    <tr className="border-t border-b bg-purple-50">
-                                      <th className="text-left p-4 font-semibold text-gray-700 sticky left-0 bg-purple-50 z-10">Cost Component</th>
+                                      <tr className="border-t border-b bg-[var(--color-bg-secondary)]">
+                                      <th className="text-left p-4 font-semibold text-[var(--color-text-secondary)] sticky left-0 bg-[var(--color-bg-secondary)] z-10">Cost Component</th>
                                       {selected.map((u) => (
                                         <th key={u.id} className="text-left p-4 min-w-48">
-                                          <div className="font-semibold text-gray-900">{u.name}</div>
+                                          <div className="font-semibold text-[var(--color-text-primary)]">{u.name}</div>
                                         </th>
                                       ))}
                                     </tr>
@@ -665,8 +665,8 @@ export default function UniversityComparePage() {
                                       { key: 'cost_of_living', label: 'Cost of Living' },
                                       { key: 'total_out_of_pocket', label: 'Total Out-of-Pocket' },
                                     ].map((item, idx) => (
-                                      <tr key={item.key} className={`border-b last:border-0 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
-                                        <td className={`p-4 font-medium text-gray-700 sticky left-0 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+                                      <tr key={item.key} className={`border-b last:border-0 ${idx % 2 === 0 ? 'bg-[var(--color-bg-primary)]' : 'bg-[var(--color-bg-secondary)]'}`}>
+                                        <td className={`p-4 font-medium text-[var(--color-text-secondary)] sticky left-0 ${idx % 2 === 0 ? 'bg-[var(--color-bg-primary)]' : 'bg-[var(--color-bg-secondary)]'}`}>
                                           {item.label}
                                         </td>
                                         {selected.map((u) => {
@@ -674,9 +674,9 @@ export default function UniversityComparePage() {
                                           const value = pred?.prediction?.[item.key]
                                           return (
                                             <td key={u.id} className={`p-4 font-semibold ${
-                                              item.key === 'total_out_of_pocket' ? 'text-purple-600' :
-                                              item.key === 'estimated_aid' ? 'text-green-600' :
-                                              'text-gray-900'
+                                              item.key === 'total_out_of_pocket' ? 'text-[var(--color-accent-secondary)]' :
+                                              item.key === 'estimated_aid' ? 'text-[var(--heatmap-best)]' :
+                                              'text-[var(--color-text-primary)]'
                                             }`}>
                                               {value ? `$${value.toLocaleString()}` : '—'}
                                             </td>
@@ -703,52 +703,52 @@ export default function UniversityComparePage() {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="bg-white rounded-xl border shadow-md p-6"
+                          className="bg-[var(--color-bg-primary)] rounded-xl border border-[var(--color-border-secondary)] shadow-md p-6"
                         >
                           <div className="flex items-start justify-between mb-4">
                             <div>
-                              <h3 className="text-xl font-bold text-gray-900">{university.name}</h3>
-                              <p className="text-gray-600">{university.city}, {university.country}</p>
+                              <h3 className="text-xl font-bold text-[var(--color-text-primary)]">{university.name}</h3>
+                              <p className="text-[var(--color-text-secondary)]">{university.city}, {university.country}</p>
                             </div>
                             <button
                               onClick={() => remove(university.id)}
-                              className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                              className="p-2 hover:bg-[var(--color-interactive-bg)] rounded-lg transition-colors"
                             >
-                              <X className="w-5 h-5 text-red-600" />
+                              <X className="w-5 h-5 text-[var(--heatmap-risk)]" />
                             </button>
                           </div>
 
                           <div className="grid md:grid-cols-3 gap-4">
-                            <div className="bg-blue-50 rounded-lg p-4">
-                              <div className="text-xs text-blue-600 font-semibold mb-1">RANKING</div>
-                              <div className="text-2xl font-bold text-blue-900">
+                            <div className="bg-[var(--color-interactive-bg)] rounded-lg p-4">
+                              <div className="text-xs text-[var(--chart-color-3)] font-semibold mb-1">RANKING</div>
+                              <div className="text-2xl font-bold text-[var(--color-text-primary)]">
                                 {university.ranking_global ? `#${university.ranking_global}` : '—'}
                               </div>
                             </div>
-                            <div className="bg-green-50 rounded-lg p-4">
-                              <div className="text-xs text-green-600 font-semibold mb-1">ACCEPTANCE</div>
-                              <div className="text-2xl font-bold text-green-900">
+                            <div className="bg-[var(--color-interactive-bg)] rounded-lg p-4">
+                              <div className="text-xs text-[var(--heatmap-best)] font-semibold mb-1">ACCEPTANCE</div>
+                              <div className="text-2xl font-bold text-[var(--color-text-primary)]">
                                 {university.acceptance_rate ? `${university.acceptance_rate}%` : '—'}
                               </div>
                             </div>
-                            <div className="bg-purple-50 rounded-lg p-4">
-                              <div className="text-xs text-purple-600 font-semibold mb-1">TUITION</div>
-                              <div className="text-2xl font-bold text-purple-900">
+                            <div className="bg-[var(--color-interactive-bg)] rounded-lg p-4">
+                              <div className="text-xs text-[var(--color-accent-secondary)] font-semibold mb-1">TUITION</div>
+                              <div className="text-2xl font-bold text-[var(--color-text-primary)]">
                                 {formatCurrency(university.avg_tuition_per_year)}
                               </div>
                             </div>
                           </div>
 
                           {prediction && (
-                            <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                            <div className="mt-4 p-4 bg-[var(--color-bg-secondary)] rounded-lg border border-[var(--color-border-primary)]">
                               <div className="flex items-center gap-2 mb-2">
-                                <Sparkles className="w-4 h-4 text-purple-600" />
-                                <div className="text-sm font-semibold text-gray-900">Your Predicted Cost</div>
+                                <Sparkles className="w-4 h-4 text-[var(--color-accent-secondary)]" />
+                                <div className="text-sm font-semibold text-[var(--color-text-primary)]">Your Predicted Cost</div>
                               </div>
-                              <div className="text-3xl font-bold text-purple-600 mb-1">
+                              <div className="text-3xl font-bold text-[var(--color-accent-secondary)] mb-1">
                                 ${prediction.prediction.total_out_of_pocket.toLocaleString()}
                               </div>
-                              <div className="text-xs text-gray-600">
+                              <div className="text-xs text-[var(--color-text-secondary)]">
                                 After ${prediction.prediction.estimated_aid.toLocaleString()} estimated aid
                               </div>
                             </div>
@@ -782,46 +782,46 @@ export default function UniversityComparePage() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6"
+                className="bg-[var(--color-bg-primary)] rounded-2xl shadow-2xl max-w-md w-full p-6"
                 onClick={(e) => e.stopPropagation()}
               >
                 {saveSuccess ? (
                   <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Check className="w-8 h-8 text-green-600" />
+                    <div className="w-16 h-16 bg-[var(--color-interactive-bg)] rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Check className="w-8 h-8 text-[var(--heatmap-best)]" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Saved Successfully!</h3>
-                    <p className="text-gray-600">Your comparison has been saved</p>
+                    <h3 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">Saved Successfully!</h3>
+                    <p className="text-[var(--color-text-secondary)]">Your comparison has been saved</p>
                   </div>
                 ) : (
                   <>
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl">
-                        <Bookmark className="w-6 h-6 text-white" />
+                      <div className="p-3 bg-gradient-to-br from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] rounded-xl">
+                        <Bookmark className="w-6 h-6 text-[var(--color-text-primary)]" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-gray-900">Save Comparison</h3>
-                        <p className="text-sm text-gray-600">Save this comparison for later viewing</p>
+                        <h3 className="text-xl font-bold text-[var(--color-text-primary)]">Save Comparison</h3>
+                        <p className="text-sm text-[var(--color-text-secondary)]">Save this comparison for later viewing</p>
                       </div>
                     </div>
 
                     <div className="space-y-4 mb-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Comparison Name <span className="text-red-500">*</span>
+                        <label className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
+                          Comparison Name <span className="text-[var(--heatmap-risk)]">*</span>
                         </label>
                         <input
                           type="text"
                           value={saveName}
                           onChange={(e) => setSaveName(e.target.value)}
                           placeholder="e.g., Top Engineering Schools 2025"
-                          className="w-full border rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          className="w-full border border-[var(--color-border-secondary)] rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]"
                           disabled={saving}
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
                           Description (optional)
                         </label>
                         <textarea
@@ -829,17 +829,17 @@ export default function UniversityComparePage() {
                           onChange={(e) => setSaveDescription(e.target.value)}
                           placeholder="Add notes about this comparison..."
                           rows={3}
-                          className="w-full border rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                          className="w-full border border-[var(--color-border-secondary)] rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--color-accent-primary)] focus:border-transparent resize-none bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]"
                           disabled={saving}
                         />
                       </div>
 
-                      <div className="bg-gray-50 rounded-lg p-3">
-                        <div className="text-xs font-medium text-gray-700 mb-2">Universities to save:</div>
+                      <div className="bg-[var(--color-bg-secondary)] rounded-lg p-3">
+                        <div className="text-xs font-medium text-[var(--color-text-secondary)] mb-2">Universities to save:</div>
                         <div className="space-y-1">
                           {selected.map((u) => (
-                            <div key={u.id} className="text-sm text-gray-600 flex items-center gap-2">
-                              <Check className="w-3 h-3 text-green-600" />
+                            <div key={u.id} className="text-sm text-[var(--color-text-secondary)] flex items-center gap-2">
+                              <Check className="w-3 h-3 text-[var(--heatmap-best)]" />
                               {u.name}
                             </div>
                           ))}
@@ -851,14 +851,14 @@ export default function UniversityComparePage() {
                       <button
                         onClick={() => setShowSaveModal(false)}
                         disabled={saving}
-                        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                        className="flex-1 px-4 py-3 border border-[var(--color-border-secondary)] rounded-lg text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-interactive-bg)] transition-colors disabled:opacity-50"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={handleSaveComparison}
                         disabled={saving || !saveName.trim()}
-                        className="flex-1 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg text-sm font-medium hover:from-green-600 hover:to-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 px-4 py-3 bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] text-[var(--color-text-primary)] rounded-lg text-sm font-medium hover:from-[var(--color-accent-primary)] hover:to-[var(--color-accent-secondary)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {saving ? 'Saving...' : 'Save Comparison'}
                       </button>

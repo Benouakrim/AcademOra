@@ -319,17 +319,17 @@ const categories = [
 const statusConfig = {
   live: {
     label: 'Live',
-    color: 'bg-green-500/20 text-green-300 border-green-500/30',
+    color: 'bg-[var(--heatmap-best)]/20 text-[var(--heatmap-best)] border-[var(--heatmap-best)]/30',
     icon: <CheckCircle2 className="w-3 h-3" />
   },
   beta: {
     label: 'Beta',
-    color: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    color: 'bg-[var(--chart-color-3)]/20 text-[var(--chart-color-3)] border-[var(--chart-color-3)]/30',
     icon: <Sparkles className="w-3 h-3" />
   },
   'coming-soon': {
     label: 'Coming Soon',
-    color: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+    color: 'bg-[var(--color-accent-secondary)]/20 text-[var(--color-accent-secondary)] border-[var(--color-accent-secondary)]/30',
     icon: <Clock className="w-3 h-3" />
   }
 }
@@ -372,35 +372,35 @@ export default function ExplorePage() {
             className="text-center"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-6">
-              <Sparkles className="w-4 h-4 text-purple-300" />
-              <span className="text-sm font-medium text-purple-200">Platform Features</span>
+              <Sparkles className="w-4 h-4 text-[var(--color-accent-secondary)]" />
+              <span className="text-sm font-medium text-[var(--color-text-secondary)]">Platform Features</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[var(--color-accent-secondary)] via-[var(--color-accent-primary)] to-[var(--chart-color-3)] bg-clip-text text-transparent">
                 Explore Everything
               </span>
               <br />
-              <span className="text-white">AcademOra Has to Offer</span>
+              <span className="text-[var(--color-text-primary)]">AcademOra Has to Offer</span>
             </h1>
 
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-[var(--color-text-secondary)] max-w-3xl mx-auto mb-8">
               Discover our comprehensive suite of tools, resources, and features designed to guide you through every step of your academic journey.
             </p>
 
             {/* Feature Stats */}
             <div className="flex flex-wrap justify-center gap-6 mb-12">
-              <div className="px-6 py-3 bg-green-500/10 backdrop-blur-sm rounded-full border border-green-500/20">
-                <span className="text-2xl font-bold text-green-400">{liveCount}</span>
-                <span className="text-sm text-green-300 ml-2">Live Features</span>
+              <div className="px-6 py-3 bg-[var(--heatmap-best)]/10 backdrop-blur-sm rounded-full border border-[var(--heatmap-best)]/20">
+                <span className="text-2xl font-bold text-[var(--heatmap-best)]">{liveCount}</span>
+                <span className="text-sm text-[var(--heatmap-best)] ml-2">Live Features</span>
               </div>
-              <div className="px-6 py-3 bg-blue-500/10 backdrop-blur-sm rounded-full border border-blue-500/20">
-                <span className="text-2xl font-bold text-blue-400">{betaCount}</span>
-                <span className="text-sm text-blue-300 ml-2">In Beta</span>
+              <div className="px-6 py-3 bg-[var(--chart-color-3)]/10 backdrop-blur-sm rounded-full border border-[var(--chart-color-3)]/20">
+                <span className="text-2xl font-bold text-[var(--chart-color-3)]">{betaCount}</span>
+                <span className="text-sm text-[var(--chart-color-3)] ml-2">In Beta</span>
               </div>
-              <div className="px-6 py-3 bg-purple-500/10 backdrop-blur-sm rounded-full border border-purple-500/20">
-                <span className="text-2xl font-bold text-purple-400">{comingSoonCount}</span>
-                <span className="text-sm text-purple-300 ml-2">Coming Soon</span>
+              <div className="px-6 py-3 bg-[var(--color-accent-secondary)]/10 backdrop-blur-sm rounded-full border border-[var(--color-accent-secondary)]/20">
+                <span className="text-2xl font-bold text-[var(--color-accent-secondary)]">{comingSoonCount}</span>
+                <span className="text-sm text-[var(--color-accent-secondary)] ml-2">Coming Soon</span>
               </div>
             </div>
           </motion.div>
@@ -474,30 +474,30 @@ export default function ExplorePage() {
                   </div>
 
                   {/* Icon */}
-                  <div className="mb-4 text-purple-400 group-hover:scale-110 transition-transform duration-300">
+                  <div className="mb-4 text-[var(--color-accent-secondary)] group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold mb-2 text-white group-hover:text-purple-400 transition-colors">
+                  <h3 className="text-xl font-bold mb-2 text-[var(--color-text-primary)] group-hover:text-[var(--color-accent-secondary)] transition-colors">
                     {feature.title}
                   </h3>
                   
-                  <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                  <p className="text-[var(--color-text-tertiary)] text-sm mb-4 line-clamp-2">
                     {feature.description}
                   </p>
 
                   {/* Additional Info */}
                   <div className="space-y-2">
                     {feature.estimatedLaunch && (
-                      <div className="flex items-center gap-2 text-xs text-purple-300">
+                      <div className="flex items-center gap-2 text-xs text-[var(--color-accent-secondary)]">
                         <Calendar className="w-3 h-3" />
                         <span>Expected: {feature.estimatedLaunch}</span>
                       </div>
                     )}
                     
                     {feature.availability && (
-                      <div className="flex items-center gap-2 text-xs text-blue-300">
+                      <div className="flex items-center gap-2 text-xs text-[var(--chart-color-3)]">
                         <Lock className="w-3 h-3" />
                         <span>{feature.availability}</span>
                       </div>
@@ -506,12 +506,12 @@ export default function ExplorePage() {
 
                   {/* Hover Indicator */}
                   <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowRight className="w-5 h-5 text-purple-400" />
+                    <ArrowRight className="w-5 h-5 text-[var(--color-accent-secondary)]" />
                   </div>
 
                   {/* Gradient Overlay on Hover */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-pink-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent-secondary)]/10 to-[var(--color-accent-primary)]/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     initial={false}
                   />
                 </motion.div>
@@ -530,19 +530,19 @@ export default function ExplorePage() {
             viewport={{ once: true }}
             className="bg-white/5 backdrop-blur-md rounded-3xl p-12 border border-white/10"
           >
-            <Sparkles className="w-16 h-16 text-purple-400 mx-auto mb-6" />
+            <Sparkles className="w-16 h-16 text-[var(--color-accent-secondary)] mx-auto mb-6" />
             <h2 className="text-4xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] bg-clip-text text-transparent">
                 Ready to Get Started?
               </span>
             </h2>
-            <p className="text-xl text-gray-300 mb-8">
+            <p className="text-xl text-[var(--color-text-secondary)] mb-8">
               Join thousands of students using AcademOra to find their perfect university match
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/register"
-                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300"
+                className="px-8 py-4 bg-gradient-to-r from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-[var(--color-accent-secondary)]/25 transition-all duration-300"
               >
                 Start Your Journey
               </Link>
@@ -590,28 +590,28 @@ export default function ExplorePage() {
 
               {/* Icon & Title */}
               <div className="flex items-start gap-4 mb-6">
-                <div className="text-purple-400 p-3 bg-purple-500/10 rounded-xl">
+                <div className="text-[var(--color-accent-secondary)] p-3 bg-[var(--color-accent-secondary)]/10 rounded-xl">
                   {selectedFeature.icon}
                 </div>
                 <div>
                   <h2 className="text-3xl font-bold mb-2">{selectedFeature.title}</h2>
-                  <p className="text-gray-400">{selectedFeature.description}</p>
+                  <p className="text-[var(--color-text-tertiary)]">{selectedFeature.description}</p>
                 </div>
               </div>
 
               {/* Long Description */}
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-3 text-purple-300">About This Feature</h3>
-                <p className="text-gray-300 leading-relaxed">{selectedFeature.longDescription}</p>
+                <h3 className="text-lg font-semibold mb-3 text-[var(--color-accent-secondary)]">About This Feature</h3>
+                <p className="text-[var(--color-text-secondary)] leading-relaxed">{selectedFeature.longDescription}</p>
               </div>
 
               {/* Benefits */}
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-3 text-purple-300">Key Benefits</h3>
+                <h3 className="text-lg font-semibold mb-3 text-[var(--color-accent-secondary)]">Key Benefits</h3>
                 <ul className="space-y-2">
                   {selectedFeature.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start gap-3 text-gray-300">
-                      <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                    <li key={index} className="flex items-start gap-3 text-[var(--color-text-secondary)]">
+                      <CheckCircle2 className="w-5 h-5 text-[var(--heatmap-best)] flex-shrink-0 mt-0.5" />
                       <span>{benefit}</span>
                     </li>
                   ))}
@@ -622,13 +622,13 @@ export default function ExplorePage() {
               {(selectedFeature.estimatedLaunch || selectedFeature.availability) && (
                 <div className="mb-6 p-4 bg-white/5 rounded-xl border border-white/10">
                   {selectedFeature.estimatedLaunch && (
-                    <div className="flex items-center gap-2 text-sm text-purple-300 mb-2">
+                    <div className="flex items-center gap-2 text-sm text-[var(--color-accent-secondary)] mb-2">
                       <Calendar className="w-4 h-4" />
                       <span>Expected Launch: {selectedFeature.estimatedLaunch}</span>
                     </div>
                   )}
                   {selectedFeature.availability && (
-                    <div className="flex items-center gap-2 text-sm text-blue-300">
+                    <div className="flex items-center gap-2 text-sm text-[var(--chart-color-3)]">
                       <Lock className="w-4 h-4" />
                       <span>{selectedFeature.availability}</span>
                     </div>

@@ -390,10 +390,10 @@ export default function UniversityDetailPage() {
 
   if (loading) {
     return (
-      <div className="bg-gray-50 min-h-screen py-12">
+      <div className="bg-[var(--color-bg-primary)] min-h-screen py-12">
         <div className="text-center py-20">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">Loading university...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--chart-color-3)]"></div>
+          <p className="mt-4 text-[var(--color-text-secondary)]">Loading university...</p>
         </div>
       </div>
     )
@@ -401,12 +401,12 @@ export default function UniversityDetailPage() {
 
   if (error || !university) {
     return (
-      <div className="bg-gray-50 min-h-screen py-12">
+      <div className="bg-[var(--color-bg-primary)] min-h-screen py-12">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="bg-white rounded-lg shadow-lg p-12">
-            <XCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">University Not Found</h1>
-            <p className="text-gray-600 mb-6">{error || 'The university you are looking for does not exist.'}</p>
+          <div className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-lg p-12">
+            <XCircle className="h-16 w-16 text-[var(--heatmap-risk)] mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-[var(--color-text-primary)] mb-2">University Not Found</h1>
+            <p className="text-[var(--color-text-secondary)] mb-6">{error || 'The university you are looking for does not exist.'}</p>
             <Link to="/orientation/schools" className="btn-primary inline-flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
               Back to Schools
@@ -438,15 +438,15 @@ export default function UniversityDetailPage() {
   const englishReqs = parseJson(university.international_english_reqs)
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-[var(--color-bg-primary)] min-h-screen">
       <SEO title={`${university.name} | AcademOra`} description={university.description?.slice(0, 150)} />
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-primary-600 to-primary-800 text-white">
+      <div className="relative bg-gradient-to-br from-[var(--color-accent-secondary)] to-[var(--color-accent-primary)] text-[var(--color-text-primary)]">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Link
             to="/orientation/schools"
-            className="inline-flex items-center gap-2 text-white/90 hover:text-white mb-6 text-sm font-medium"
+            className="inline-flex items-center gap-2 text-[var(--color-text-primary)] hover:opacity-90 mb-6 text-sm font-medium"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Schools
@@ -459,11 +459,11 @@ export default function UniversityDetailPage() {
                 <img
                   src={university.logo_url}
                   alt={university.name}
-                  className="w-32 h-32 object-contain bg-white rounded-lg p-4 shadow-lg"
+                  className="w-32 h-32 object-contain bg-[var(--color-bg-primary)] rounded-lg p-4 shadow-lg"
                   onError={() => setImageError(true)}
                 />
               ) : (
-                <div className="w-32 h-32 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center text-4xl font-bold">
+                <div className="w-32 h-32 bg-[var(--color-interactive-bg)] backdrop-blur-sm rounded-lg flex items-center justify-center text-4xl font-bold text-[var(--color-text-primary)]">
                   {(university.name || 'U')[0].toUpperCase()}
                 </div>
               )}
@@ -475,51 +475,51 @@ export default function UniversityDetailPage() {
                 <div>
                   <h1 className="text-4xl md:text-5xl font-bold mb-2">{university.name}</h1>
                   {university.short_name && (
-                    <p className="text-xl text-white/90 mb-2">{university.short_name}</p>
+                    <p className="text-xl text-[var(--color-text-primary)] mb-2">{university.short_name}</p>
                   )}
                   {(location || country) && (
-                    <div className="flex items-center gap-2 text-white/90">
+                    <div className="flex items-center gap-2 text-[var(--color-text-primary)]">
                       <MapPin className="h-5 w-5" />
                       <span>{location ? `${location}, ` : ''}{country}</span>
-                      {university.campus_setting && <span className="text-white/70">• {university.campus_setting}</span>}
+                      {university.campus_setting && <span className="text-[var(--color-text-secondary)]">• {university.campus_setting}</span>}
                     </div>
                   )}
                 </div>
                 {university.ranking_world && (
-                  <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg text-center">
-                    <div className="text-sm text-white/80">World Ranking</div>
+                  <div className="bg-[var(--color-interactive-bg)] backdrop-blur-sm px-4 py-2 rounded-lg text-center">
+                    <div className="text-sm text-[var(--color-text-secondary)]">World Ranking</div>
                     <div className="text-3xl font-bold">#{university.ranking_world}</div>
                   </div>
                 )}
               </div>
 
               {university.description && (
-                <p className="text-white/90 text-lg mb-4 max-w-3xl">{university.description}</p>
+                <p className="text-[var(--color-text-primary)] text-lg mb-4 max-w-3xl">{university.description}</p>
               )}
 
               {/* Quick Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                 {university.acceptance_rate && (
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                    <div className="text-xs text-white/80 mb-1">Acceptance Rate</div>
+                  <div className="bg-[var(--color-interactive-bg)] backdrop-blur-sm rounded-lg p-3">
+                    <div className="text-xs text-[var(--color-text-secondary)] mb-1">Acceptance Rate</div>
                     <div className="text-2xl font-bold">{university.acceptance_rate}%</div>
                   </div>
                 )}
                 {tuition > 0 && (
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                    <div className="text-xs text-white/80 mb-1">Annual Tuition</div>
+                  <div className="bg-[var(--color-interactive-bg)] backdrop-blur-sm rounded-lg p-3">
+                    <div className="text-xs text-[var(--color-text-secondary)] mb-1">Annual Tuition</div>
                     <div className="text-2xl font-bold">${(tuition / 1000).toFixed(0)}k</div>
                   </div>
                 )}
                 {university.total_enrollment && (
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                    <div className="text-xs text-white/80 mb-1">Total Students</div>
+                  <div className="bg-[var(--color-interactive-bg)] backdrop-blur-sm rounded-lg p-3">
+                    <div className="text-xs text-[var(--color-text-secondary)] mb-1">Total Students</div>
                     <div className="text-2xl font-bold">{university.total_enrollment.toLocaleString()}</div>
                   </div>
                 )}
                 {university.established_year && (
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                    <div className="text-xs text-white/80 mb-1">Established</div>
+                  <div className="bg-[var(--color-interactive-bg)] backdrop-blur-sm rounded-lg p-3">
+                    <div className="text-xs text-[var(--color-text-secondary)] mb-1">Established</div>
                     <div className="text-2xl font-bold">{university.established_year}</div>
                   </div>
                 )}
@@ -531,14 +531,14 @@ export default function UniversityDetailPage() {
                   itemType="university"
                   itemId={university.id}
                   itemData={{ name: university.name, slug: university.slug, location: `${location}, ${country}` }}
-                  className="bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30"
+                  className="bg-[var(--color-interactive-bg)] backdrop-blur-sm text-[var(--color-text-primary)] border border-[var(--color-border-secondary)] hover:bg-[var(--color-interactive-bg-hover)]"
                 />
                 {university.website_url && (
                   <a
                     href={university.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-white text-primary-600 px-4 py-2 rounded-lg font-semibold hover:bg-white/90 transition-colors"
+                    className="inline-flex items-center gap-2 bg-[var(--color-bg-primary)] text-[var(--color-accent-primary)] px-4 py-2 rounded-lg font-semibold hover:bg-[var(--color-interactive-bg)] transition-colors"
                   >
                     <ExternalLink className="h-4 w-4" />
                     Visit Website
@@ -549,7 +549,7 @@ export default function UniversityDetailPage() {
                     href={university.program_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition-colors"
+                    className="inline-flex items-center gap-2 bg-[var(--color-interactive-bg)] backdrop-blur-sm text-[var(--color-text-primary)] px-4 py-2 rounded-lg font-semibold hover:bg-[var(--color-interactive-bg-hover)] transition-colors"
                   >
                     <School className="h-4 w-4" />
                     View Programs
@@ -571,7 +571,7 @@ export default function UniversityDetailPage() {
             <SectionCard
               icon={<Building className="h-6 w-6" />}
               title="General Information"
-              className="bg-white rounded-lg shadow-sm p-6"
+              className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-sm p-6"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <InfoItem label="Institution Type" value={university.institution_type} />
@@ -587,22 +587,22 @@ export default function UniversityDetailPage() {
             <SectionCard
               icon={<Users className="h-6 w-6" />}
               title="Student Reviews"
-              className="bg-white rounded-lg shadow-sm p-6"
+              className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-sm p-6"
             >
               <div className="space-y-6">
-                <form onSubmit={submitReview} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <form onSubmit={submitReview} className="bg-[var(--color-bg-secondary)] rounded-lg p-4 border border-[var(--color-border-secondary)]">
                   <div className="flex flex-col md:flex-row md:items-center gap-3">
                     <div>
-                      <div className="text-xs text-gray-600 mb-1">Your Rating</div>
-                      <select value={myRating} onChange={(e)=> setMyRating(Number(e.target.value))} className="border rounded px-2 py-1 text-sm">
+                      <div className="text-xs text-[var(--color-text-secondary)] mb-1">Your Rating</div>
+                      <select value={myRating} onChange={(e)=> setMyRating(Number(e.target.value))} className="border border-[var(--color-border-secondary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded px-2 py-1 text-sm">
                         <option value={0}>Select…</option>
                         {[1,2,3,4,5].map(n => <option key={n} value={n}>{n} / 5</option>)}
                       </select>
                     </div>
                     <div className="flex-1">
-                      <div className="text-xs text-gray-600 mb-1">Comment (optional)</div>
+                      <div className="text-xs text-[var(--color-text-secondary)] mb-1">Comment (optional)</div>
                       <input value={myComment} onChange={(e)=> setMyComment(e.target.value)} placeholder="Share your experience"
-                        className="w-full border rounded px-3 py-2 text-sm" />
+                        className="w-full border border-[var(--color-border-secondary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded px-3 py-2 text-sm" />
                     </div>
                     <div>
                       <button disabled={!myRating || savingReview} className="btn-primary text-sm">
@@ -614,14 +614,14 @@ export default function UniversityDetailPage() {
 
                 <div className="divide-y">
                   {reviews.length === 0 ? (
-                    <div className="text-sm text-gray-500">No reviews yet.</div>
+                    <div className="text-sm text-[var(--color-text-tertiary)]">No reviews yet.</div>
                   ) : reviews.map((r) => (
                     <div key={r.id} className="py-3">
                       <div className="flex items-center justify-between">
-                        <div className="text-sm font-semibold text-gray-900">{r.rating} / 5</div>
-                        <div className="text-xs text-gray-500">{new Date(r.created_at).toLocaleDateString()}</div>
+                        <div className="text-sm font-semibold text-[var(--color-text-primary)]">{r.rating} / 5</div>
+                        <div className="text-xs text-[var(--color-text-tertiary)]">{new Date(r.created_at).toLocaleDateString()}</div>
                       </div>
-                      {r.comment && <div className="text-sm text-gray-700 mt-1">{r.comment}</div>}
+                      {r.comment && <div className="text-sm text-[var(--color-text-secondary)] mt-1">{r.comment}</div>}
                     </div>
                   ))}
                 </div>
@@ -632,7 +632,7 @@ export default function UniversityDetailPage() {
             <SectionCard
               icon={<MapPin className="h-6 w-6" />}
               title="Location & Campus"
-              className="bg-white rounded-lg shadow-sm p-6"
+              className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-sm p-6"
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <InfoItem label="City" value={location || 'N/A'} />
@@ -650,10 +650,10 @@ export default function UniversityDetailPage() {
               </div>
               {university.student_life_tags && university.student_life_tags.length > 0 && (
                 <div className="mt-6">
-                  <div className="text-sm font-medium text-gray-700 mb-3">Student Life Tags</div>
+                  <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-3">Student Life Tags</div>
                   <div className="flex flex-wrap gap-2">
                     {university.student_life_tags.map((tag, idx) => (
-                      <span key={idx} className="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm">
+                      <span key={idx} className="px-3 py-1 bg-[var(--color-interactive-bg)] text-[var(--color-accent-primary)] rounded-full text-sm">
                         {tag}
                       </span>
                     ))}
@@ -666,16 +666,16 @@ export default function UniversityDetailPage() {
             <SectionCard
               icon={<GraduationCap className="h-6 w-6" />}
               title="Academics"
-              className="bg-white rounded-lg shadow-sm p-6"
+              className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-sm p-6"
             >
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {university.degree_levels_offered && university.degree_levels_offered.length > 0 && (
                     <div>
-                      <div className="text-sm font-medium text-gray-700 mb-2">Degree Levels</div>
+                      <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-2">Degree Levels</div>
                       <div className="flex flex-wrap gap-2">
                         {university.degree_levels_offered.map((level, idx) => (
-                          <span key={idx} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
+                          <span key={idx} className="px-3 py-1 bg-[var(--color-interactive-bg)] text-[var(--chart-color-3)] rounded-full text-sm">
                             {level}
                           </span>
                         ))}
@@ -689,10 +689,10 @@ export default function UniversityDetailPage() {
                   )}
                   {university.languages_of_instruction && university.languages_of_instruction.length > 0 && (
                     <div className="md:col-span-2">
-                      <div className="text-sm font-medium text-gray-700 mb-2">Languages of Instruction</div>
+                      <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-2">Languages of Instruction</div>
                       <div className="flex flex-wrap gap-2">
                         {university.languages_of_instruction.map((lang, idx) => (
-                          <span key={idx} className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm">
+                          <span key={idx} className="px-3 py-1 bg-[var(--color-interactive-bg)] text-[var(--heatmap-best)] rounded-full text-sm">
                             {lang}
                           </span>
                         ))}
@@ -701,15 +701,15 @@ export default function UniversityDetailPage() {
                   )}
                 </div>
 
-                {university.top_ranked_programs && university.top_ranked_programs.length > 0 && (
+                  {university.top_ranked_programs && university.top_ranked_programs.length > 0 && (
                   <div>
-                    <div className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
-                      <Trophy className="h-4 w-4 text-yellow-600" />
+                    <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-3 flex items-center gap-2">
+                      <Trophy className="h-4 w-4 text-[var(--heatmap-good)]" />
                       Top Ranked Programs
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {university.top_ranked_programs.map((program, idx) => (
-                        <span key={idx} className="px-4 py-2 bg-yellow-50 text-yellow-800 rounded-lg text-sm font-semibold border border-yellow-200">
+                        <span key={idx} className="px-4 py-2 bg-[var(--color-bg-secondary)] text-[var(--color-text-primary)] rounded-lg text-sm font-semibold border border-[var(--color-border-secondary)]">
                           {program}
                         </span>
                       ))}
@@ -717,12 +717,12 @@ export default function UniversityDetailPage() {
                   </div>
                 )}
 
-                {university.interests && university.interests.length > 0 && (
+                  {university.interests && university.interests.length > 0 && (
                   <div>
-                    <div className="text-sm font-medium text-gray-700 mb-3">Academic Fields</div>
+                    <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-3">Academic Fields</div>
                     <div className="flex flex-wrap gap-2">
                       {university.interests.map((interest, idx) => (
-                        <span key={idx} className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm">
+                        <span key={idx} className="px-3 py-1 bg-[var(--color-interactive-bg)] text-[var(--color-accent-secondary)] rounded-full text-sm">
                           {interest}
                         </span>
                       ))}
@@ -730,21 +730,21 @@ export default function UniversityDetailPage() {
                   </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[var(--color-border-secondary)]">
                   <div className="flex items-center gap-3">
                     {university.study_abroad_opportunities ? (
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-[var(--heatmap-best)]" />
                     ) : (
-                      <XCircle className="h-5 w-5 text-gray-400" />
+                      <XCircle className="h-5 w-5 text-[var(--color-text-tertiary)]" />
                     )}
-                    <span className="text-sm text-gray-700">Study Abroad Available</span>
+                    <span className="text-sm text-[var(--color-text-secondary)]">Study Abroad Available</span>
                   </div>
                   {university.accreditation_body && (
                     <div className="flex items-center gap-2">
-                      <Shield className="h-5 w-5 text-blue-600" />
+                      <Shield className="h-5 w-5 text-[var(--chart-color-3)]" />
                       <div>
-                        <div className="text-xs text-gray-500">Accredited by</div>
-                        <div className="text-sm font-medium text-gray-900">{university.accreditation_body}</div>
+                        <div className="text-xs text-[var(--color-text-tertiary)]">Accredited by</div>
+                        <div className="text-sm font-medium text-[var(--color-text-primary)]">{university.accreditation_body}</div>
                       </div>
                     </div>
                   )}
@@ -756,7 +756,7 @@ export default function UniversityDetailPage() {
             <SectionCard
               icon={<BookOpen className="h-6 w-6" />}
               title="Admissions & Selectivity"
-              className="bg-white rounded-lg shadow-sm p-6"
+              className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-sm p-6"
             >
               <div className="space-y-6">
                 {/* Acceptance Rate with Progress Bar */}
@@ -768,7 +768,7 @@ export default function UniversityDetailPage() {
                       label="Acceptance Rate"
                       showLabel
                     />
-                    <div className="mt-1 text-xs text-gray-500">
+                    <div className="mt-1 text-xs text-[var(--color-text-tertiary)]">
                       {university.acceptance_rate < 20 ? 'Highly Selective' : 
                        university.acceptance_rate < 50 ? 'Selective' : 
                        university.acceptance_rate < 80 ? 'Moderately Selective' : 'Less Selective'}
@@ -781,8 +781,8 @@ export default function UniversityDetailPage() {
                   <InfoItem label="Test Policy" value={university.standardized_test_policy || 'N/A'} />
                   {university.sat_score_25th_percentile && university.sat_score_75th_percentile && (
                     <div>
-                      <div className="text-sm font-medium text-gray-700 mb-2">SAT Score Range</div>
-                      <div className="text-lg font-semibold text-gray-900">
+                      <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-2">SAT Score Range</div>
+                      <div className="text-lg font-semibold text-[var(--color-text-primary)]">
                         {university.sat_score_25th_percentile} - {university.sat_score_75th_percentile}
                       </div>
                     </div>
@@ -800,14 +800,14 @@ export default function UniversityDetailPage() {
 
                 {applicationDeadlines && (
                   <div>
-                    <div className="text-sm font-medium text-gray-700 mb-3">Application Deadlines</div>
+                    <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-3">Application Deadlines</div>
                     <div className="space-y-2">
                       {Object.entries(applicationDeadlines).map(([type, date]: [string, any]) => (
-                        <div key={type} className="flex items-center justify-between bg-gray-50 px-4 py-2 rounded-lg">
-                          <span className="text-sm font-medium text-gray-700 capitalize">
+                        <div key={type} className="flex items-center justify-between bg-[var(--color-bg-secondary)] px-4 py-2 rounded-lg">
+                          <span className="text-sm font-medium text-[var(--color-text-secondary)] capitalize">
                             {type.replace('_', ' ')}
                           </span>
-                          <span className="text-sm text-gray-900 font-semibold">{date}</span>
+                          <span className="text-sm text-[var(--color-text-primary)] font-semibold">{date}</span>
                         </div>
                       ))}
                     </div>
@@ -816,10 +816,10 @@ export default function UniversityDetailPage() {
 
                 {university.required_tests && university.required_tests.length > 0 && (
                   <div>
-                    <div className="text-sm font-medium text-gray-700 mb-2">Required Tests</div>
+                    <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-2">Required Tests</div>
                     <div className="flex flex-wrap gap-2">
                       {university.required_tests.map((test, idx) => (
-                        <span key={idx} className="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-sm">
+                        <span key={idx} className="px-3 py-1 bg-[var(--color-interactive-bg)] text-[var(--heatmap-caution)] rounded-full text-sm">
                           {test}
                         </span>
                       ))}
@@ -829,18 +829,18 @@ export default function UniversityDetailPage() {
 
                 {englishReqs && (
                   <div>
-                    <div className="text-sm font-medium text-gray-700 mb-2">English Requirements (International)</div>
+                    <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-2">English Requirements (International)</div>
                     <div className="grid grid-cols-2 gap-4">
                       {englishReqs.toefl_min && (
-                        <div className="bg-blue-50 px-4 py-2 rounded-lg">
-                          <div className="text-xs text-gray-600 mb-1">TOEFL</div>
-                          <div className="text-lg font-bold text-gray-900">Min: {englishReqs.toefl_min}</div>
+                        <div className="bg-[var(--color-interactive-bg)] px-4 py-2 rounded-lg">
+                          <div className="text-xs text-[var(--color-text-secondary)] mb-1">TOEFL</div>
+                          <div className="text-lg font-bold text-[var(--color-text-primary)]">Min: {englishReqs.toefl_min}</div>
                         </div>
                       )}
                       {englishReqs.ielts_min && (
-                        <div className="bg-blue-50 px-4 py-2 rounded-lg">
-                          <div className="text-xs text-gray-600 mb-1">IELTS</div>
-                          <div className="text-lg font-bold text-gray-900">Min: {englishReqs.ielts_min}</div>
+                        <div className="bg-[var(--color-interactive-bg)] px-4 py-2 rounded-lg">
+                          <div className="text-xs text-[var(--color-text-secondary)] mb-1">IELTS</div>
+                          <div className="text-lg font-bold text-[var(--color-text-primary)]">Min: {englishReqs.ielts_min}</div>
                         </div>
                       )}
                     </div>
@@ -853,7 +853,7 @@ export default function UniversityDetailPage() {
             <SectionCard
               icon={<DollarSign className="h-6 w-6" />}
               title="Financials & Aid"
-              className="bg-white rounded-lg shadow-sm p-6"
+              className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-sm p-6"
             >
               <div className="space-y-6">
                 {/* Tuition Comparison */}
@@ -887,22 +887,22 @@ export default function UniversityDetailPage() {
                 {university.cost_of_living_est && (
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Cost of Living (Annual)</span>
-                      <span className="text-lg font-bold text-gray-900">${university.cost_of_living_est.toLocaleString()}</span>
+                      <span className="text-sm font-medium text-[var(--color-text-secondary)]">Cost of Living (Annual)</span>
+                      <span className="text-lg font-bold text-[var(--color-text-primary)]">${university.cost_of_living_est.toLocaleString()}</span>
                     </div>
                   </div>
                 )}
 
                 {totalCost > 0 && (
-                  <div className="bg-gradient-to-r from-primary-50 to-primary-100 p-4 rounded-lg border border-primary-200">
+                  <div className="bg-[var(--color-bg-secondary)] p-4 rounded-lg border border-[var(--color-border-secondary)]">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">Estimated Total Cost (Tuition + Living)</span>
-                      <span className="text-2xl font-bold text-primary-700">${totalCost.toLocaleString()}/yr</span>
+                      <span className="text-sm font-medium text-[var(--color-text-secondary)]">Estimated Total Cost (Tuition + Living)</span>
+                      <span className="text-2xl font-bold text-[var(--color-accent-primary)]">${totalCost.toLocaleString()}/yr</span>
                     </div>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-[var(--color-border-secondary)]">
                   {university.percentage_receiving_aid && (
                     <div>
                       <ProgressBar
@@ -921,22 +921,22 @@ export default function UniversityDetailPage() {
                   )}
                 </div>
 
-                <div className="flex flex-wrap gap-4 pt-4 border-t border-gray-200">
+                <div className="flex flex-wrap gap-4 pt-4 border-t border-[var(--color-border-secondary)]">
                   <div className="flex items-center gap-2">
                     {university.scholarships_international ? (
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-[var(--heatmap-best)]" />
                     ) : (
-                      <XCircle className="h-5 w-5 text-gray-400" />
+                      <XCircle className="h-5 w-5 text-[var(--color-text-tertiary)]" />
                     )}
-                    <span className="text-sm text-gray-700">International Scholarships Available</span>
+                    <span className="text-sm text-[var(--color-text-secondary)]">International Scholarships Available</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {university.need_blind_admission ? (
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-[var(--heatmap-best)]" />
                     ) : (
-                      <XCircle className="h-5 w-5 text-gray-400" />
+                      <XCircle className="h-5 w-5 text-[var(--color-text-tertiary)]" />
                     )}
-                    <span className="text-sm text-gray-700">Need-Blind Admission</span>
+                    <span className="text-sm text-[var(--color-text-secondary)]">Need-Blind Admission</span>
                   </div>
                 </div>
               </div>
@@ -945,13 +945,13 @@ export default function UniversityDetailPage() {
             {/* Financial Aid Predictor */}
             <div className="mt-6 space-y-3">
               {financialProfileLoading && (
-                <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div className="flex items-center gap-2 text-sm text-[var(--color-text-tertiary)]">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   <span>Loading your financial profile...</span>
                 </div>
               )}
               {financialProfileError && (
-                <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+                <div className="flex items-center gap-2 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] px-3 py-2 text-sm text-[var(--heatmap-risk)]">
                   <AlertCircle className="h-4 w-4" />
                   <span>{financialProfileError}</span>
                 </div>
@@ -967,31 +967,31 @@ export default function UniversityDetailPage() {
             <SectionCard
               icon={<Users className="h-6 w-6" />}
               title="Student Demographics"
-              className="bg-white rounded-lg shadow-sm p-6"
+              className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-sm p-6"
             >
               <div className="space-y-6">
                 {/* Enrollment Breakdown */}
                 {university.total_enrollment && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-lg font-semibold text-gray-900">Total Enrollment</span>
-                      <span className="text-3xl font-bold text-primary-600">{university.total_enrollment.toLocaleString()}</span>
+                      <span className="text-lg font-semibold text-[var(--color-text-primary)]">Total Enrollment</span>
+                      <span className="text-3xl font-bold text-[var(--color-accent-primary)]">{university.total_enrollment.toLocaleString()}</span>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       {university.undergrad_enrollment && (
-                        <div className="bg-blue-50 p-4 rounded-lg">
-                          <div className="text-xs text-gray-600 mb-1">Undergraduate</div>
-                          <div className="text-xl font-bold text-gray-900">{university.undergrad_enrollment.toLocaleString()}</div>
-                          <div className="text-xs text-gray-500 mt-1">
+                        <div className="bg-[var(--color-interactive-bg)] p-4 rounded-lg">
+                          <div className="text-xs text-[var(--color-text-secondary)] mb-1">Undergraduate</div>
+                          <div className="text-xl font-bold text-[var(--color-text-primary)]">{university.undergrad_enrollment.toLocaleString()}</div>
+                          <div className="text-xs text-[var(--color-text-tertiary)] mt-1">
                             {((university.undergrad_enrollment / university.total_enrollment) * 100).toFixed(1)}%
                           </div>
                         </div>
                       )}
                       {university.grad_enrollment && (
-                        <div className="bg-purple-50 p-4 rounded-lg">
-                          <div className="text-xs text-gray-600 mb-1">Graduate</div>
-                          <div className="text-xl font-bold text-gray-900">{university.grad_enrollment.toLocaleString()}</div>
-                          <div className="text-xs text-gray-500 mt-1">
+                        <div className="bg-[var(--color-interactive-bg)] p-4 rounded-lg">
+                          <div className="text-xs text-[var(--color-text-secondary)] mb-1">Graduate</div>
+                          <div className="text-xl font-bold text-[var(--color-text-primary)]">{university.grad_enrollment.toLocaleString()}</div>
+                          <div className="text-xs text-[var(--color-text-tertiary)] mt-1">
                             {((university.grad_enrollment / university.total_enrollment) * 100).toFixed(1)}%
                           </div>
                         </div>
@@ -1032,7 +1032,7 @@ export default function UniversityDetailPage() {
             <SectionCard
               icon={<TrendingUp className="h-6 w-6" />}
               title="Future Outcomes"
-              className="bg-white rounded-lg shadow-sm p-6"
+              className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-sm p-6"
             >
               <div className="space-y-6">
                 {/* Graduation Rates */}
@@ -1085,10 +1085,10 @@ export default function UniversityDetailPage() {
                 </div>
 
                 {/* Support Ratings */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[var(--color-border-secondary)]">
                   {university.internship_placement_support && (
                     <div>
-                      <div className="text-sm font-medium text-gray-700 mb-2">Internship Support</div>
+                      <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-2">Internship Support</div>
                       <div className="flex items-center gap-2">
                         <div className="flex-1">
                           <ProgressBar 
@@ -1096,13 +1096,13 @@ export default function UniversityDetailPage() {
                             variant="info"
                           />
                         </div>
-                        <span className="text-sm font-bold text-gray-900">{university.internship_placement_support}/5</span>
+                        <span className="text-sm font-bold text-[var(--color-text-primary)]">{university.internship_placement_support}/5</span>
                       </div>
                     </div>
                   )}
                   {university.alumni_network_strength && (
                     <div>
-                      <div className="text-sm font-medium text-gray-700 mb-2">Alumni Network</div>
+                      <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-2">Alumni Network</div>
                       <div className="flex items-center gap-2">
                         <div className="flex-1">
                           <ProgressBar 
@@ -1110,15 +1110,15 @@ export default function UniversityDetailPage() {
                             variant="purple"
                           />
                         </div>
-                        <span className="text-sm font-bold text-gray-900">{university.alumni_network_strength}/5</span>
+                        <span className="text-sm font-bold text-[var(--color-text-primary)]">{university.alumni_network_strength}/5</span>
                       </div>
                     </div>
                   )}
                   {university.post_study_work_visa_months && (
                     <div>
-                      <div className="text-sm font-medium text-gray-700 mb-2">Post-Study Work Visa</div>
-                      <div className="text-2xl font-bold text-gray-900">{university.post_study_work_visa_months} months</div>
-                      <div className="text-xs text-gray-500 mt-1">Work authorization period</div>
+                      <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-2">Post-Study Work Visa</div>
+                      <div className="text-2xl font-bold text-[var(--color-text-primary)]">{university.post_study_work_visa_months} months</div>
+                      <div className="text-xs text-[var(--color-text-tertiary)] mt-1">Work authorization period</div>
                     </div>
                   )}
                 </div>
@@ -1163,9 +1163,9 @@ export default function UniversityDetailPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             {/* Quick Stats */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-primary-600" />
+            <div className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4 flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-[var(--color-accent-primary)]" />
                 Quick Stats
               </h3>
               <div className="space-y-4">
@@ -1191,9 +1191,9 @@ export default function UniversityDetailPage() {
             </div>
 
             {/* Key Highlights */}
-            <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-lg shadow-sm p-6 border border-primary-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <Zap className="h-5 w-5 text-primary-600" />
+            <div className="bg-[var(--color-bg-secondary)] rounded-lg shadow-sm p-6 border border-[var(--color-border-secondary)]">
+              <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4 flex items-center gap-2">
+                <Zap className="h-5 w-5 text-[var(--color-accent-primary)]" />
                 Key Highlights
               </h3>
               <div className="space-y-3">
@@ -1217,9 +1217,9 @@ export default function UniversityDetailPage() {
 
             {/* Contact & Links */}
             {(university.website_url || university.program_url) && (
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <ExternalLink className="h-5 w-5 text-primary-600" />
+              <div className="bg-[var(--color-bg-primary)] rounded-lg border border-[var(--color-border-secondary)] shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4 flex items-center gap-2">
+                  <ExternalLink className="h-5 w-5 text-[var(--color-accent-primary)]" />
                   Quick Links
                 </h3>
                 <div className="space-y-3">
@@ -1228,7 +1228,7 @@ export default function UniversityDetailPage() {
                       href={university.website_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium text-sm"
+                      className="flex items-center gap-2 text-[var(--color-accent-primary)] hover:opacity-90 font-medium text-sm"
                     >
                       <ExternalLink className="h-4 w-4" />
                       Official Website
@@ -1239,7 +1239,7 @@ export default function UniversityDetailPage() {
                       href={university.program_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium text-sm"
+                      className="flex items-center gap-2 text-[var(--color-accent-primary)] hover:opacity-90 font-medium text-sm"
                     >
                       <School className="h-4 w-4" />
                       Academic Programs
@@ -1255,15 +1255,15 @@ export default function UniversityDetailPage() {
     {/* Financial Profile Modal */}
     {showFinancialProfileModal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-        <div className="w-full max-w-xl rounded-2xl bg-white shadow-2xl">
-          <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+        <div className="w-full max-w-xl rounded-2xl bg-[var(--color-bg-primary)] shadow-2xl">
+          <div className="flex items-center justify-between border-b border-[var(--color-border-secondary)] px-6 py-4">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Financial Aid Profile</h3>
-              <p className="text-sm text-gray-500">We use this to personalize your aid predictions.</p>
+              <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">Financial Aid Profile</h3>
+              <p className="text-sm text-[var(--color-text-tertiary)]">We use this to personalize your aid predictions.</p>
             </div>
             <button
               onClick={handleCloseFinancialProfileModal}
-              className="rounded-full p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              className="rounded-full p-2 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] transition-colors"
               type="button"
             >
               <X className="h-5 w-5" />
@@ -1272,7 +1272,7 @@ export default function UniversityDetailPage() {
 
           <form onSubmit={handleSubmitFinancialProfile} className="px-6 py-5 space-y-5">
             {financialProfileModalError && (
-              <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+              <div className="flex items-center gap-2 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] px-3 py-2 text-sm text-[var(--heatmap-risk)]">
                 <AlertCircle className="h-4 w-4" />
                 <span>{financialProfileModalError}</span>
               </div>
@@ -1280,7 +1280,7 @@ export default function UniversityDetailPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">GPA</label>
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">GPA</label>
                 <input
                   type="number"
                   step="0.01"
@@ -1288,50 +1288,50 @@ export default function UniversityDetailPage() {
                   max="4.5"
                   value={financialProfileForm.gpa}
                   onChange={(e) => handleFinancialProfileInputChange('gpa', e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                  className="w-full rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] px-3 py-2 focus:border-[var(--color-accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-bg)]"
                   placeholder="e.g. 3.8"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">SAT Score</label>
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">SAT Score</label>
                 <input
                   type="number"
                   min="400"
                   max="1600"
                   value={financialProfileForm.sat_score}
                   onChange={(e) => handleFinancialProfileInputChange('sat_score', e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                  className="w-full rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] px-3 py-2 focus:border-[var(--color-accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-bg)]"
                   placeholder="Optional"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">ACT Score</label>
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">ACT Score</label>
                 <input
                   type="number"
                   min="1"
                   max="36"
                   value={financialProfileForm.act_score}
                   onChange={(e) => handleFinancialProfileInputChange('act_score', e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                  className="w-full rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] px-3 py-2 focus:border-[var(--color-accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-bg)]"
                   placeholder="Optional"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Family Income (USD)</label>
+                <label className="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Family Income (USD)</label>
                 <input
                   type="number"
                   min="0"
                   step="1000"
                   value={financialProfileForm.family_income}
                   onChange={(e) => handleFinancialProfileInputChange('family_income', e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                  className="w-full rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] px-3 py-2 focus:border-[var(--color-accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-bg)]"
                   placeholder="e.g. 65000"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-              <label className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+              <label className="flex items-center gap-2 rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-secondary)] px-3 py-2">
                 <input
                   type="checkbox"
                   checked={financialProfileForm.international_student}
@@ -1339,7 +1339,7 @@ export default function UniversityDetailPage() {
                 />
                 <span>International student</span>
               </label>
-              <label className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+              <label className="flex items-center gap-2 rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-secondary)] px-3 py-2">
                 <input
                   type="checkbox"
                   checked={financialProfileForm.in_state}
@@ -1347,7 +1347,7 @@ export default function UniversityDetailPage() {
                 />
                 <span>In-state applicant</span>
               </label>
-              <label className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+              <label className="flex items-center gap-2 rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-secondary)] px-3 py-2">
                 <input
                   type="checkbox"
                   checked={financialProfileForm.first_generation}
@@ -1358,22 +1358,22 @@ export default function UniversityDetailPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Special talents or awards</label>
+              <label className="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Special talents or awards</label>
               <textarea
                 value={financialProfileForm.special_talents}
                 onChange={(e) => handleFinancialProfileInputChange('special_talents', e.target.value)}
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                className="w-full rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] px-3 py-2 focus:border-[var(--color-accent-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-interactive-bg)]"
                 placeholder="e.g. Research award, varsity athlete, music scholarship"
               />
-              <p className="mt-1 text-xs text-gray-500">Separate multiple items with commas.</p>
+              <p className="mt-1 text-xs text-[var(--color-text-tertiary)]">Separate multiple items with commas.</p>
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 type="button"
                 onClick={handleCloseFinancialProfileModal}
-                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
+                className="rounded-lg border border-[var(--color-border-secondary)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-interactive-bg)]"
                 disabled={financialProfileSaving}
               >
                 Cancel
@@ -1381,7 +1381,7 @@ export default function UniversityDetailPage() {
               <button
                 type="submit"
                 disabled={financialProfileSaving}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-70"
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-text-primary)] shadow-sm hover:bg-[var(--color-accent-secondary)] disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {financialProfileSaving && <Loader2 className="h-4 w-4 animate-spin" />}
                 Save profile
@@ -1409,9 +1409,9 @@ export default function UniversityDetailPage() {
 function SectionCard({ icon, title, children, className = '' }: { icon: React.ReactNode; title: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={className}>
-      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
-        <div className="text-primary-600">{icon}</div>
-        <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[var(--color-border-secondary)]">
+        <div className="text-[var(--color-accent-primary)]">{icon}</div>
+        <h2 className="text-xl font-bold text-[var(--color-text-primary)]">{title}</h2>
       </div>
       {children}
     </div>
@@ -1422,18 +1422,18 @@ function InfoItem({ label, value }: { label: string; value: string | number | un
   if (!value && value !== 0) return null
   return (
     <div>
-      <div className="text-xs text-gray-500 mb-1">{label}</div>
-      <div className="text-sm font-semibold text-gray-900">{value}</div>
+      <div className="text-xs text-[var(--color-text-tertiary)] mb-1">{label}</div>
+      <div className="text-sm font-semibold text-[var(--color-text-primary)]">{value}</div>
     </div>
   )
 }
 
 function StatCard({ label, value, icon, color = 'blue' }: { label: string; value: string; icon: React.ReactNode; color?: 'blue' | 'purple' | 'green' | 'orange' }) {
   const colorClasses: Record<'blue' | 'purple' | 'green' | 'orange', string> = {
-    blue: 'bg-blue-50 text-blue-600',
-    purple: 'bg-purple-50 text-purple-600',
-    green: 'bg-green-50 text-green-600',
-    orange: 'bg-orange-50 text-orange-600',
+    blue: 'bg-[var(--color-interactive-bg)] text-[var(--chart-color-3)]',
+    purple: 'bg-[var(--color-interactive-bg)] text-[var(--color-accent-secondary)]',
+    green: 'bg-[var(--color-interactive-bg)] text-[var(--heatmap-best)]',
+    orange: 'bg-[var(--color-interactive-bg)] text-[var(--heatmap-caution)]',
   }
   return (
     <div className={`${colorClasses[color]} p-4 rounded-lg`}>
@@ -1441,24 +1441,24 @@ function StatCard({ label, value, icon, color = 'blue' }: { label: string; value
         {icon}
         <div className="text-xs font-medium opacity-80">{label}</div>
       </div>
-      <div className="text-2xl font-bold">{value}</div>
+      <div className="text-2xl font-bold text-[var(--color-text-primary)]">{value}</div>
     </div>
   )
 }
 
 function StatRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-      <span className="text-sm text-gray-600">{label}</span>
-      <span className="text-sm font-bold text-gray-900">{value}</span>
+    <div className="flex items-center justify-between py-2 border-b border-[var(--color-border-secondary)] last:border-0">
+      <span className="text-sm text-[var(--color-text-secondary)]">{label}</span>
+      <span className="text-sm font-bold text-[var(--color-text-primary)]">{value}</span>
     </div>
   )
 }
 
 function HighlightItem({ icon, text }: { icon: React.ReactNode; text: string }) {
   return (
-    <div className="flex items-center gap-2 text-sm text-gray-700">
-      <div className="text-primary-600">{icon}</div>
+    <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+      <div className="text-[var(--color-accent-primary)]">{icon}</div>
       <span>{text}</span>
     </div>
   )

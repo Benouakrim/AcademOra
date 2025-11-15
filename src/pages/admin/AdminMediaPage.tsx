@@ -13,6 +13,10 @@ import {
   ImagePlus,
   Copy,
   Check,
+  Sparkles,
+  EyeOff,
+  Clock,
+  ExternalLink,
 } from 'lucide-react'
 import { videosAPI, uploadAPI } from '../../lib/api'
 import ImageUpload from '../../components/ImageUpload'
@@ -26,6 +30,8 @@ type SiteVideo = {
   thumbnail_url?: string | null
   position?: number | null
   is_active?: boolean | null
+  created_at?: string | null
+  updated_at?: string | null
 }
 
 type VideoFormState = {
@@ -66,6 +72,19 @@ const sampleVideos: Omit<VideoFormState, 'position'>[] = [
     is_active: true,
   },
 ]
+
+const FALLBACK_HERO_IMAGE =
+  'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1280&q=80'
+
+const getDomain = (value?: string | null) => {
+  if (!value) return null
+  try {
+    const url = new URL(value)
+    return url.hostname.replace(/^www\./, '')
+  } catch {
+    return value
+  }
+}
 
 const initialForm: VideoFormState = {
   title: '',
@@ -113,6 +132,7 @@ export default function AdminMediaPage() {
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false)
   const [imageUrl, setImageUrl] = useState<string>('')
   const [copySuccess, setCopySuccess] = useState(false)
+  const [heroCopySuccess, setHeroCopySuccess] = useState(false)
 
   const apiOrigin = useMemo(resolveApiOrigin, [])
 
@@ -123,6 +143,102 @@ export default function AdminMediaPage() {
   const sortedVideos = useMemo(() => {
     return [...videos].sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
   }, [videos])
+
+  const activeVideos = useMemo(
+    () => sortedVideos.filter((video) => video.is_active),
+    [sortedVideos]
+  )
+
+  const inactiveCount = useMemo(
+    () => Math.max(sortedVideos.length - activeVideos.length, 0),
+    [sortedVideos.length, activeVideos.length]
+  )
+
+  const heroVideo = useMemo(() => {
+    if (sortedVideos.length === 0) return null
+    const firstActive = sortedVideos.find((video) => video.is_active)
+    return firstActive ?? sortedVideos[0]
+  }, [sortedVideos])
+
+  const heroPreview = useMemo(() => {
+    if (heroVideo?.thumbnail_url) {
+      return toAbsolute(heroVideo.thumbnail_url, apiOrigin) || FALLBACK_HERO_IMAGE
+    }
+    return FALLBACK_HERO_IMAGE
+  }, [heroVideo, apiOrigin])
+
+  const heroVideoLink = useMemo(() => {
+    if (!heroVideo?.video_url) return null
+    return toAbsolute(heroVideo.video_url, apiOrigin)
+  }, [heroVideo, apiOrigin])
+
+  const latestUpdate = useMemo(() => {
+    let latest: Date | null = null
+    sortedVideos.forEach((video) => {
+      const ts = video.updated_at ?? video.created_at
+      if (!ts) return
+      const candidate = new Date(ts)
+      if (!latest || candidate > latest) {
+        latest = candidate
+      }
+    })
+    return latest
+  }, [sortedVideos])
+
+  const formattedLastUpdated = useMemo(() => {
+    if (!latestUpdate) return 'No updates yet'
+    return latestUpdate.toLocaleString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }, [latestUpdate])
+
+  const mediaStats = useMemo(
+    () => [
+      {
+        label: 'Active videos',
+        value: activeVideos.length.toString(),
+        subLabel:
+          sortedVideos.length > 0
+            ? `${activeVideos.length}/${sortedVideos.length} visible`
+            : 'Add your first video',
+        icon: Sparkles,
+      },
+      {
+        label: 'Hidden videos',
+        value: inactiveCount.toString(),
+        subLabel:
+          inactiveCount === 0
+            ? 'All entries published'
+            : 'Hidden from the public carousel',
+        icon: EyeOff,
+      },
+      {
+        label: 'Last updated',
+        value: formattedLastUpdated,
+        subLabel: heroVideo
+          ? `Hero source • position ${heroVideo.position ?? 0}`
+          : 'Hero not yet configured',
+        icon: Clock,
+      },
+    ],
+    [activeVideos.length, sortedVideos.length, inactiveCount, formattedLastUpdated, heroVideo]
+  )
+
+  const previewThumbnail = useMemo(
+    () =>
+      form.thumbnail_url
+        ? toAbsolute(form.thumbnail_url, apiOrigin)
+        : heroPreview,
+    [form.thumbnail_url, apiOrigin, heroPreview]
+  )
+
+  const previewVideoDomain = useMemo(
+    () => getDomain(form.video_url),
+    [form.video_url]
+  )
 
   async function fetchVideos() {
     try {
@@ -269,95 +385,257 @@ export default function AdminMediaPage() {
     }
   }
 
+  const handleCopyHeroImage = async () => {
+    if (!heroPreview) return
+    try {
+      await navigator.clipboard.writeText(heroPreview)
+      setHeroCopySuccess(true)
+      setTimeout(() => setHeroCopySuccess(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy hero image url', err)
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 px-6 py-8">
-      <div className="mx-auto max-w-6xl space-y-10">
-        <header className="space-y-2">
-          <h1 className="flex items-center gap-3 text-3xl font-bold text-slate-900">
-            <ImagePlus className="h-7 w-7 text-primary-600" />
-            Media Library
-          </h1>
-          <p className="max-w-3xl text-sm text-slate-500">
-            Upload and manage the media assets that power the landing experience. Add home page
-            showcase videos, upload MP4 demos, or grab hosted image URLs for other pages.
-          </p>
+    <div className="min-h-screen bg-slate-950/5 px-6 py-8">
+      <div className="mx-auto max-w-6xl space-y-8">
+        <header className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="space-y-2">
+            <h1 className="flex items-center gap-3 text-3xl font-bold text-slate-900">
+              <ImagePlus className="h-7 w-7 text-primary-600" />
+              Media Studio
+            </h1>
+            <p className="max-w-3xl text-sm text-slate-500">
+              Manage the images and videos that shape the public experience. Updates apply immediately
+              to the home page hero, carousel, and other marketing surfaces.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={fetchVideos}
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 shadow-sm transition hover:bg-slate-100"
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+              Refresh data
+            </button>
+            <button
+              onClick={handleImportSamples}
+              disabled={submitting}
+              className="inline-flex items-center gap-2 rounded-xl border border-primary-200 bg-primary-50 px-4 py-2 text-xs font-semibold text-primary-600 transition hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Add sample set
+            </button>
+          </div>
         </header>
 
         {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[2fr,3fr]">
-          {/* Quick Image Upload */}
-          <motion.section
+        <motion.section layout className="grid gap-6 xl:grid-cols-[1.2fr,0.8fr]">
+          <motion.div
             layout
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+            className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md"
           >
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold text-slate-900">Image Hosting</h2>
-                <p className="text-xs text-slate-500">
-                  Upload an image and copy the hosted URL for use across the site.
-                </p>
-              </div>
-            </div>
-
-            <ImageUpload value={imageUrl} onChange={setImageUrl} />
-
-            {imageUrl && (
-              <div className="mt-4 space-y-3">
-                <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-500">
-                  {imageUrl}
+            <div className="grid gap-6 lg:grid-cols-[1.1fr,0.9fr]">
+              <div className="relative">
+                <img
+                  src={heroPreview}
+                  alt={heroVideo?.title || 'Home hero preview'}
+                  className="h-full min-h-[280px] w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-slate-900/35 via-transparent to-transparent" />
+                <div className="absolute left-6 top-6 inline-flex items-center gap-2 rounded-full bg-white/85 px-3 py-1 text-[11px] font-semibold text-slate-700 shadow">
+                  <Sparkles className="h-3.5 w-3.5 text-primary-500" />
+                  Home hero source
                 </div>
-                <button
-                  onClick={handleCopyImageUrl}
-                  className="inline-flex items-center gap-2 rounded-xl bg-primary-50 px-4 py-2 text-xs font-semibold text-primary-600 transition hover:bg-primary-100"
-                >
-                  {copySuccess ? (
-                    <>
-                      <Check className="h-3.5 w-3.5" />
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3.5 w-3.5" />
-                      Copy image URL
-                    </>
+                {heroVideo && (
+                  <div className="absolute bottom-6 left-6 max-w-sm rounded-2xl bg-slate-900/80 px-4 py-3 text-white shadow-lg backdrop-blur">
+                    <p className="text-sm font-semibold">
+                      {heroVideo.title || 'Untitled video'}
+                    </p>
+                    {heroVideo.description && (
+                      <p className="mt-1 text-xs text-white/80 line-clamp-2">{heroVideo.description}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="flex h-full flex-col justify-between p-6">
+                <div className="space-y-4">
+                  <div>
+                    <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                      <Sparkles className="h-5 w-5 text-primary-600" />
+                      Hero banner overview
+                    </h2>
+                    <p className="text-xs text-slate-500">
+                      The first active entry in your list powers the home hero media. Update its thumbnail
+                      and description here then jump directly into editing.
+                    </p>
+                  </div>
+                  <dl className="space-y-3 text-sm">
+                    <div className="flex items-center justify-between gap-3">
+                      <dt className="text-slate-500">Current source</dt>
+                      <dd className="max-w-[220px] truncate text-right font-medium text-slate-900">
+                        {heroVideo?.title || 'Not configured'}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-slate-500">Position</dt>
+                      <dd className="font-medium text-slate-900">{heroVideo?.position ?? '—'}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-slate-500">Status</dt>
+                      <dd>
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                            heroVideo?.is_active
+                              ? 'bg-green-100 text-green-600'
+                              : 'bg-slate-200 text-slate-500'
+                          }`}
+                        >
+                          {heroVideo?.is_active ? 'Active' : 'Hidden'}
+                        </span>
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={handleCopyHeroImage}
+                    className="inline-flex items-center gap-2 rounded-xl border border-primary-200 bg-primary-50 px-4 py-2 text-xs font-semibold text-primary-600 transition hover:bg-primary-100"
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                    {heroCopySuccess ? 'Copied!' : 'Copy hero image URL'}
+                  </button>
+                  {heroVideo && (
+                    <button
+                      onClick={() => handleEdit(heroVideo)}
+                      className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+                    >
+                      Edit hero video
+                    </button>
                   )}
-                </button>
+                  {heroVideoLink && (
+                    <a
+                      href={heroVideoLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+                    >
+                      Open video
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  )}
+                </div>
               </div>
-            )}
-          </motion.section>
-
-          {/* Video Showcase Manager */}
-          <motion.section
-            layout
-            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-          >
-            <div className="mb-6 flex items-start justify-between">
-              <div>
-                <h2 className="flex items-center gap-2 text-xl font-semibold text-slate-900">
-                  <Play className="h-5 w-5 text-primary-600" />
-                  Landing Page Video Showcase
-                </h2>
-                <p className="mt-1 text-xs text-slate-500">
-                  These videos feed the “See how it works” carousel on the home page.
-                </p>
-              </div>
-              {editingId && (
-                <button
-                  onClick={resetForm}
-                  className="text-sm font-medium text-primary-600 transition hover:text-primary-700"
-                >
-                  Cancel edit
-                </button>
-              )}
             </div>
+          </motion.div>
 
-            <div className="grid gap-6 lg:grid-cols-[1.4fr,1fr]">
-              <form onSubmit={handleSubmit} className="space-y-5">
+          <motion.div layout className="space-y-6">
+            <motion.div layout className="grid gap-3 sm:grid-cols-3">
+              {mediaStats.map((stat) => {
+                const Icon = stat.icon
+                const numeric = Number.isNaN(Number(stat.value)) ? stat.value : Number(stat.value).toLocaleString()
+                return (
+                  <div
+                    key={stat.label}
+                    className="rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                        {stat.label}
+                      </span>
+                      <Icon className="h-4 w-4 text-primary-500" />
+                    </div>
+                    <div className="mt-3 text-2xl font-semibold text-slate-900">{numeric}</div>
+                    <p className="mt-1 text-[11px] text-slate-500">{stat.subLabel}</p>
+                  </div>
+                )
+              })}
+            </motion.div>
+
+            <motion.section
+              layout
+              className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-900">Image hosting</h2>
+                  <p className="text-xs text-slate-500">
+                    Upload a static image and copy the hosted URL for articles, landing pages, or
+                    hero backgrounds.
+                  </p>
+                </div>
+                {imageUrl && (
+                  <button
+                    onClick={() => setImageUrl('')}
+                    className="rounded-xl border border-slate-200 px-3 py-1.5 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              <div className="mt-4">
+                <ImageUpload value={imageUrl} onChange={setImageUrl} />
+              </div>
+
+              {imageUrl && (
+                <div className="mt-4 space-y-3">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-500">
+                    {imageUrl}
+                  </div>
+                  <button
+                    onClick={handleCopyImageUrl}
+                    className="inline-flex items-center gap-2 rounded-xl border border-primary-200 bg-primary-50 px-4 py-2 text-xs font-semibold text-primary-600 transition hover:bg-primary-100"
+                  >
+                    {copySuccess ? (
+                      <>
+                        <Check className="h-3.5 w-3.5" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-3.5 w-3.5" />
+                        Copy image URL
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </motion.section>
+          </motion.div>
+        </motion.section>
+
+        <motion.section
+          layout
+          className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md"
+        >
+          <div className="flex flex-col gap-3 border-b border-slate-200 bg-slate-50/80 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                <Video className="h-5 w-5 text-primary-600" />
+                Video & hero manager
+              </h2>
+              <p className="text-xs text-slate-500">
+                Create, reorder, and publish the videos that power the home page carousel and hero.
+              </p>
+            </div>
+            {editingId && (
+              <button
+                onClick={resetForm}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+              >
+                Cancel editing
+              </button>
+            )}
+          </div>
+
+          <div className="grid gap-8 px-6 py-6 xl:grid-cols-[1.05fr,0.95fr]">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-700">Title</label>
                   <input
@@ -402,7 +680,7 @@ export default function AdminMediaPage() {
                       />
                       <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50">
                         <Upload className="h-3.5 w-3.5" />
-                        {uploadingVideo ? 'Uploading...' : 'Upload'}
+                        {uploadingVideo ? 'Uploading…' : 'Upload'}
                         <input
                           type="file"
                           accept="video/*"
@@ -424,7 +702,7 @@ export default function AdminMediaPage() {
 
                   <div>
                     <label className="mb-1 block text-sm font-medium text-slate-700">
-                      Embed Code (optional)
+                      Embed code (optional)
                     </label>
                     <textarea
                       value={form.embed_code}
@@ -441,7 +719,7 @@ export default function AdminMediaPage() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <label className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-700">
-                      Thumbnail Image
+                      Thumbnail image
                       <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
                         Optional
                       </span>
@@ -458,7 +736,7 @@ export default function AdminMediaPage() {
                       />
                       <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50">
                         <ImageIcon className="h-3.5 w-3.5" />
-                        {uploadingThumbnail ? 'Uploading...' : 'Upload'}
+                        {uploadingThumbnail ? 'Uploading…' : 'Upload'}
                         <input
                           type="file"
                           accept="image/*"
@@ -478,7 +756,7 @@ export default function AdminMediaPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="mb-1 block text-sm font-medium text-slate-700">
-                        Sort Order
+                        Sort order
                       </label>
                       <input
                         type="number"
@@ -507,20 +785,66 @@ export default function AdminMediaPage() {
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  <Save className="h-4 w-4" />
-                  {editingId ? 'Update Video' : 'Add Video'}
-                </button>
-              </form>
+              <button
+                type="submit"
+                disabled={submitting}
+                className="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <Save className="h-4 w-4" />
+                {editingId ? 'Update video' : 'Add video'}
+              </button>
+            </form>
 
-              <div className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50/60 p-4">
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-5">
+                <h3 className="text-sm font-semibold text-slate-700">Live preview</h3>
+                <p className="text-xs text-slate-500">
+                  See how this entry will appear in the carousel and hero banner.
+                </p>
+                <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+                  {previewThumbnail ? (
+                    <img
+                      src={previewThumbnail}
+                      alt="Draft thumbnail preview"
+                      className="h-40 w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-40 items-center justify-center text-xs text-slate-400">
+                      Add a thumbnail to generate a preview.
+                    </div>
+                  )}
+                </div>
+                <dl className="mt-4 space-y-1 text-xs text-slate-500">
+                  <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
+                    <dt>Title</dt>
+                    <dd className="font-semibold text-slate-600">
+                      {form.title || 'Untitled video'}
+                    </dd>
+                  </div>
+                  <div className="flex items-center justify-between border-b border-slate-200/60 py-2">
+                    <dt>Source</dt>
+                    <dd className="text-slate-600">{previewVideoDomain || '—'}</dd>
+                  </div>
+                  <div className="flex items-center justify-between pt-2">
+                    <dt>Status</dt>
+                    <dd>
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                          form.is_active ? 'bg-green-100 text-green-600' : 'bg-slate-200 text-slate-500'
+                        }`}
+                      >
+                        {form.is_active ? 'Will be active' : 'Will be hidden'}
+                      </span>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-slate-800">Current videos</h3>
+                  <h3 className="text-sm font-semibold text-slate-800">Video library</h3>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={fetchVideos}
@@ -535,91 +859,116 @@ export default function AdminMediaPage() {
                       className="inline-flex items-center gap-2 rounded-xl border border-primary-200 bg-primary-50 px-3 py-1.5 text-[11px] font-semibold text-primary-600 transition hover:bg-primary-100 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       <Plus className="h-3 w-3" />
-                      Add sample videos
+                      Sample set
                     </button>
                   </div>
                 </div>
 
                 {loading ? (
-                  <div className="flex items-center justify-center py-10 text-sm text-slate-500">
+                  <div className="flex items-center justify-center rounded-2xl border border-dashed border-slate-300 py-12 text-sm text-slate-500">
                     <Video className="mr-2 h-4 w-4 animate-pulse" />
                     Loading videos…
                   </div>
                 ) : sortedVideos.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-slate-300 py-10 text-center text-sm text-slate-500">
-                    No videos configured yet. Add one using the form.
+                  <div className="rounded-2xl border border-dashed border-slate-300 py-12 text-center text-sm text-slate-500">
+                    No videos configured yet. Add one using the form on the left.
                   </div>
                 ) : (
-                  <div className="space-y-3">
-                    {sortedVideos.map((video) => (
-                      <motion.div
-                        key={video.id}
-                        layout
-                        className="rounded-2xl border border-slate-200 bg-white p-4 transition hover:border-primary-200"
-                      >
-                        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-500">
-                                {video.position ?? 0}
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {sortedVideos.map((video) => {
+                      const preview = video.thumbnail_url
+                        ? toAbsolute(video.thumbnail_url, apiOrigin)
+                        : FALLBACK_HERO_IMAGE
+                      const domain = getDomain(video.video_url)
+                      const isHero = heroVideo?.id === video.id
+                      return (
+                        <motion.article
+                          key={video.id}
+                          layout
+                          className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-primary-200"
+                        >
+                          <div className="relative h-40 overflow-hidden border-b border-slate-200 bg-slate-100">
+                            <img
+                              src={preview}
+                              alt={video.title || 'Video thumbnail'}
+                              className="h-full w-full object-cover"
+                            />
+                            {isHero && (
+                              <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary-600 px-3 py-1 text-[11px] font-semibold text-white shadow">
+                                <Sparkles className="h-3 w-3" />
+                                Home hero
                               </span>
-                              <div>
-                                <h4 className="text-base font-semibold text-slate-900">
-                                  {video.title}
-                                </h4>
-                                <div className="mt-1 flex items-center gap-3 text-[11px] text-slate-500">
-                                  {video.video_url && (
-                                    <span className="inline-flex items-center gap-1">
-                                      <LinkIcon className="h-3 w-3" />
-                                      Link
-                                    </span>
-                                  )}
-                                  {video.embed_code && (
-                                    <span className="inline-flex items-center gap-1">
-                                      <Video className="h-3 w-3" />
-                                      Embed
-                                    </span>
-                                  )}
-                                  <span
-                                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                                      video.is_active
-                                        ? 'bg-green-100 text-green-600'
-                                        : 'bg-slate-200 text-slate-500'
-                                    }`}
-                                  >
-                                    {video.is_active ? 'Active' : 'Hidden'}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            {video.description && (
-                              <p className="mt-3 text-xs text-slate-600">{video.description}</p>
                             )}
                           </div>
-                          <div className="flex items-center gap-2 text-xs font-semibold">
-                            <button
-                              onClick={() => handleEdit(video)}
-                              className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary-200 px-3 py-1.5 text-primary-600 transition hover:bg-primary-50"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDelete(video.id)}
-                              className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-1.5 text-red-500 transition hover:bg-red-50"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                              Delete
-                            </button>
+                          <div className="space-y-3 p-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="space-y-1">
+                                <h4 className="text-sm font-semibold text-slate-900">
+                                  {video.title || 'Untitled video'}
+                                </h4>
+                                <p className="text-[11px] text-slate-500">
+                                  {domain
+                                    ? `Source: ${domain}`
+                                    : video.embed_code
+                                    ? 'Embedded player'
+                                    : 'No link yet'}
+                                </p>
+                              </div>
+                              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-500">
+                                {video.position ?? 0}
+                              </span>
+                            </div>
+                            {video.description && (
+                              <p className="text-xs text-slate-600 line-clamp-3">
+                                {video.description}
+                              </p>
+                            )}
+                            <div className="flex flex-wrap gap-2">
+                              <span
+                                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                                  video.is_active ? 'bg-green-100 text-green-600' : 'bg-slate-200 text-slate-500'
+                                }`}
+                              >
+                                {video.is_active ? 'Active' : 'Hidden'}
+                              </span>
+                              {video.embed_code && (
+                                <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-500">
+                                  <Video className="h-3 w-3" />
+                                  Embed
+                                </span>
+                              )}
+                              {video.video_url && (
+                                <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-500">
+                                  <LinkIcon className="h-3 w-3" />
+                                  Link
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleEdit(video)}
+                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-primary-200 px-3 py-1.5 text-xs font-semibold text-primary-600 transition hover:bg-primary-50"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDelete(video.id)}
+                                className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-500 transition hover:bg-red-50"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                                Delete
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      </motion.div>
-                    ))}
+                        </motion.article>
+                      )
+                    })}
                   </div>
                 )}
               </div>
             </div>
-          </motion.section>
-        </div>
+          </div>
+        </motion.section>
       </div>
     </div>
   )
